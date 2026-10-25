@@ -2,8 +2,8 @@
 
 Standalone Arduino sketch for CrowPanel Advanced ESP32-P4 10.1-inch V1.2.
 Canonical repository: https://github.com/VOC-FH/CrowPanelTelemetry (private).
-The initial repository import uses main; subsequent coherent work uses feature
-branches based on the actual remote default branch. Do not create duplicate PRs.
+Implement directly on main by default. Create or use another branch only when
+the user explicitly instructs it. Do not create duplicate PRs.
 The canonical project is this folder; do not modify sibling Basic/S3 sketches.
 
 `Config.h` owns pin assignments and editable credentials. `Application.cpp`

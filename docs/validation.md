@@ -8,10 +8,12 @@ reserved before joining; it is unrelated to airtime reservations.
 
 Canonical checkout: /home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry.
 Repository: https://github.com/VOC-FH/CrowPanelTelemetry (private).
-Task branch: fix/remove-airtime-reservations, based on main at
-1e3cb016c8180f681635c0d69b45329ef8e01dd5. No other open PR existed at task start.
-The user authorized fixing and pushing; no merge, installation, flash or RF was
-performed. No alternate checkout was created.
+The correction was initially committed on fix/remove-airtime-reservations, based
+on main at1e3cb016c8180f681635c0d69b45329ef8e01dd5. The user subsequently directed
+merging/pushing and local synchronization on main; main was fast-forwarded to
+the validated correction. Future work stays on main unless the user explicitly
+directs another branch. No open PR existed at task start. No installation, flash
+or RF was performed. No alternate checkout was created.
 
 ## Configuration and fresh builds
 
