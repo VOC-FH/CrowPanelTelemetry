@@ -1,0 +1,5 @@
+build/
+checkouts/
+*.bin
+*.elf
+*.map

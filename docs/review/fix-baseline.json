@@ -1,0 +1,178 @@
+{
+  ".clang-format": {
+    "sha256": "633441d2ab5699252d83520f001d61dc2d6dde90f76e3a99f799baf60f08aafa",
+    "lines": 137
+  },
+  ".clang-format-ignore": {
+    "sha256": "137c5f6c1cc2192c3e29ee0748e6c68853e0e4b34a9697038840b3c865debcb9",
+    "lines": 1
+  },
+  ".clang-tidy": {
+    "sha256": "e81b15a50fc926a66e6e8aecd4647a850c3ef0c64781b61d61ad82d099b441cd",
+    "lines": 173
+  },
+  ".clangd": {
+    "sha256": "64de7616169b415a8bdfd8b91d405bfd2b0d723a0fc4738c30a83005f4b942bb",
+    "lines": 2
+  },
+  ".gitignore": {
+    "sha256": "10539007bb4f153400d5d74774e9863b73a8a10c5e7544af3e3b7fee84c4beab",
+    "lines": 5
+  },
+  "AGENTS.md": {
+    "sha256": "37c9269a9034ea2c6305a1013d527ca5b6b4c8e2b7fb90a703f6170f01541fc2",
+    "lines": 26
+  },
+  "App.h": {
+    "sha256": "d0605e5835f1b96ba591be6ef216d0ea9545cf6720b1976f2ea63293b45c69a4",
+    "lines": 37
+  },
+  "Application.cpp": {
+    "sha256": "c42de9dede40e9217f52fc301f3e0b7bc3c7bed3a438d93798d104b3a1336e66",
+    "lines": 130
+  },
+  "Config.h": {
+    "sha256": "640d3514ac9d89c24a968cb04df908a0af03c3d8ef747caec3973798d141a007",
+    "lines": 42
+  },
+  "CrowPanelTelemetry.ino": {
+    "sha256": "8616017294cf1410aba9050ae24719e0b70b59e2b0b0695a454ff8e13289d452",
+    "lines": 8
+  },
+  "Makefile": {
+    "sha256": "4280a7a4619d473844af87c0b2f98cc3819bcc190d641fa1fa67619a1b8f1d87",
+    "lines": 15
+  },
+  "README.md": {
+    "sha256": "ca5072a6351b7668cf9c84c4130f41f0279a73400f089526d31e7acc5cf64de6",
+    "lines": 201
+  },
+  "SHA256SUMS.json": {
+    "sha256": "3edef85bbbe21be327916eb1c116f5afe26a0c5a01a8f5b23c4695710453f639",
+    "lines": 45
+  },
+  "Telemetry.h": {
+    "sha256": "743003632cfbdc78dbcc0badb807a8f48b97e86d7d7866a5bc32350d1273c169",
+    "lines": 54
+  },
+  "Ui.cpp": {
+    "sha256": "7504897c9d4a478dd4a7096f70f77ec9bfab23ed3a297f8342fb532394d4564f",
+    "lines": 293
+  },
+  "Workers.cpp": {
+    "sha256": "dfb6bd6fc1f6c5d20827c88821a30d23e790848de436d96b9176c6f5aed1c1b4",
+    "lines": 403
+  },
+  "docs/airtime-calculation.txt": {
+    "sha256": "4fff9c49bcb06c9ae738b43fa1e47e8c458935c53fe2a0d477747c0a2b4e8c45",
+    "lines": 9
+  },
+  "docs/airtime.md": {
+    "sha256": "94e09d91e2792548585d3c4a2cea0df42436487c6b54ca3820ffc5c0d611e31e",
+    "lines": 93
+  },
+  "docs/hardware-checklist.md": {
+    "sha256": "8dc38fa059166d9184462bcffc1efd3b2c046a507e78fe0d591f2397afd835bc",
+    "lines": 70
+  },
+  "docs/radio-nets.json": {
+    "sha256": "4c91b0e26380071b8dddf549c0622fb7e3915392c620d6902eb15a3d746635e9",
+    "lines": 56
+  },
+  "docs/source-photo.png": {
+    "sha256": "5b2e2bdfefe5a38b7bbee5ef09f37c363579a8628f27df23f5702b5fcd6624ad",
+    "lines": 18789
+  },
+  "docs/sources.md": {
+    "sha256": "6b4e19ce177a818c5d7a47216169881517dcfd6d7e978f6fd28299e7e59e5dfe",
+    "lines": 40
+  },
+  "docs/ui-preview.png": {
+    "sha256": "f973bbd21d6b9a91b201e3fda898a3e6cc9c4c143517e4c295321858197ba172",
+    "lines": 655
+  },
+  "docs/ui-preview.svg": {
+    "sha256": "201656131387b862c202eddf03b662c6d4b697e4307284b8db340431e19b46fa",
+    "lines": 43
+  },
+  "docs/ui.md": {
+    "sha256": "24d11d2192c432419c640aca7afd94986dec02449c81a7575b88d2a8ee36282b",
+    "lines": 28
+  },
+  "docs/validation-logs/default-prev3.txt": {
+    "sha256": "bc53cae6eaaec18ab26472373aa91d598478db94f55a2d5134b45b5dd2637d8e",
+    "lines": 2
+  },
+  "docs/validation-logs/enabled-postv3.txt": {
+    "sha256": "6075c0226c464995ec7515fce546397fe99ae59b3929c306ac965bb2fb9ac9eb",
+    "lines": 2
+  },
+  "docs/validation-logs/enabled-prev3.txt": {
+    "sha256": "b150c6710ef891f9043eca06372bb844a8d9a43d3c720fd29c2eb9af71a126d0",
+    "lines": 2
+  },
+  "docs/validation-logs/host-checks.txt": {
+    "sha256": "81c4d05f47c23508be8c6dd7f01079b3a3e43bba1cf816dafe6d4d22813940ed",
+    "lines": 15
+  },
+  "docs/validation.md": {
+    "sha256": "6f8d54cf64714a407761d60c64c5a09964d797b9392551aee2ad434ae5a45380",
+    "lines": 107
+  },
+  "docs/visual-method.md": {
+    "sha256": "21c5f84c4bf3fc06f307064278be7c9e9df0a690b7d834e707749b146b1b7ce1",
+    "lines": 31
+  },
+  "docs/wiring-verification.txt": {
+    "sha256": "ebd1a14c081a0d949952ba7b2e587530cee8b323a0a0e43f702bce481afa375d",
+    "lines": 4
+  },
+  "docs/wiring.md": {
+    "sha256": "b19259099f92b9fdc54586ff085bb9b01efd47650123902dc0982689f2cfe321",
+    "lines": 195
+  },
+  "docs/wiring.png": {
+    "sha256": "1aa4bb24e945f48017271a1e6895c8fdbec3b931153e4c8a034d84bfb66cf33f",
+    "lines": 22180
+  },
+  "docs/wiring.svg": {
+    "sha256": "7a82faf9a0086cc39e43baf3e9f6c20ce386df4e002c31a4fe4b00859f99bf0f",
+    "lines": 242
+  },
+  "tests/codec.cpp": {
+    "sha256": "e3e17e271cb3a59c9e7a4210da151456abb31fc76ab5b99303f36934318e8ad1",
+    "lines": 51
+  },
+  "tests/decoder.js": {
+    "sha256": "306ae9d30e5e096db60d5d81f266c456986756fb74a5077e9fbd06508250272d",
+    "lines": 38
+  },
+  "tests/reference-packet.json": {
+    "sha256": "7830ef443d0513c4dd8f81f3e50378cc10ba1fb4ed7b077028c474d88977f1cc",
+    "lines": 1
+  },
+  "tools/airtime.py": {
+    "sha256": "24236724b3f55fe4def0253ff1985896bf790b02f74c3fc0bae13e4fb9029b71",
+    "lines": 19
+  },
+  "tools/check_wiring.py": {
+    "sha256": "d4ce81ca9504e05bc82e4733a456b532fdfa33afb19184456786c6c89fa562ac",
+    "lines": 65
+  },
+  "tools/draw_ui.py": {
+    "sha256": "fe23921ae453969425524a55f46f746e652b953a15d823afaef88c365ac5d1a2",
+    "lines": 51
+  },
+  "tools/draw_wiring.py": {
+    "sha256": "5c70d01852e5ccd0697d1218e3b8bbfeda42a6ca5066789a651a946bd5c29927",
+    "lines": 131
+  },
+  "tools/test.py": {
+    "sha256": "705fca297ba2409d5ce272b229b2417a12037669a5f20e60282cf13cecf42177",
+    "lines": 31
+  },
+  "ttn-decoder.js": {
+    "sha256": "74d5d6df05ddf85b452e6ebe148da80378108dd36ad7965669becef1e222cf0c",
+    "lines": 41
+  }
+}

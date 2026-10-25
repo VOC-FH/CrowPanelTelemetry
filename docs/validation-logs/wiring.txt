@@ -1,0 +1,4 @@
+PASS: 9 distinct radio GPIOs have no on-board consumers; Config.h matches Eagle.
+PASS: UART1, external I2C/level shifters, power rails, C6 reset and J7 orientation.
+Schematic SHA256: 7f9ac57dab96110467e4a9728cfb71b46024ea57f28a2d9d8b545b3ff0d0c172
+PCB SHA256: 29cd4115b1d16de5b1c5f99582b83e8fb3ef5616acd920dfa609b7d7424f9430

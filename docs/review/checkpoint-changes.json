@@ -1,0 +1,57 @@
+[
+  {
+    "file": "README.md",
+    "added": 9,
+    "removed": 2
+  },
+  {
+    "file": "docs/airtime.md",
+    "added": 9,
+    "removed": 0
+  },
+  {
+    "file": "docs/correctness-source-hashes.json",
+    "added": 42,
+    "removed": 0
+  },
+  {
+    "file": "docs/correctness-status.md",
+    "added": 105,
+    "removed": 0
+  },
+  {
+    "file": "docs/hardware-checklist.md",
+    "added": 8,
+    "removed": 1
+  },
+  {
+    "file": "docs/sources.md",
+    "added": 1,
+    "removed": 1
+  },
+  {
+    "file": "docs/validation.md",
+    "added": 8,
+    "removed": 4
+  },
+  {
+    "file": "docs/wiring.md",
+    "added": 8,
+    "removed": 4
+  },
+  {
+    "file": "docs/wiring.png",
+    "added": null,
+    "removed": null
+  },
+  {
+    "file": "docs/wiring.svg",
+    "added": 2,
+    "removed": 2
+  },
+  {
+    "file": "tools/draw_wiring.py",
+    "added": 2,
+    "removed": 2
+  }
+]

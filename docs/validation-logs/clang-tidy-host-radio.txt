@@ -1,0 +1,197 @@
+40585 warnings generated.
+warning: invalid configuration value '-1' for option 'cert-err09-cpp.MaxSize'; expected an integer [clang-tidy-config]
+warning: invalid configuration value '-1' for option 'cert-err61-cpp.MaxSize'; expected an integer [clang-tidy-config]
+warning: invalid configuration value '-1' for option 'misc-throw-by-value-catch-by-reference.MaxSize'; expected an integer [clang-tidy-config]
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:25:32: warning: all parameters should be named in a function [readability-named-parameter]
+   25 |     size_t putBytes(const char*, const uint8_t* bytes, size_t length) {
+      |                                ^
+      |                                 /*unused*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:31:31: warning: all parameters should be named in a function [readability-named-parameter]
+   31 |     size_t putUInt(const char*, uint32_t value) {
+      |                               ^
+      |                                /*unused*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:37:14: warning: method 'getUInt' can be made const [readability-make-member-function-const]
+   37 |     uint32_t getUInt(const char*, uint32_t) {
+      |              ^
+      |                                             const
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:37:33: warning: all parameters should be named in a function [readability-named-parameter]
+   37 |     uint32_t getUInt(const char*, uint32_t) {
+      |                                 ^         
+      |                                  /*unused*/  /*unused*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:56:26: warning: all parameters should be named in a function [readability-named-parameter]
+   56 |     void pinMode(uint32_t, uint32_t) override {
+      |                          ^         
+      |                           /*pin*/   /*mode*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:58:31: warning: all parameters should be named in a function [readability-named-parameter]
+   58 |     void digitalWrite(uint32_t, uint32_t) override {
+      |                               ^         
+      |                                /*pin*/   /*value*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:60:34: warning: all parameters should be named in a function [readability-named-parameter]
+   60 |     uint32_t digitalRead(uint32_t) override {
+      |                                  ^
+      |                                   /*pin*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:63:34: warning: all parameters should be named in a function [readability-named-parameter]
+   63 |     void attachInterrupt(uint32_t, void (*)(void), uint32_t) override {
+      |                                  ^                         
+      |                                   /*interruptNum*/  /*interruptCb*/  /*mode*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:63:45: warning: redundant void argument list in variable declaration [modernize-redundant-void-arg]
+   63 |     void attachInterrupt(uint32_t, void (*)(void), uint32_t) override {
+      |                                             ^~~~
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:65:34: warning: all parameters should be named in a function [readability-named-parameter]
+   65 |     void detachInterrupt(uint32_t) override {
+      |                                  ^
+      |                                   /*interruptNum*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:79:26: warning: all parameters should be named in a function [readability-named-parameter]
+   79 |     long pulseIn(uint32_t, uint32_t, RadioLibTime_t) override {
+      |                          ^                         
+      |                           /*pin*/   /*state*/       /*timeout*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:86:30: warning: all parameters should be named in a function [readability-named-parameter]
+   86 |     void spiTransfer(uint8_t*, size_t, uint8_t*) override {
+      |                              ^                 
+      |                               /*out*/ /*len*/   /*in*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:119:37: warning: all parameters should be named in a function [readability-named-parameter]
+  119 |     int16_t checkDataRate(DataRate_t, ModemType_t) override {
+      |                                     ^            
+      |                                      /*dr*/       /*modem*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:122:35: warning: all parameters should be named in a function [readability-named-parameter]
+  122 |     int16_t setDataRate(DataRate_t, ModemType_t) override {
+      |                                   ^            
+      |                                    /*dr*/       /*modem*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:125:31: warning: all parameters should be named in a function [readability-named-parameter]
+  125 |     int16_t setFrequency(float) override {
+      |                               ^
+      |                                /*freq*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:132:34: warning: all parameters should be named in a function [readability-named-parameter]
+  132 |     int16_t setOutputPower(int8_t) override {
+      |                                  ^
+      |                                   /*power*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:135:26: warning: all parameters should be named in a function [readability-named-parameter]
+  135 |     int16_t invertIQ(bool) override {
+      |                          ^
+      |                           /*enable*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:138:37: warning: all parameters should be named in a function [readability-named-parameter]
+  138 |     int16_t setPreambleLength(size_t) override {
+      |                                     ^
+      |                                      /*len*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:141:33: warning: all parameters should be named in a function [readability-named-parameter]
+  141 |     int16_t setSyncWord(uint8_t*, size_t) override {
+      |                                 ^       
+      |                                  /*sync*/  /*len*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:147:50: warning: all parameters should be named in a function [readability-named-parameter]
+  147 |     RadioLibTime_t calculateTimeOnAir(ModemType_t, DataRate_t, PacketConfig_t, size_t) override {
+      |                                                  ^                                   
+      |                                                   /*modem*/   /*dr*/          /*pc*/  /*len*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:168:17: warning: implicit conversion 'void (*)()' -> 'bool' [readability-implicit-bool-conversion]
+  168 |             if (callback) {
+      |                 ^       
+      |                          != nullptr
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:186:35: warning: all parameters should be named in a function [readability-named-parameter]
+  186 |     int16_t clearIrqFlags(uint32_t) override {
+      |                                   ^
+      |                                    /*irq*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:189:32: warning: all parameters should be named in a function [readability-named-parameter]
+  189 |     size_t getPacketLength(bool) override {
+      |                                ^
+      |                                 /*update*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:208:16: warning: implicit conversion 'uint8_t' (aka 'unsigned char') -> 'bool' [readability-implicit-bool-conversion]
+  208 |         return payloadLimit ? payloadLimit : LoRaWANNode::getMaxPayloadLen();
+      |                ^
+      |                (            != 0u)
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:211:9: warning: variable 'port' of type 'size_t' (aka 'unsigned long') can be declared 'const' [misc-const-correctness]
+  211 |         size_t port = 8 + (frame[5] & 15);
+      |         ^
+      |                const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:213:9: warning: variable 'counter' of type 'uint16_t' (aka 'unsigned short') can be declared 'const' [misc-const-correctness]
+  213 |         uint16_t counter = frame[6] | uint16_t(frame[7]) << 8;
+      |         ^
+      |                  const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:218:9: warning: variable 'length' of type 'size_t' (aka 'unsigned long') can be declared 'const' [misc-const-correctness]
+  218 |         size_t length = 13 + requests + payload.size();
+      |         ^
+      |                const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:234:9: warning: variable 'mic' of type 'uint32_t' (aka 'unsigned int') can be declared 'const' [misc-const-correctness]
+  234 |         uint32_t mic = generateMIC(frame.data(), frame.size() - 4, sNwkSIntKey);
+      |         ^
+      |                  const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:256:54: warning: all parameters should be named in a function [readability-named-parameter]
+  256 | static int xQueueReceive(TestQueue* q, void* out, int) {
+      |                                                      ^
+      |                                                       /*unused*/
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:257:5: warning: variable 'available' of type 'bool' can be declared 'const' [misc-const-correctness]
+  257 |     bool available = uxQueueMessagesWaiting(q) > 0;
+      |     ^
+      |          const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:270:5: warning: variable 'boot' of type 'uint16_t' (aka 'unsigned short') can be declared 'const' [misc-const-correctness]
+  270 |     uint16_t boot = 1;
+      |     ^
+      |              const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:292:9: warning: variable 'rc' of type 'int16_t' (aka 'short') can be declared 'const' [misc-const-correctness]
+  292 |         int16_t rc = node.activateOTAA(&event);
+      |         ^
+      |                 const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:332:5: warning: variable 'maximum' of type 'size_t' (aka 'unsigned long') can be declared 'const' [misc-const-correctness]
+  332 |     size_t maximum = node.getMaxPayloadLen();
+      |     ^
+      |            const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:341:5: warning: variable 'sentBefore' of type 'size_t' (aka 'unsigned long') can be declared 'const' [misc-const-correctness]
+  341 |     size_t sentBefore = phy.sent.size();
+      |     ^
+      |            const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:363:10: warning: variable 'minute' of type 'uint32_t' (aka 'unsigned int') can be declared 'const' [misc-const-correctness]
+  363 |     for (uint32_t minute : {10U, 20U, 30U}) {
+      |          ^
+      |                   const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:366:28: warning: floating point literal has suffix 'f', which is not uppercase [readability-uppercase-literal-suffix]
+  366 |             reading = {12, 0.1f, 1.2f};
+      |                            ^  ~
+      |                               F
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:366:34: warning: floating point literal has suffix 'f', which is not uppercase [readability-uppercase-literal-suffix]
+  366 |             reading = {12, 0.1f, 1.2f};
+      |                                  ^  ~
+      |                                     F
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:371:5: warning: multiple declarations in a single statement reduces readability [readability-isolate-declaration]
+  371 |     bool ready = true, demoTurn = true;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/codex/build/CrowPanelTelemetry/radio-tests/PersistentNode-under-test.h:15:9: warning: variable 'now' of type 'uint32_t' (aka 'unsigned int') can be declared 'const' [misc-const-correctness]
+   15 |         uint32_t now = millis();
+      |         ^
+      |                  const 
+/tmp/codex/build/CrowPanelTelemetry/radio-tests/PersistentNode-under-test.h:21:13: warning: variable 'next' of type 'uint16_t' (aka 'unsigned short') can be declared 'const' [misc-const-correctness]
+   21 |             uint16_t next = devNonce + 1;
+      |             ^
+      |                      const 
+/tmp/codex/build/CrowPanelTelemetry/radio-tests/PersistentNode-under-test.h:74:66: warning: implicit conversion 'uint32_t' (aka 'unsigned int') -> 'bool' [readability-implicit-bool-conversion]
+   74 |         uint32_t allowance = std::min<uint32_t>(band->dutyCycle, dutyCycle ? dutyCycle : band->dutyCycle);
+      |                                                                  ^
+      |                                                                  (         != 0u)
+/tmp/codex/build/CrowPanelTelemetry/radio-tests/Radio-service-under-test.h:7:21: warning: variable 'request' is not initialized [cppcoreguidelines-init-variables]
+    7 |             uint8_t request;
+      |                     ^      
+      |                             = 0
+/tmp/codex/build/CrowPanelTelemetry/radio-tests/Radio-service-under-test.h:13:17: warning: variable 'maxLen' of type 'uint8_t' (aka 'unsigned char') can be declared 'const' [misc-const-correctness]
+   13 |                 uint8_t maxLen = node.getMaxPayloadLen();
+      |                 ^
+      |                         const 
+/tmp/codex/build/CrowPanelTelemetry/radio-tests/Radio-service-under-test.h:14:17: warning: variable 'count' of type 'uint8_t' (aka 'unsigned char') can be declared 'const' [misc-const-correctness]
+   14 |                 uint8_t count = maxLen > HeaderSize ? std::min<int>((maxLen - HeaderSize) / 4, 10 - offset) : 0;
+      |                 ^
+      |                         const 
+/tmp/codex/build/CrowPanelTelemetry/radio-tests/Radio-service-under-test.h:15:17: warning: variable 'length' of type 'size_t' (aka 'unsigned long') can be declared 'const' [misc-const-correctness]
+   15 |                 size_t length = demo ? 4 : encodeFragment(batch, boot, offset, count, payload);
+      |                 ^
+      |                        const 
+/tmp/codex/build/CrowPanelTelemetry/radio-tests/Radio-service-under-test.h:22:21: warning: multiple declarations in a single statement reduces readability [readability-isolate-declaration]
+   22 |                     LoRaWANEvent_t upEvent{}, downEvent{};
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/codex/build/CrowPanelTelemetry/radio-tests/Radio-service-under-test.h:25:21: warning: variable 'rc' of type 'int16_t' (aka 'short') can be declared 'const' [misc-const-correctness]
+   25 |                     int16_t rc = node.sendReceive(payload, length, demo ? 2 : 1, down, &downLen, false, &upEvent, &downEvent);
+      |                     ^
+      |                             const 
+/tmp/codex/build/CrowPanelTelemetry/radio-tests/Radio-service-under-test.h:37:30: warning: redundant explicit casting to the same type 'unsigned int' as the sub-expression, remove this casting [readability-redundant-casting]
+   37 |                              static_cast<unsigned>(uxQueueMessagesWaiting(batches)));
+      |                              ^~~~~~~~~~~~~~~~~~~~~~                               ~
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:253:17: note: source type originates from the invocation of this function
+  253 | static unsigned uxQueueMessagesWaiting(TestQueue* q) {
+      |        ~~~~~~~~ ^
+Suppressed 40532 warnings (40532 in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.

@@ -1,0 +1,66 @@
+{
+  "LoRaWAN.cpp": {
+    "url": "https://raw.githubusercontent.com/jgromes/RadioLib/7.8.1/src/protocols/LoRaWAN/LoRaWAN.cpp",
+    "sha256": "bfd64fe3707795fcf54e75fc80e0b21036c0fa5d80850927f5ed7961873c0415"
+  },
+  "LoRaWAN.h": {
+    "url": "https://raw.githubusercontent.com/jgromes/RadioLib/7.8.1/src/protocols/LoRaWAN/LoRaWAN.h",
+    "sha256": "d359477577b97d0c2024624e3036b9aab3f06fd24db79d8fe4daa2c8b56d846b"
+  },
+  "TypeDef.h": {
+    "url": "https://raw.githubusercontent.com/jgromes/RadioLib/7.8.1/src/TypeDef.h",
+    "sha256": "6ffa96af9c9d12b95d8681f0f56df5b03cc52babc4bce668010ab599e0afad02"
+  },
+  "INA226.cpp": {
+    "url": "https://raw.githubusercontent.com/RobTillaart/INA226/0.6.6/INA226.cpp",
+    "sha256": "7ea0108d5d025bb9a5ec4bc6e43e5dc1293f9d2c81a1dc1fc54fe6937fe7e841"
+  },
+  "INA226.h": {
+    "url": "https://raw.githubusercontent.com/RobTillaart/INA226/0.6.6/INA226.h",
+    "sha256": "cbbd6a569cbd765b06818498588b38ebf98bef0f60cc57f73a837ed7681a4bc8"
+  },
+  "vfs_fat_sdmmc.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-idf/v5.5.5/components/fatfs/vfs/vfs_fat_sdmmc.c",
+    "sha256": "5668001c1e9b0a9908e9636b9c64b5de9953e8872f97334c19b68dc1a13b2a1b"
+  },
+  "sdmmc_host.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-idf/v5.5.5/components/esp_driver_sdmmc/src/sdmmc_host.c",
+    "sha256": "366dcc3e7f72db930632e1e49cebb4ffa8bc080f631c0aecb179cf187315c0ff"
+  },
+  "sdio_drv.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-hosted-mcu/v2.12.13/host/drivers/transport/sdio/sdio_drv.c",
+    "sha256": "e45c99b5a1c8735eaaab635ab404ee6e34ae98c7f5b92de3db134c95b37ab86d"
+  },
+  "panel.sch": {
+    "sha256": "7f9ac57dab96110467e4a9728cfb71b46024ea57f28a2d9d8b545b3ff0d0c172",
+    "revision": "cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e"
+  },
+  "panel.brd": {
+    "sha256": "29cd4115b1d16de5b1c5f99582b83e8fb3ef5616acd920dfa609b7d7424f9430",
+    "revision": "cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e"
+  },
+  "hardware/esp32/3.3.12/variants/esp32p4/pins_arduino.h": {
+    "sha256": "5dca1dbec4e8f1b9bb8643495f969659f692e36cf1ce8774d61078e88baa3cc5",
+    "local_base": "/home/voc/.arduino15/packages/esp32"
+  },
+  "hardware/esp32/3.3.12/libraries/SD_MMC/src/SD_MMC.cpp": {
+    "sha256": "5b7849419aafc6b6e0ccbe539217027ca54ed67a00a99aa71cafbfdcfce417b1",
+    "local_base": "/home/voc/.arduino15/packages/esp32"
+  },
+  "hardware/esp32/3.3.12/cores/esp32/esp32-hal-gpio.c": {
+    "sha256": "4d8ae8d5d0f88389179b2bd8a74dd1293f9bfe0b9b9c0138125a107cd6c0ff9c",
+    "local_base": "/home/voc/.arduino15/packages/esp32"
+  },
+  "hardware/esp32/3.3.12/cores/esp32/esp32-hal-i2c-ng.c": {
+    "sha256": "eb815402f5bef114f04ebb34b1ce5c6437fa45251cbd8eaa9504115d1756cae4",
+    "local_base": "/home/voc/.arduino15/packages/esp32"
+  },
+  "hardware/esp32/3.3.12/cores/esp32/esp32-hal-ldo.c": {
+    "sha256": "a50f60af6fdbd3af3dd6445a74480e947d95ee68062031e0f6b6a8be53fa599d",
+    "local_base": "/home/voc/.arduino15/packages/esp32"
+  },
+  "tools/esp32p4_es-libs/3.3.12/include/esp_driver_sdmmc/include/driver/sdmmc_default_configs.h": {
+    "sha256": "db9787e9a5c2d73e335b4ae973a9c5ba10e18a357ba8eb97b0c752c102ad83e3",
+    "local_base": "/home/voc/.arduino15/packages/esp32"
+  }
+}

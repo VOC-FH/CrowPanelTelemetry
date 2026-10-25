@@ -1,0 +1,48 @@
+{
+  "baseline": "delivered firmware / pre-SD approval checkpoint",
+  "lines": {
+    "production": {
+      "added": 258,
+      "removed": 104
+    },
+    "tests": {
+      "added": 548,
+      "removed": 0
+    },
+    "tools": {
+      "added": 69,
+      "removed": 4
+    },
+    "dependency_patch": {
+      "added": 26,
+      "removed": 12
+    }
+  },
+  "changed_files_before_final_docs": [
+    "AGENTS.md",
+    "Application.cpp",
+    "Makefile",
+    "README.md",
+    "SdStorage.h",
+    "Telemetry.h",
+    "Ui.cpp",
+    "Workers.cpp",
+    "docs/airtime.md",
+    "docs/hardware-checklist.md",
+    "docs/sources.md",
+    "docs/ui.md",
+    "docs/wiring.md",
+    "patches/radiolib-7.8.1-hashes.json",
+    "patches/radiolib-7.8.1.patch",
+    "tests/codec.cpp",
+    "tests/radio.cpp",
+    "tests/sd-storage.cpp",
+    "tests/sd-stubs/driver/sdmmc_host.h",
+    "tests/sd-stubs/esp32-hal-ldo.h",
+    "tests/sd-stubs/esp_vfs_fat.h",
+    "tests/sd-stubs/soc/sdmmc_pins.h",
+    "tools/patch_radiolib.py",
+    "tools/test.py",
+    "tools/test_radio.py"
+  ]
+}

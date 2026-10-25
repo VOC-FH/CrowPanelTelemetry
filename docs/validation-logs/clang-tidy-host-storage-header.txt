@@ -1,0 +1,20 @@
+1507 warnings generated.
+warning: invalid configuration value '-1' for option 'cert-err09-cpp.MaxSize'; expected an integer [clang-tidy-config]
+warning: invalid configuration value '-1' for option 'cert-err61-cpp.MaxSize'; expected an integer [clang-tidy-config]
+warning: invalid configuration value '-1' for option 'misc-throw-by-value-catch-by-reference.MaxSize'; expected an integer [clang-tidy-config]
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/SdStorage.h:1:1: warning: avoid 'pragma once' directive; use include guards instead [portability-avoid-pragma-once]
+    1 | #pragma once
+      | ^
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/SdStorage.h:1:9: warning: #pragma once in main file [clang-diagnostic-pragma-once-outside-header]
+    1 | #pragma once
+      |         ^
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/SdStorage.h:17:13: warning: implicit conversion 'sdmmc_card_t *' -> 'bool' [readability-implicit-bool-conversion]
+   17 |         if (card && !unmountFailed) {
+      |             ^
+      |             (    != nullptr)
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/SdStorage.h:22:20: warning: implicit conversion 'ldo_channel_handle_t' (aka 'void *') -> 'bool' [readability-implicit-bool-conversion]
+   22 |         if (ok && !power) {
+      |                   ~^    
+      |                   (      == nullptr)
+Suppressed 1500 warnings (1500 in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.

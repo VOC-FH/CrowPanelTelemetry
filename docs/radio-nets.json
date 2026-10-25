@@ -1,0 +1,56 @@
+[
+  {
+    "pin": 9,
+    "gpio": 2,
+    "module": "CLK",
+    "color": "#D49700"
+  },
+  {
+    "pin": 11,
+    "gpio": 3,
+    "module": "MOSI",
+    "color": "#008a53"
+  },
+  {
+    "pin": 13,
+    "gpio": 4,
+    "module": "MISO",
+    "color": "#1565c0"
+  },
+  {
+    "pin": 15,
+    "gpio": 5,
+    "module": "CS",
+    "color": "#a832ad"
+  },
+  {
+    "pin": 17,
+    "gpio": 25,
+    "module": "RESET",
+    "color": "#6d4c41"
+  },
+  {
+    "pin": 19,
+    "gpio": 49,
+    "module": "BUSY",
+    "color": "#e27300"
+  },
+  {
+    "pin": 20,
+    "gpio": 50,
+    "module": "DIO1",
+    "color": "#455a64"
+  },
+  {
+    "pin": 18,
+    "gpio": 51,
+    "module": "RXEN",
+    "color": "#008b8b"
+  },
+  {
+    "pin": 16,
+    "gpio": 52,
+    "module": "TXEN",
+    "color": "#9c4a00"
+  }
+]
