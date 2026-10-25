@@ -1,4 +1,4 @@
-python3 tools/test.py
+BUILD='/tmp/codex/build/CrowPanelTelemetry/deep-fix' python3 tools/test.py
 C++ encoder -> TTN decoder: values, limits, invalid slots, fragments and malformed packets passed
 47 application bytes + 13 overhead; 125kHz, CR4/5, explicit header, CRC, preamble8
 DR | SF | packet ms | 144 batches/day seconds | pacing interval seconds

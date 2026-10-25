@@ -117,16 +117,18 @@ static void radioTask(void*) {
         post(EventKind::Radio, "Fill DEV_EUI, JOIN_EUI, APP_KEY, NWK_KEY");
     }
     if (ready) {
+        char text[100] = "NVS open failed / radio stopped";
         ready = store.begin("crow-lora", false);
-        int16_t rc = radio.begin(868.1, 125, 7, 5, RADIOLIB_SX126X_SYNC_WORD_PUBLIC, 14, 8, RADIO_TCXO_VOLTAGE);
-        ready = ready && rc == RADIOLIB_ERR_NONE;
-        radio.setRfSwitchPins(Pins::RxEn, Pins::TxEn);
         if (ready) {
-            ready = radio.setDio2AsRfSwitch(false) == RADIOLIB_ERR_NONE;
+            int16_t rc = radio.begin(868.1, 125, 7, 5, RADIOLIB_SX126X_SYNC_WORD_PUBLIC, 14, 8, RADIO_TCXO_VOLTAGE);
+            radio.setRfSwitchPins(Pins::RxEn, Pins::TxEn);
+            if (rc == RADIOLIB_ERR_NONE) {
+                rc = radio.setDio2AsRfSwitch(false);
+            }
+            ready = rc == RADIOLIB_ERR_NONE;
+            snprintf(text, sizeof(text), "Radio init failed (%d); inspect wiring/TCXO", rc);
         }
         if (!ready) {
-            char text[100];
-            snprintf(text, sizeof(text), "Radio/NVS init failed (%d); inspect wiring/TCXO", rc);
             post(EventKind::Radio, text);
         }
     }
@@ -166,7 +168,7 @@ static void radioTask(void*) {
                     char text[120];
                     snprintf(text, sizeof(text), "Join failed (%d), or server is not 1.1; retry paced", rc);
                     post(EventKind::Radio, text);
-                    joinRetry = std::min(joinRetry * 2, 3600000UL);
+                    joinRetry = std::min<uint32_t>(joinRetry * 2, 3600000);
                     node.clearSession();
                 }
             }
@@ -205,12 +207,12 @@ static void radioTask(void*) {
                     snprintf(text,
                              sizeof(text),
                              "TX %s (%d) / %lu ms airtime / queued %u",
-                             rc >= 0 ? "sent" : "error",
+                             upEvent.fPort != 0 ? (rc >= 0 ? "sent" : "sent; RX error") : "not confirmed",
                              rc,
                              static_cast<unsigned long>(node.getLastToA()),
                              static_cast<unsigned>(uxQueueMessagesWaiting(batches)));
                     post(EventKind::Radio, text);
-                    if (rc >= 0) {
+                    if (upEvent.fPort != 0) {
                         if (demo) {
                             demoTurn = false;
                         } else {
@@ -241,7 +243,7 @@ static void wifiTask(void*) {
     }
     WiFi.setPins(Pins::WifiClk, Pins::WifiCmd, Pins::WifiD0, Pins::WifiD1, Pins::WifiD2, Pins::WifiD3, Pins::WifiReset);
     bool online = WiFi.mode(WIFI_STA);
-    configASSERT(xTaskCreate(mediaTask, "media", 12288, nullptr, 1, nullptr) == pdPASS);
+    configASSERT(xTaskCreate(mediaTask, "media", 24576, nullptr, 1, nullptr) == pdPASS);
     if (!online) {
         post(EventKind::Wifi, "C6 unavailable / check ESP-Hosted firmware");
     } else if (command.ssid[0]) {
@@ -315,7 +317,7 @@ static void loadImage(const String& path) {
             }
             event.width = (jpeg.getWidth() + (1 << scale) - 1) >> scale;
             event.height = (jpeg.getHeight() + (1 << scale) - 1) >> scale;
-            ok = event.width <= 600 && event.height <= 270;
+            ok = event.width <= 600 && event.height <= 270 && jpeg.getJPEGType() == JPEG_MODE_BASELINE;
             event.pixels = ok ? static_cast<uint16_t*>(ps_calloc(600 * 270, 2)) : nullptr;
             ok = ok && event.pixels;
             if (ok) {

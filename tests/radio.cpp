@@ -15,7 +15,24 @@ static uint32_t millis() {
     return static_cast<uint32_t>(clockMs);
 }
 struct Preferences {
-    bool failBytes = false;
+    bool failBytes = false, failOpen = false, failBoot = false;
+    bool begin(const char*, bool) {
+        return !failOpen;
+    }
+    bool isKey(const char*) const {
+        return !nonces.empty();
+    }
+    uint16_t getUShort(const char*, uint16_t fallback) const {
+        return fallback;
+    }
+    size_t putUShort(const char*, uint16_t value) {
+        return failBoot ? 0 : sizeof(value);
+    }
+    size_t getBytes(const char*, uint8_t* out, size_t length) const {
+        size_t count = length <= nonces.size() ? length : 0;
+        memcpy(out, nonces.data(), count);
+        return count;
+    }
     std::vector<uint8_t> nonces;
     size_t putBytes(const char*, const uint8_t* bytes, size_t length) {
         if (!failBytes) {
@@ -25,17 +42,21 @@ struct Preferences {
     }
 };
 enum class EventKind { Radio, Downlink };
-static std::vector<std::string> messages;
+static std::vector<std::string> messages, radioMessages;
 static void post(EventKind kind, const char* text) {
-    if (kind == EventKind::Downlink) {
+    if (kind == EventKind::Radio) {
+        radioMessages.emplace_back(text);
+    } else if (kind == EventKind::Downlink) {
         messages.emplace_back(text);
     }
 }
 // Generated verbatim from the production class by tools/test_radio.py.
+#include "Airtime-reference.h"
 #include "PersistentNode-under-test.h"
 
 class TestHal : public RadioLibHal {
 public:
+    bool irqHigh = true;
     TestHal()
         : RadioLibHal(0, 1, 0, 1, 1, 0) {
     }
@@ -44,7 +65,7 @@ public:
     void digitalWrite(uint32_t, uint32_t) override {
     }
     uint32_t digitalRead(uint32_t) override {
-        return 1;
+        return irqHigh ? 1 : 0;
     }
     void attachInterrupt(uint32_t, void (*)(void), uint32_t) override {
     }
@@ -83,7 +104,20 @@ class TestPhy : public PhysicalLayer {
 public:
     TestHal hal;
     Module module{&hal, 1, 2, 3, 4};
-    bool failLaunch = false;
+    bool failLaunch = false, failStage = false, realisticAirtime = false, signalReceive = true;
+    std::vector<uint8_t> txSpreadingFactors;
+    size_t failOnTx = 0, beginCalls = 0;
+    int16_t beginResult = 0, switchResult = 0;
+    template <typename... Args>
+    int16_t begin(Args...) {
+        ++beginCalls;
+        return beginResult;
+    }
+    void setRfSwitchPins(int, int) {
+    }
+    int16_t setDio2AsRfSwitch(bool) {
+        return switchResult;
+    }
     RadioModeType_t mode{};
     void (*callback)() = nullptr;
     std::vector<uint64_t> starts;
@@ -104,7 +138,9 @@ public:
     int16_t checkDataRate(DataRate_t, ModemType_t) override {
         return 0;
     }
-    int16_t setDataRate(DataRate_t, ModemType_t) override {
+    uint8_t spreadingFactor = 7;
+    int16_t setDataRate(DataRate_t rate, ModemType_t) override {
+        spreadingFactor = rate.lora.spreadingFactor;
         return 0;
     }
     int16_t setFrequency(float) override {
@@ -129,18 +165,19 @@ public:
     uint8_t randomByte() override {
         return 42;
     }
-    RadioLibTime_t calculateTimeOnAir(ModemType_t, DataRate_t, PacketConfig_t, size_t) override {
-        return 112000;
+    RadioLibTime_t calculateTimeOnAir(ModemType_t, DataRate_t rate, PacketConfig_t, size_t length) override {
+        return realisticAirtime ? referenceToA[rate.lora.spreadingFactor - 7][length] : 112000;
     }
     int16_t stageMode(RadioModeType_t value, RadioModeConfig_t* cfg) override {
         mode = value;
         if (mode == RADIOLIB_RADIO_MODE_TX) {
             staged.assign(cfg->transmit.data, cfg->transmit.data + cfg->transmit.len);
         }
-        return 0;
+        return failStage && mode == RADIOLIB_RADIO_MODE_TX ? RADIOLIB_ERR_TX_TIMEOUT : 0;
     }
     int16_t launchMode() override {
         if (mode == RADIOLIB_RADIO_MODE_TX) {
+            txSpreadingFactors.push_back(spreadingFactor);
             starts.push_back(clockMs);
             sent.push_back(staged);
         } else {
@@ -149,11 +186,11 @@ public:
                 active = replies.front();
                 replies.pop_front();
             }
-            if (callback) {
+            if (callback && signalReceive) {
                 callback();
             }
         }
-        return failLaunch ? RADIOLIB_ERR_TX_TIMEOUT : 0;
+        return failLaunch || (mode == RADIOLIB_RADIO_MODE_TX && failOnTx == sent.size()) ? RADIOLIB_ERR_TX_TIMEOUT : 0;
     }
     int16_t finishTransmit() override {
         return 0;
@@ -191,6 +228,41 @@ public:
     uint8_t getMaxPayloadLen() override {
         return payloadLimit ? payloadLimit : LoRaWANNode::getMaxPayloadLen();
     }
+    bool requestAuthenticated(std::vector<uint8_t> frame) {
+        return verifyMIC(frame.data(), frame.size(), nwkKey);
+    }
+    uint32_t acceptedNonce() const {
+        return joinNonce;
+    }
+    std::vector<uint8_t> gatewayAccept(uint32_t nonce, bool valid, size_t length = 33, uint8_t revision = 1) {
+        std::vector<uint8_t> plain(length, 0), encrypted(length, 0);
+        plain[0] = 0x20;
+        hton<uint32_t>(&plain[1], nonce, 3);
+        hton<uint32_t>(&plain[4], 0x13, 3);
+        hton<uint32_t>(&plain[7], 0x01020304);
+        plain[11] = revision << 7;
+        plain[12] = 1;
+        RadioLibSoftwareAES128 cipher;
+        uint8_t derivation[16] = {RADIOLIB_LORAWAN_JOIN_ACCEPT_JS_INT_KEY}, integrity[16] = {};
+        hton<uint64_t>(&derivation[1], devEUI);
+        cipher.init(nwkKey);
+        cipher.encryptECB(derivation, sizeof(derivation), integrity);
+        std::vector<uint8_t> micInput(11 + length, 0);
+        micInput[0] = RADIOLIB_LORAWAN_JOIN_REQUEST_TYPE;
+        hton<uint64_t>(&micInput[1], joinEUI);
+        hton<uint16_t>(&micInput[9], devNonce);
+        memcpy(&micInput[11], plain.data(), length);
+        uint32_t mic =
+            revision ? generateMIC(micInput.data(), micInput.size() - 4, integrity) : generateMIC(plain.data(), length - 4, appKey);
+        hton<uint32_t>(&plain[length - 4], mic);
+        if (!valid) {
+            plain[length - 1] ^= 1;
+        }
+        encrypted[0] = plain[0];
+        cipher.init(nwkKey);
+        cipher.decryptECB(&plain[1], length - 1, &encrypted[1]);
+        return encrypted;
+    }
     std::vector<uint8_t> decryptUplink(const std::vector<uint8_t>& frame) {
         size_t port = 8 + (frame[5] & 15);
         std::vector<uint8_t> payload(frame.size() - port - 5);
@@ -221,8 +293,8 @@ public:
     }
 };
 static void initialize(ProbeNode& node) {
-    uint8_t key[16] = {1};
-    assert(node.beginOTAA(1, 2, key, key) == 0);
+    uint8_t nwk[16] = {1}, app[16] = {2};
+    assert(node.beginOTAA(1, 2, nwk, app) == 0);
     node.setDutyCycle(false);
     node.defer(0);
 }
@@ -253,6 +325,170 @@ static int xQueueReceive(TestQueue* q, void* out, int) {
 static void serviceIteration(ProbeNode& node, bool& ready, Batch& batch, uint8_t& offset, bool& demoTurn) {
     uint16_t boot = 1;
 #include "Radio-service-under-test.h"
+}
+static void initializeRadio(ProbeNode& node, TestPhy& radio, Preferences& store, bool& ready) {
+    const uint8_t appKey[16] = {2}, nwkKey[16] = {1};
+#include "Radio-init-under-test.h"
+    (void) boot;
+}
+static void joinIteration(ProbeNode& node, bool& ready, uint32_t& joinRetry) {
+#include "Radio-join-under-test.h"
+}
+static void testInitialization() {
+    for (unsigned fault = 0; fault < 5; ++fault) {
+        Preferences store;
+        TestPhy phy;
+        ProbeNode node(&phy, store);
+        bool ready = true;
+        store.failOpen = fault == 0;
+        phy.beginResult = fault == 1 ? RADIOLIB_ERR_CHIP_NOT_FOUND : 0;
+        phy.switchResult = fault == 2 ? RADIOLIB_ERR_UNKNOWN : 0;
+        store.failBoot = fault == 3;
+        if (fault == 4) {
+            store.nonces.assign(3, 0); // too short to be a valid saved nonce buffer
+        }
+        initializeRadio(node, phy, store, ready);
+        assert(!ready && phy.sent.empty());
+        if (fault == 0) {
+            assert(phy.beginCalls == 0 && radioMessages.back().find("NVS open failed") == 0);
+        }
+        uint32_t retry = 60000;
+        joinIteration(node, ready, retry);
+        assert(phy.sent.empty()); // failed initialization cannot reach RF
+    }
+    Preferences store;
+    TestPhy phy;
+    ProbeNode node(&phy, store);
+    initialize(node);
+    uint32_t retry = 60000;
+    bool ready = true;
+    phy.replies.push_back(node.gatewayAccept(1, true, 33, 0));
+    joinIteration(node, ready, retry);
+    assert(!ready && !node.isActivated()); // authenticated 1.0 still fails closed
+    size_t sent = phy.sent.size();
+    joinIteration(node, ready, retry);
+    assert(phy.sent.size() == sent);
+}
+static void testElapsedLoops() {
+    Preferences store;
+    TestPhy phy;
+    ProbeNode node(&phy, store);
+    initialize(node);
+    node.activeSession();
+    uint8_t payload = 1;
+    LoRaWANEvent_t event{};
+    clockMs = 100000;
+    phy.hal.irqHigh = false;
+    assert(node.sendReceive(&payload, 1, 1, false, &event) == RADIOLIB_ERR_TX_TIMEOUT);
+    assert(event.fPort == 0 && phy.sent.size() == 1 && clockMs > 100112);
+    uint64_t start = clockMs;
+    phy.hal.irqHigh = true;
+    phy.signalReceive = false;
+    node.scheduleTransmission(millis());
+    assert(node.sendReceive(&payload, 1, 1, false, &event) == 0);
+    assert(event.fPort == 1 && clockMs > start + 2000);
+}
+static void testJoinLoop() {
+    Preferences store;
+    TestPhy phy;
+    phy.realisticAirtime = true;
+    ProbeNode node(&phy, store);
+    initialize(node);
+    bool ready = true;
+    uint32_t retry = 60000;
+    for (unsigned n = 0; n < 6; ++n) {
+        clockMs += 10000000;
+        joinIteration(node, ready, retry);
+        assert(ready && phy.sent.size() == n + 1 && phy.sent.back()[17] == n);
+        assert(phy.txSpreadingFactors.back() == 7 + n);
+        assert(node.getLastToA() == referenceToA[n][23] / 1000);
+        assert(!node.canTransmit());
+        assert(retry == std::min<uint32_t>(60000U << (n + 1), 3600000));
+    }
+    store.failBytes = true;
+    clockMs += 10000000;
+    joinIteration(node, ready, retry);
+    assert(!ready && phy.sent.size() == 6);
+}
+static void testTransmitOutcome() {
+    Preferences storage;
+    TestPhy phy;
+    ProbeNode node(&phy, storage);
+    initialize(node);
+    node.activeSession();
+    node.payloadLimit = 36;
+    Batch batch;
+    bool ready = true, demoTurn = false;
+    uint8_t offset = 0;
+    size_t sentBefore = phy.sent.size();
+    phy.failStage = true;
+    serviceIteration(node, ready, batch, offset, demoTurn);
+    assert(offset == 0 && phy.sent.size() == sentBefore);
+    phy.failStage = false;
+    phy.failLaunch = true;
+    clockMs += 3600000;
+    serviceIteration(node, ready, batch, offset, demoTurn);
+    assert(offset == 0);
+    phy.failLaunch = false;
+    auto foreign = node.gatewayFrame(1, "foreign", 0);
+    foreign[1] ^= 1;
+    phy.replies.push_back(foreign);
+    clockMs += 3600000;
+    serviceIteration(node, ready, batch, offset, demoTurn);
+    assert(offset == 7 && radioMessages.back().find("sent; RX error") != std::string::npos);
+    auto badMic = node.gatewayFrame(1, "bad MIC", 0);
+    badMic.back() ^= 1;
+    phy.replies.push_back(badMic);
+    clockMs += 3600000;
+    serviceIteration(node, ready, batch, offset, demoTurn);
+    assert(offset == 10 && radioMessages.back().find("sent; RX error") != std::string::npos);
+    assert(node.decryptUplink(phy.sent.back())[6] == 0x73);
+    offset = 0;
+    phy.replies.push_back(node.gatewayFrame(1, "outer", 6));
+    phy.failOnTx = phy.sent.size() + 2;
+    clockMs += 3600000;
+    serviceIteration(node, ready, batch, offset, demoTurn);
+    assert(offset == 7); // outer completed even though its nested MAC launch failed
+}
+static void testJoinAuthentication() {
+    for (unsigned fault = 0; fault < 5; ++fault) {
+        for (size_t length : {17U, 33U}) {
+            Preferences storage;
+            TestPhy phy;
+            ProbeNode node(&phy, storage);
+            initialize(node);
+            assert(node.setDatarate(5) == 0);
+            auto corrupt = node.gatewayAccept(0xFFFFFE, false, length, fault == 1 ? 0 : 1);
+            if (fault == 2) {
+                corrupt.pop_back();
+            } else if (fault == 3) {
+                corrupt[0] = 0x60;
+            } else if (fault == 4) {
+                corrupt[5] ^= 0x80; // accept encrypted for another root key/device
+            }
+            phy.replies.push_back(corrupt);
+            LoRaWANJoinEvent_t event{};
+            assert(node.activateOTAA(&event) == (fault == 2 || fault == 3 ? RADIOLIB_ERR_DOWNLINK_MALFORMED : RADIOLIB_ERR_MIC_MISMATCH));
+            assert(storage.nonces[RADIOLIB_LORAWAN_NONCES_JOIN_NONCE] == 0);
+            assert(node.acceptedNonce() == 0 && node.getVersionMajor() == 1);
+            node.clearSession();
+            assert(node.setDatarate(5) == 0);
+            phy.replies.push_back(node.gatewayAccept(1, true, length));
+            assert(node.activateOTAA(&event) == RADIOLIB_LORAWAN_NEW_SESSION);
+            assert(node.acceptedNonce() == 1 && node.getVersionMajor() == 1);
+            assert(phy.sent[0][17] == 0 && phy.sent[1][17] == 1);
+            assert(node.requestAuthenticated(phy.sent[0]) && node.requestAuthenticated(phy.sent[1]));
+            node.clearSession();
+            assert(node.setDatarate(5) == 0);
+            phy.replies.push_back(node.gatewayAccept(1, true, length));
+            assert(node.activateOTAA(&event) == RADIOLIB_ERR_JOIN_NONCE_INVALID);
+            Preferences rebootStorage;
+            TestPhy rebootPhy;
+            ProbeNode reboot(&rebootPhy, rebootStorage);
+            initialize(reboot);
+            assert(reboot.setBufferNonces(storage.nonces.data()) == 0 && reboot.acceptedNonce() == 1);
+        }
+    }
 }
 int main() {
     Preferences store;
@@ -379,6 +615,11 @@ int main() {
     assert(failedNode.setDatarate(5) == 0);
     assert(failedNode.activateOTAA(&event) < 0);
     assert(!failedNode.healthy && failedPhy.sent.empty());
+    testJoinAuthentication();
+    testTransmitOutcome();
+    testInitialization();
+    testJoinLoop();
+    testElapsedLoops();
     std::puts("PASS: real RadioLib + production node: joins, wrap, aggregate pacing, immediate nested MAC/downlinks, nonce TX-error/reset "
               "recovery, "
               "fairness/fragments and NVS "

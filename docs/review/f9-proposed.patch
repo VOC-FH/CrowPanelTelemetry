@@ -1,0 +1,27 @@
+--- a/Workers.cpp
++++ b/Workers.cpp
+@@ -117,16 +117,18 @@
+         post(EventKind::Radio, "Fill DEV_EUI, JOIN_EUI, APP_KEY, NWK_KEY");
+     }
+     if (ready) {
++        char text[100] = "NVS open failed / radio stopped";
+         ready = store.begin("crow-lora", false);
+-        int16_t rc = radio.begin(868.1, 125, 7, 5, RADIOLIB_SX126X_SYNC_WORD_PUBLIC, 14, 8, RADIO_TCXO_VOLTAGE);
+-        ready = ready && rc == RADIOLIB_ERR_NONE;
+-        radio.setRfSwitchPins(Pins::RxEn, Pins::TxEn);
+         if (ready) {
+-            ready = radio.setDio2AsRfSwitch(false) == RADIOLIB_ERR_NONE;
++            int16_t rc = radio.begin(868.1, 125, 7, 5, RADIOLIB_SX126X_SYNC_WORD_PUBLIC, 14, 8, RADIO_TCXO_VOLTAGE);
++            radio.setRfSwitchPins(Pins::RxEn, Pins::TxEn);
++            if (rc == RADIOLIB_ERR_NONE) {
++                rc = radio.setDio2AsRfSwitch(false);
++            }
++            ready = rc == RADIOLIB_ERR_NONE;
++            snprintf(text, sizeof(text), "Radio init failed (%d); inspect wiring/TCXO", rc);
+         }
+         if (!ready) {
+-            char text[100];
+-            snprintf(text, sizeof(text), "Radio/NVS init failed (%d); inspect wiring/TCXO", rc);
+             post(EventKind::Radio, text);
+         }
+     }

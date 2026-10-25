@@ -95,7 +95,7 @@ uses slot0. The media worker mounts through ESP-IDF, with the default slot-speci
 deinit flag, one-bit IO_MUX pins and a fixed shared 3.3V VO4 reference. No SD power
 GPIO or adjustable SD power driver is used. Cleanup checks that slot0 was counted
 before deinitializing it, including failed mounts. It starts after WiFi.mode completes
-to serialize shared-host initialization. Generic SD_MMC.begin would drive GPIO45
+to order application init calls; this does not exclude concurrent Hosted traffic. Generic SD_MMC.begin would drive GPIO45
 and break I2C; that wrapper and unused audio board catalog have been removed
 from the application. The ES8311 codec uses its driver directly. A failed SD
 unmount latches storage unavailable until restart; ordinary no-card mount
@@ -146,7 +146,7 @@ power failure. Active session state is intentionally not restored. Both root key
 are needed for1.1; a negotiated1.0 session is rejected. Joining and transmission
 run on the radio worker while the UI remains operational.
 
-NVS keys live in `crow-lora` (nonce buffer, boot ID, conservative RF delay debt)
+NVS keys live in `crow-lora` (nonce buffer and boot ID; no airtime debt)
 and `crow-wifi` (SSID/password). A nonce write failure stops radio operations.
 Changing credentials after an earlier enrollment can make the stored nonce buffer
 incompatible; the UI reports failure. **Do not erase/reuse old nonce state with the
@@ -212,7 +212,8 @@ reviewing/rebasing the patch and repeating validation; do not bypass the checked
 patch or apply it blindly to another release.
 
 The patch forwards authenticated application downlinks, including nested and empty
-messages, and corrects reachable Class-A time comparisons and airtime aggregation.
+messages, corrects reachable Class-A time comparisons and airtime aggregation,
+and commits JoinAccept state only after authentication.
 It adds no project marker macro or before/after-transmission hooks. PersistentNode
 spaces completed join/uplink operations using their aggregate predicted airtime,
 including repetitions and nested replies. RadioLib's ordinary duty-cycle gate is
@@ -223,7 +224,8 @@ Reset clears the volatile airtime deadline; repeated resets can exceed network
 allowances. See [airtime policy and limitations](docs/airtime.md).
 
 `make test` runs independent encoder/decoder, sensor-range, join-DR, SD lifecycle,
-airtime and real patched RadioLib integration checks. Set RADIOLIB_DIR explicitly;
+airtime, real-library calibration/GPS/JPEG, WiFi input/status and patched RadioLib
+integration checks. Set RADIOLIB_DIR explicitly;
 its absence is a failed prerequisite, not a skipped passing check. The integration
 runner compiles the actual production node and scheduling block verbatim against
 real RadioLib, with simulated RF, time, queues and NVS. It sends no RF. `make compile`
@@ -243,3 +245,16 @@ local checkout remains this project folder; sibling sketches are excluded.
 [Review provenance](docs/review/README.md) and the original
 [delivery snapshot](artifacts/README.md) are included. Existing installed Arduino
 libraries, board/C6 firmware and TTN services were not modified or deployed.
+
+## Deep-review validation limits
+
+See [F1–F14 dispositions](docs/review/deep-fix-dispositions.md) and
+[validation](docs/validation.md). JoinAccept authentication, fragment outcome,
+calibration NACK, NMEA freshness, WiFi validation/init diagnostics and progressive
+JPEG rejection were corrected. Only init calls are ordered for SD/Hosted; runtime
+mount/clock/deinit exclusion is not established. GT911 still intentionally latches
+an error until restart. DSI ESP_ERROR_CHECK failures panic and reboot with serial
+output, before workers start, rather than returning a graceful UI error.
+Media stack is24576 bytes following a measured compiler frame of19120 bytes;
+radio/media stack margins and runtime responsiveness still need bench measurements.
+No hardware or RF operation is claimed. Unattended TTN operation remains NO-GO.

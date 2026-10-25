@@ -1,0 +1,16 @@
+/tmp/codex/build/CrowPanelTelemetry/deep-fix/deps/TinyGPSPlus/src/TinyGPS++.cpp: In member function ‘bool TinyGPSPlus::encode(char)’:
+/tmp/codex/build/CrowPanelTelemetry/deep-fix/deps/TinyGPSPlus/src/TinyGPS++.cpp:63:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   63 |     parity ^= (uint8_t)c;
+      |     ~~~~~~~^~~~~~~~~~~~~
+/tmp/codex/build/CrowPanelTelemetry/deep-fix/deps/TinyGPSPlus/src/TinyGPS++.cpp:64:3: note: here
+   64 |   case '\r':
+      |   ^~~~
+gps: /home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/gps.cpp:47: int main(): Assertion `model.gps.find("No valid NMEA") == 0' failed.
+Traceback (most recent call last):
+  File "/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tools/test_gps.py", line 22, in <module>
+    subprocess.run([str(build/'gps')], cwd=build, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/tmp/codex/build/CrowPanelTelemetry/deep-fix/gps']' died with <Signals.SIGABRT: 6>.

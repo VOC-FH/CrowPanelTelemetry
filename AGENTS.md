@@ -20,7 +20,7 @@ held by the application deadline. Apply the patch only to the selected isolated
 dependency. Do not edit installed SDK sources.
 The media worker uses SdStorage (IDF slot 0, default deinit flags, fixed shared
 3.3 V VO4 reference) and POSIX files. It starts after WiFi.mode completes so
-application shared-controller startup is serialized. Its cleanup callback must
+application init calls are ordered; Hosted traffic is not serialized with SD mounts. Its cleanup callback must
 not decrement an uncounted slot after an early IDF initialization failure. Never use SD_MMC or cycle
 the shared IO supply. An unmount error latches storage unavailable until restart.
 Queues transfer commands and unique ownership of pixel/audio allocations.

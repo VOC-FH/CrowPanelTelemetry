@@ -1,0 +1,15 @@
+--- a/Application.cpp
++++ b/Application.cpp
+@@ -73,8 +73,10 @@
+             model.minute++;
+             Reading reading;
+             bool currentSlot = static_cast<int32_t>(now - nextSample) < 60000;
+-            model.sensor = meter.isConnected();
+-            model.calibrated = model.sensor && INA_SHUNT_OHMS > 0 && meter.setMaxCurrentShunt(INA_MAX_CURRENT_A, INA_SHUNT_OHMS) == 0;
++            model.sensor =
++                meter.isConnected() &&
++                (INA_SHUNT_OHMS <= 0 || (meter.setMaxCurrentShunt(INA_MAX_CURRENT_A, INA_SHUNT_OHMS) == 0 && meter.getLastError() == 0));
++            model.calibrated = model.sensor && INA_SHUNT_OHMS > 0;
+             if (currentSlot && model.sensor) {
+                 // Trigger one coherent conversion after calibration. The bounded
+                 // <=60 ms sensor wait leaves radio/audio on their own tasks.

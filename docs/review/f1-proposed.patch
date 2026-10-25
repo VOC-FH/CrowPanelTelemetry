@@ -1,0 +1,55 @@
+--- a/src/protocols/LoRaWAN/LoRaWAN.cpp
++++ b/src/protocols/LoRaWAN/LoRaWAN.cpp
+@@ -801,24 +801,23 @@
+       return(RADIOLIB_ERR_JOIN_NONCE_INVALID);
+     }
+   }
+-  this->joinNonce = joinNonceNew;
+ 
+   uint32_t homeNetId = LoRaWANNode::ntoh<uint32_t>(&joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_HOME_NET_ID_POS], 3);
+-  this->devAddr = LoRaWANNode::ntoh<uint32_t>(&joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_DEV_ADDR_POS]);
+ 
+   // check LoRaWAN revision (the MIC verification depends on this)
+   uint8_t dlSettings = joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_DL_SETTINGS_POS];
+-  this->rev = (dlSettings & RADIOLIB_LORAWAN_JOIN_ACCEPT_R_1_1) >> 7;
+-  RADIOLIB_DEBUG_PROTOCOL_PRINTLN("LoRaWAN revision: 1.%d", this->rev);
++  uint8_t revNew = (dlSettings & RADIOLIB_LORAWAN_JOIN_ACCEPT_R_1_1) >> 7;
++  RADIOLIB_DEBUG_PROTOCOL_PRINTLN("LoRaWAN revision: 1.%d", revNew);
+ 
+   // verify MIC
+-  if(this->rev == 1) {
++  if(revNew == 1) {
+     // 1.1 version, first we need to derive the join accept integrity key
+     uint8_t keyDerivationBuff[RADIOLIB_AES128_BLOCK_SIZE] = { 0 };
++    uint8_t jSIntKey[RADIOLIB_AES128_KEY_SIZE];
+     keyDerivationBuff[0] = RADIOLIB_LORAWAN_JOIN_ACCEPT_JS_INT_KEY;
+     LoRaWANNode::hton<uint64_t>(&keyDerivationBuff[1], this->devEUI);
+     mod->hal->aes128->init(this->nwkKey);
+-    mod->hal->aes128->encryptECB(keyDerivationBuff, RADIOLIB_AES128_BLOCK_SIZE, this->jSIntKey);
++    mod->hal->aes128->encryptECB(keyDerivationBuff, RADIOLIB_AES128_BLOCK_SIZE, jSIntKey);
+ 
+     // prepare the buffer for MIC calculation
+     uint8_t micBuff[3*RADIOLIB_AES128_BLOCK_SIZE] = { 0 };
+@@ -827,9 +826,10 @@
+     LoRaWANNode::hton<uint16_t>(&micBuff[9], this->devNonce - 1);
+     memcpy(&micBuff[11], joinAcceptMsg, lenRx);
+     
+-    if(!verifyMIC(micBuff, lenRx + 11, this->jSIntKey)) {
++    if(!verifyMIC(micBuff, lenRx + 11, jSIntKey)) {
+       return(RADIOLIB_ERR_MIC_MISMATCH);
+     }
++    memcpy(this->jSIntKey, jSIntKey, RADIOLIB_AES128_KEY_SIZE);
+   
+   } else {
+     // 1.0 version
+@@ -838,6 +838,10 @@
+     }
+ 
+   }
++
++  this->joinNonce = joinNonceNew;
++  this->rev = revNew;
++  this->devAddr = LoRaWANNode::ntoh<uint32_t>(&joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_DEV_ADDR_POS]);
+ 
+   uint8_t cOcts[5];
+   uint8_t cid = RADIOLIB_LORAWAN_MAC_RX_PARAM_SETUP;

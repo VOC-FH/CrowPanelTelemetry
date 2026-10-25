@@ -1,0 +1,11 @@
+jpeg: /home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/jpeg.cpp:22: int main(int, char**): Assertion `ok == (n == 1)' failed.
+Traceback (most recent call last):
+  File "/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tools/test_jpeg.py", line 16, in <module>
+    subprocess.run([str(build/'jpeg'), str(project/'tests/fixtures/baseline.jpg'),
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        str(project/'tests/fixtures/progressive.jpg')], cwd=build, check=True)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/tmp/codex/build/CrowPanelTelemetry/deep-fix/jpeg', '/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/fixtures/baseline.jpg', '/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/fixtures/progressive.jpg']' died with <Signals.SIGABRT: 6>.

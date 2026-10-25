@@ -1,0 +1,25 @@
+Command: ['clang-tidy', 'tests/sensor.cpp', '--', '-std=c++17', '-Itests/arduino-stubs', '-I/tmp/codex/build/CrowPanelTelemetry/deep-fix/deps/INA226', '-I.', '-I/tmp/codex/build/CrowPanelTelemetry/deep-fix', '-DINA_SHUNT_OHMS=0.1f']
+38169 warnings generated.
+warning: invalid configuration value '-1' for option 'cert-err09-cpp.MaxSize'; expected an integer [clang-tidy-config]
+warning: invalid configuration value '-1' for option 'cert-err61-cpp.MaxSize'; expected an integer [clang-tidy-config]
+warning: invalid configuration value '-1' for option 'misc-throw-by-value-catch-by-reference.MaxSize'; expected an integer [clang-tidy-config]
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/sensor.cpp:22:5: warning: variable 'currentSlot' of type 'bool' can be declared 'const' [misc-const-correctness]
+   22 |     bool currentSlot = true;
+      |     ^
+      |          const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/sensor.cpp:31:5: warning: variable 'failed' of type 'Reading' can be declared 'const' [misc-const-correctness]
+   31 |     Reading failed = sample();
+      |     ^
+      |             const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/sensor.cpp:39:5: warning: variable 'zero' of type 'Reading' can be declared 'const' [misc-const-correctness]
+   39 |     Reading zero = sample();
+      |     ^
+      |             const 
+/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/sensor.cpp:45:16: warning: boolean expression can be simplified by DeMorgan's theorem [readability-simplify-boolean-expr]
+   45 |         assert(!(encoded[0] == 255 && encoded[1] == 255 && encoded[2] == 255 && encoded[3] == 255));
+      |                ^
+/usr/include/assert.h:138:27: note: expanded from macro 'assert'
+  138 |      (static_cast <bool> (expr)                                         \
+      |                           ^~~~
+Suppressed 38162 warnings (38162 in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.

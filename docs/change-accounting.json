@@ -66,5 +66,27 @@
       }
     },
     "scope": "Remove pre-physical-frame airtime hooks/NVS/marker; retain nested downlinks and timing/airtime corrections. Patch changes counted separately from application production."
+  },
+  "deep_review": {
+    "baseline_commit": "6fada32040bbcb982c99dd59e9b4f57c1b2eb7c3",
+    "lines": {
+      "application": {
+        "added": 31,
+        "removed": 20
+      },
+      "tests": {
+        "added": 516,
+        "removed": 13
+      },
+      "tooling": {
+        "added": 127,
+        "removed": 10
+      },
+      "dependency_source": {
+        "added": 11,
+        "removed": 7
+      }
+    },
+    "scope": "F1/F2/F3/F8/F9/F10/F13 correctness; approved media stack increase; qualified retained F4/F6/F7/F11/F12; no hardware operation. Binary JPEG fixtures excluded from physical LOC."
   }
 }

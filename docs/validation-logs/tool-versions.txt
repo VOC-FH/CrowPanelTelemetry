@@ -1,0 +1,5 @@
+arduino-cli  Version: 1.5.1 Commit: 01f3d4f2b Date: 2026-06-05T10:22:17Z
+Official Linux64 archive SHA256: 28a8e119c498a25607821c36cb2dc49e8463941b261a0d99091baa7bc692dd2b
+Debian LLVM version 21.1.8
+  Optimized build.
+Debian clang-format version 21.1.8 (13)

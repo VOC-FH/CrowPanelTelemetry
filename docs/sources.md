@@ -47,3 +47,33 @@ SVG overlay containing the original photo bytes unchanged.
   LDO interfaces were traced; source hashes are correctness-source-hashes.json.
 - patches/radiolib-7.8.1.patch records the precise dependency correction; its hash
   manifest is authoritative for applying/verifying it. No installed SDK was patched.
+
+## Deep-review exact sources and power units
+
+Exact tag/commit/archive provenance: validation-logs/deep-fix-dependencies.json;
+additional inspected-file hashes: correctness-source-hashes.json. Conclusions use
+ESP-IDF v5.5.5 and esp-hosted-mcu v2.12.13 only. The Hosted example at that tag
+orders WiFi init before mount; its IDF6-only workaround does not establish exclusion
+on5.5.5. The installed Arduino core/SDK were read-only throughout.
+
+- [Hosted v2.12.13 SDIO port](https://github.com/espressif/esp-hosted-mcu/blob/v2.12.13/host/port/esp/freertos/src/port_esp_hosted_host_sdio.c)
+- [Hosted v2.12.13 SD-card example](https://github.com/espressif/esp-hosted-mcu/tree/v2.12.13/examples/host_sdcard_with_hosted)
+- [IDF v5.5.5 SDMMC transactions](https://github.com/espressif/esp-idf/blob/v5.5.5/components/esp_driver_sdmmc/src/sdmmc_transaction.c)
+- [LoRa Alliance RP002-1.0.4, section2.4.3 / printed page33](https://read.uberflip.com/i/1479525-rp002-1-0-4-regional-parameters/32):
+  default EU863–870 maximum16dBm EIRP; TXPower0 is that maximum. Footnote15 gives
+  ERP(dBm) = EIRP(dBm) −2.15dB. Regional parameters are not a conducted-power limit.
+- [ERC/REC70-03 document register](https://docdb.cept.org/document/845) identifies
+  the active9October2026 edition and national implementation caveats. Its download
+  endpoint failed during this audit; do not infer national authorization from it.
+  [CEPT-hosted June2022 Annex1](https://testdocdb.cept.org/download/4358) gives
+  868–868.6MHz25mW ERP and1% duty cycle or LBT+AFA. This older edition is context,
+  not a claim that all current national restrictions were audited.
+- [ETSI EN300220-2 V3.3.1 (2025-03), Table4 bandM / printed page20](https://www.etsi.org/deliver/etsi_en/300200_300299/30022002/03.03.01_60/en_30022002v030301p.pdf):
+  868.000–868.600MHz25mW ERP,1% duty cycle or polite spectrum access.25mW is
+  13.9794dBm ERP, equivalent to16.1294dBm EIRP using2.15dB. Other sub-bands have
+  different limits. Check actual country/channel/access conditions before operation.
+
+RadioLib EU868 powerMax16 is passed to the PHY as conducted dBm, with no antenna
+gain/cable-loss adjustment in this app. Initial radio.begin requests14dBm; ADR can
+request16dBm. Measure conducted power, antenna gain/loss, EIRP and ERP separately;
+no default or antenna value was changed. RF measurements need separate authorization.

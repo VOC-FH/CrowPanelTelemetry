@@ -1,0 +1,8 @@
+/tmp/codex/build/CrowPanelTelemetry/deep-fix/deps/TinyGPSPlus/src/TinyGPS++.cpp: In member function ‘bool TinyGPSPlus::encode(char)’:
+/tmp/codex/build/CrowPanelTelemetry/deep-fix/deps/TinyGPSPlus/src/TinyGPS++.cpp:63:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   63 |     parity ^= (uint8_t)c;
+      |     ~~~~~~~^~~~~~~~~~~~~
+/tmp/codex/build/CrowPanelTelemetry/deep-fix/deps/TinyGPSPlus/src/TinyGPS++.cpp:64:3: note: here
+   64 |   case '\r':
+      |   ^~~~
+PASS: real TinyGPSPlus + production GPS status: garbage, valid no-fix/fix, satellites, silence and uint32 wrap

@@ -1,0 +1,13 @@
+/usr/bin/x86_64-linux-gnu-ld.bfd: cannot find Scrt1.o: No such file or directory
+/usr/bin/x86_64-linux-gnu-ld.bfd: cannot find crti.o: No such file or directory
+/usr/bin/x86_64-linux-gnu-ld.bfd: skipping incompatible /usr/lib/gcc/x86_64-linux-gnu/16/libstdc++.so when searching for -lstdc++
+/usr/bin/x86_64-linux-gnu-ld.bfd: skipping incompatible /usr/lib/gcc/x86_64-linux-gnu/16/libstdc++.a when searching for -lstdc++
+/usr/bin/x86_64-linux-gnu-ld.bfd: cannot find -lstdc++: No such file or directory
+/usr/bin/x86_64-linux-gnu-ld.bfd: skipping incompatible /usr/lib/gcc/x86_64-linux-gnu/16/libstdc++.so when searching for -lstdc++
+/usr/bin/x86_64-linux-gnu-ld.bfd: skipping incompatible /usr/lib/x86_64-linux-gnu/libm.so when searching for -lm
+/usr/bin/x86_64-linux-gnu-ld.bfd: skipping incompatible /usr/lib/x86_64-linux-gnu/libm.a when searching for -lm
+/usr/bin/x86_64-linux-gnu-ld.bfd: cannot find -lm: No such file or directory
+/usr/bin/x86_64-linux-gnu-ld.bfd: skipping incompatible /usr/lib/x86_64-linux-gnu/libm.so when searching for -lm
+/usr/bin/x86_64-linux-gnu-ld.bfd: skipping incompatible /usr/lib/gcc/x86_64-linux-gnu/16/libgcc.a when searching for -lgcc
+/usr/bin/x86_64-linux-gnu-ld.bfd: cannot find -lgcc: No such file or directory
+collect2: error: ld returned 1 exit status

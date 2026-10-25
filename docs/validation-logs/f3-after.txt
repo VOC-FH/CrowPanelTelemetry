@@ -1,0 +1,2 @@
+PASS: production acquisition + real INA226 calibration NACK, true zero and voltage-only contract
+PASS: production acquisition + real INA226 calibration NACK, true zero and voltage-only contract

@@ -36,7 +36,7 @@ shunt value and supply/load/antenna configuration with each test run.
    three times while checking touch, INA226 and WiFi each time.
 7. Insert a prepared FAT32 SD. Browse several JPGs, previous from first wraps to
    last, next from last wraps to first. Test missing `/images`, an empty folder,
-   unsupported/corrupt/oversized JPGs, removal while reading, insertion and Retry SD.
+   baseline and progressive JPGs (progressive must be rejected), corrupt/oversized JPGs, removal while reading, insertion and Retry SD.
    A missing/replaced card must not be reported as a successfully decoded new image.
    If unmount reports an error, verify storage stays unavailable until restart.
 8. Play canonical WAV on the physical speakers at low volume. Check both outputs,
@@ -55,7 +55,9 @@ shunt value and supply/load/antenna configuration with each test run.
 11. Register TTN MAC1.1.0/RP1.0.4/ClassA with matching EUIs/keys. Observe JoinRequest/
     JoinAccept and a successful1.1 session. Check SPI with a logic analyzer if radio
     init fails. Check RF switch logic during TX/RX and oscillator state if join fails.
-    Verify actual TX power/EIRP for the antenna and regional profile; the initial
+    Under separately authorized RF testing measure conducted power at TXPower0,
+    antenna gain and cable/connector loss; calculate EIRP and ERP. Compare with
+    RP002 default16dBm EIRP and 868.0–868.6MHz25mW ERP (about16.13dBm EIRP); the initial
     radio.begin power is not the maximum LoRaWAN will request through ADR.
 12. Tap Send demo and verify FPort2 `DEMO`. After minute10, verify FPort1 with ten
     samples and correct sample uptime indices. Compare decoded quantized values
@@ -89,9 +91,48 @@ shunt value and supply/load/antenna configuration with each test run.
     replaced by the compile or host codec tests.
 
 17. Unplug GPS after receiving data: within10seconds status must distinguish no
-    recent data from no fix; satellite counts must expire. Induce a GT911 I2C
+    recent checksum-valid NMEA from no fresh fix; satellite counts must expire. Induce a GT911 I2C
     error from both WiFi and downlink screens: the dashboard must display
     GT911 lost/restart instead of silently freezing. Restart after repair.
 18. Exercise millis wrap in a controlled accelerated-HAL build on the actual P4,
     including TX ending at zero, both receive windows, join and nested frames.
     Host tests model this; they do not prove ESP timer/IRQ scheduling on hardware.
+
+## Deep-review bench checks — all unexecuted
+
+- F1/F2: only in a controlled private network, inject malformed/foreign/bad-MIC
+  JoinAccept and downlink frames, then genuine1.1 replies; check retries, counters,
+  fragment advancement and received text. Include local TX timeout and nested reply
+  failure. A local TX-done event never proves gateway receipt.
+- F3: calibration-register write NACK must show sensor error and invalid triplets;
+  true zero load remains valid. Inspect shunt/address straps and I2C pull-ups first.
+  INA_SHUNT_OHMS=0 permits on-screen voltage but version1 sends invalid triplets.
+- F4: continuous WiFi traffic during at least50 Retry SD cycles, with/without card,
+  plus cold boots, failed mounts, removal, C6 startup failure and Hosted recovery.
+  Count H_SDIO_DRV/sdmmc errors and recovery events. Init-call ordering is not bus
+  exclusion; no app mutex or startup delay is claimed to fix this.
+- F5: inspect TCXO R22/FB1 population, RXEN/TXEN polarity with a logic analyser,
+  antenna/cable and measured radiated power. FB1-only with TCXO voltage0 may have
+  no clock; R22 fitting does not prove frequency accuracy. Record frequency offset.
+- F6: measure UI/touch/GPS responsiveness during SF12 RX windows with WiFi/audio
+  active. No device latency baseline has been measured by this task.
+- F7: transient/persistent GT911 faults, including clear-status-write NACK, must
+  visibly latch lost/restart. Repair and restart; no automatic recovery is promised.
+- F8: wrong baud/garbage, valid no-fix NMEA, silence and stale satellites/fix.
+- F9/F10: NVS/radio failures must stop RF; inspect serial for the specific init
+  diagnostic. Empty SSID and1–7 character passwords must show the WiFi rejection;
+  exercise open, valid WPA and64-hex PSK input, including periodic status updates.
+- F12: controlled display-init failure is serial-only panic/reboot diagnosis;
+  there is no graceful on-screen DSI fallback. Confirm no worker/RF starts.
+- F13: progressive JPEG visibly rejected; baseline browsing still works.
+- F14: measure radio AND media stack high-water marks with maximum binary downlink,
+  nested MAC replies, full-size baseline JPEG, directory sorting, simultaneous
+  WiFi/audio and the24h run. Media stack increased to24576 after a19120-byte
+  loadImage frame was found; static evidence is not a whole-call-chain guarantee.
+- Pinned panel.sch re-verifies GPIO30→R147(0Ω)→NS4263B U4 pin1 and R71(10kΩ)
+  pulling AUDIO_OUT_SD toward3.3V. Measure enable polarity and reset-to-setup pop;
+  neither component population nor the actual amplifier behavior is verified.
+- Still inspect GPS VCC/TXD levels, J2/J13 orientation, INA226 shunt/rating/straps,
+  actual P4 revision/Chip Variant and C6 firmware compatibility with Hosted2.12.13.
+  Verify10.1-inch DSI timing, GT911 orientation and ES8311 retention across MCLK gap.
+  Wire DIO1/DIO2 from the table, not from the photographed pad placement.

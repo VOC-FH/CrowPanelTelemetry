@@ -1,0 +1,1 @@
+PASS: real JPEGDEC with production guard: baseline decoded; progressive rejected

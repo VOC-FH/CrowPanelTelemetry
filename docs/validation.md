@@ -1,173 +1,206 @@
-# Final validation — 2026-10-25
+# Deep-review validation — 2026-10-25
 
-This revision removes the per-physical-transmission airtime reservation policy at
-user request. Nested application downlinks and the accepted RadioLib timing and
-airtime corrections remain. The patch comment, project marker macro, build guard,
-reservation callbacks and airtime NVS reads/writes are removed. DevNonce remains
-reserved before joining; it is unrelated to airtime reservations.
+Canonical checkout:
+`/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry`.
+Private repository: `git@github.com:VOC-FH/CrowPanelTelemetry.git`.
+Default/current branch `main`; HEAD remains
+`6fada32040bbcb982c99dd59e9b4f57c1b2eb7c3`; local main/origin/main ahead0/behind0
+against the existing tracking ref. No fetch/pull or ref change. Read-only
+`gh pr list --repo VOC-FH/CrowPanelTelemetry --state open --json number,title,headRefName,baseRefName,url`
+returned `[]`. No commit, push, PR, installation, flashing, RF or TTN access.
 
-Canonical checkout: /home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry.
-Repository: https://github.com/VOC-FH/CrowPanelTelemetry (private).
-The correction was initially committed on fix/remove-airtime-reservations, based
-on main at1e3cb016c8180f681635c0d69b45329ef8e01dd5. The user subsequently directed
-merging/pushing and local synchronization on main; main was fast-forwarded to
-the validated correction. Future work stays on main unless the user explicitly
-directs another branch. No open PR existed at task start. No installation, flash
-or RF was performed. No alternate checkout was created.
+The original full-file SHA256/physical-LOC snapshot, manifest contents and dirty
+status are preserved in `validation-logs/deep-fix-baseline.json`. Pre-existing
+SHA256SUMS/review-index changes and five untracked raw review/request/prompt files
+were preserved. Review index was appended only; raw records were not rewritten.
+Baseline host tests and format check passed after the approved path-only runner
+adjustment. Fresh pre-change firmware compiles were not captured; previous build
+sizes are historical, not a measured baseline. Only final-source compiles below
+are new evidence. No pre-existing test failure was attributed to this implementation.
 
-## Configuration and fresh builds
+Detailed per-finding source traces, approvals, classifications/dispositions and
+hardware limits: [deep-fix-dispositions.md](review/deep-fix-dispositions.md).
+F1/F2/F3/F8/F9/F10/F13 are source-corrected. F4 concurrency, F6 scheduling,
+F7 intentional latch, F11 conservative over-deferral and F12 driver abort remain
+explicitly documented; F5/F14 need hardware evidence. Additional confirmed media
+stack mismatch S1 was corrected with separate approval.
 
-Arduino CLI1.5.1 (01f3d4f2b); esp32 core3.3.12 / ESP-IDF5.5.5;
-Arduino_GFX1.6.9; RadioLib7.8.1 + patches/radiolib-7.8.1.patch;
-INA2260.6.6; TinyGPSPlus tagv1.0.3a; JPEGDEC1.8.4; audio-driver0.3.1.
-The core/SDK and normal Arduino libraries were not installed, upgraded or edited.
-Exact tags were downloaded only into the isolated task dependency collection.
+## Exact configuration and final builds
 
-Common FQBN: esp32:esp32:esp32p4:FlashSize=16M,PSRAM=enabled,
-PartitionScheme=app3M_fat9M_16MB (3,145,728-byte app). ChipVariant=prev3 or postv3.
-Delivered Config.h still contains blank credentials and shunt configuration.
-Enabled builds use dummy overrides only:
--DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f.
+Arduino CLI1.5.1 commit01f3d4f2b, official isolated release/checksum verification;
+installed esp32 core3.3.12 / ESP-IDF5.5.5 (read-only). Dependencies in the exact-tag
+provenance file `validation-logs/deep-fix-dependencies.json`:
+Arduino_GFX1.6.9, RadioLib7.8.1 with approved patch, INA2260.6.6,
+TinyGPSPlusv1.0.3a, JPEGDEC1.8.4, audio-driverv0.3.1. IDFv5.5.5 and
+Hostedv2.12.13 source traces use those tags, not branch heads/older examples.
+New source-file hashes are in correctness-source-hashes.json; original RadioLib
+and patched hashes remain separately authoritative in patches/.
+No toolchain or library version changed; no global install/upgrade/index update.
+All six external Used library paths resolve under the isolated task deps directory.
+Bundled SPI/Wire/Preferences/WiFi/Networking/ESP_I2S resolve to core3.3.12.
 
-| Final configuration | Flash bytes | Static RAM bytes | Result |
+Common FQBN:
+`esp32:esp32:esp32p4:FlashSize=16M,PSRAM=enabled,PartitionScheme=app3M_fat9M_16MB`.
+3,145,728-byte app partition. Delivered Config.h is byte-identical with blank
+credentials/shunt. Enabled builds use only the dummy flags shown below.
+
+| Final source configuration | Flash bytes | Static RAM bytes | Result |
 |---|---:|---:|---|
-| prev3, blank | 1,202,142 | 39,364 | PASS |
-| prev3, dummy enabled | 1,209,106 | 39,436 | PASS |
-| postv3, dummy enabled | 1,210,676 | 39,436 | PASS |
+| ChipVariant=prev3, blank | 1,202,450 | 39,364 | PASS |
+| ChipVariant=prev3, dummy enabled | 1,209,552 | 39,436 | PASS |
+| ChipVariant=postv3, dummy enabled | 1,211,122 | 39,436 | PASS |
 
-These are three configurations of the same sketch. Runtime heap, real task
-latency and hardware behavior were not measured. Dynamic display/PSRAM, stacks,
-SD, WiFi and audio allocations are additional to static RAM.
+All were rebuilt after the approved media-stack correction; verbose output also
+captures exact compile/link commands and dependency discovery. Same enabled-prev3
+configuration with `-fstack-usage` also passes. Task stacks and PSRAM/heap allocations
+are additional to static RAM; media-stack allocation grew12KiB at runtime.
+These are configurations of one sketch, not three installed firmwares.
 
 ## Commands and evidence
 
-B=/tmp/codex/build/CrowPanelTelemetry/remove-reservation. Dependencies are in
-$B/deps. Each build uses its own task-local temporary/cache/build directory.
-Full commands and fresh output are in validation-logs/{default-prev3,
-enabled-prev3,enabled-postv3}.txt. Representative invocation:
+`T=/tmp/codex/build/CrowPanelTelemetry/deep-fix`; dependencies in `$T/deps`.
+Separate TMPDIR/cache/build per configuration, all belowT. No alternate checkout,
+project copy, persistent build or dependency installation. Read-only source inputs
+under `/home/voc/.arduino15/packages/esp32` were never modified.
 
 ```sh
-python3 tools/patch_radiolib.py "$B/deps/RadioLib"
-TMPDIR="$B/default-prev3-tmp" ARDUINO_BUILD_CACHE_PATH="$B/default-prev3-cache" \
-  "$B/arduino-cli" compile --jobs 3 \
-  --fqbn 'esp32:esp32:esp32p4:FlashSize=16M,PSRAM=enabled,PartitionScheme=app3M_fat9M_16MB,ChipVariant=prev3' \
-  --libraries "$B/deps" --build-path "$B/default-prev3" .
-# Enabled configurations add:
-# --build-property 'compiler.cpp.extra_flags=-DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f'
+python3 tools/patch_radiolib.py "$T/deps/RadioLib"
+BUILD="$T" RADIOLIB_DIR="$T/deps/RadioLib" make test
 make format
 make format-check
-RADIOLIB_DIR="$B/deps/RadioLib" make test
-python3 tools/check_wiring.py "$B/panel.sch" "$B/panel.brd"
+python3 tools/check_wiring.py "$T/panel.sch" "$T/panel.brd"
+TMPDIR="$T/default-prev3-tmp" ARDUINO_BUILD_CACHE_PATH="$T/default-prev3-cache" \
+  "$T/cli/arduino-cli" compile --verbose --jobs 3 \
+  --fqbn 'esp32:esp32:esp32p4:FlashSize=16M,PSRAM=enabled,PartitionScheme=app3M_fat9M_16MB,ChipVariant=prev3' \
+  --libraries "$T/deps" --build-path "$T/default-prev3" .
+# Enabled prev3/postv3 add (and use separate build/tmp/cache names):
+# --build-property 'compiler.cpp.extra_flags=-DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f'
+# stack-prev3 adds -fstack-usage to that same extra_flags property.
+clang-tidy -p "$T/enabled-prev3" "$T/enabled-prev3/sketch/Application.cpp"
+clang-tidy -p "$T/enabled-prev3" "$T/enabled-prev3/sketch/Workers.cpp"
+clang-tidy -p "$T/enabled-prev3" "$T/enabled-prev3/sketch/Ui.cpp"
+# Host-width feasibility probe (FAILED; no multilib runtime):
+printf 'int main(){return 0;}\n' | TMPDIR="$T" c++ -m32 -x c++ -o "$T/probe32" -
 ```
 
-- PASS: all independent host checks: encoder/reference/JS decoder, fragments,
-  sensor saturation, join DR progression, airtime calculations and SD lifecycle.
-- PASS: real patched RadioLib with production node and scheduling code extracted
-  verbatim. Six failed joins each account112ms, never cumulative; volatile holds
-  expire at the tested boundary. Tests cover wrapping application deadlines, TX
-  ending exactly at millis0 with receive windows, immediate nested MAC responses,
-  total224ms for outer+nested frames, and aggregate spacing afterward. Both nested
-  application downlinks arrive in order, including empty and maximum binary data.
-  Fair demo scheduling and7+3 batch fragments remain covered.
-- PASS: ambiguous launch-error and reboot tests preserve DevNonce non-reuse;
-  failed nonce NVS writes prevent RF. Reboot has no restored airtime debt. The
-  old airtime-write failure tests were removed with that rejected mechanism;
-  the Preferences test double exposes only nonce writes now.
-- PASS: fresh exact-source patch application, idempotence, modified-source
-  refusal and integration-test patched hash verification. See patch-check.txt.
-- PASS: final C++/headers in all three build trees match canonical bytes after
-  excluding Arduino's generated #line prefix. Final ELFs have the downlink
-  callback and no beforeUplink/afterUplink or SDMMCFS begin/end symbols.
+Exact argv for every final compile is the first line of the corresponding
+validation-logs/{default-prev3,enabled-prev3,enabled-postv3,stack-prev3}.txt;
+`deep-fix-build-results.json` records exits. Each independent test keeps running
+even if another fails. Final host.txt and format-check.txt pass.
+The Makefile BUILD override now respects task-local environment/command-line
+settings. An initial runner invocation used its default `local` path because
+of an unconditional Make assignment; that task-created directory is cleaned too.
+All final checks useT. Path changes were explicitly approved before baseline.
+
+Passing host checks cover encoder/reference/decoder, fragments/saturation/airtime,
+SD API lifecycle, actual RadioLib node/init/join/service extraction and crypto,
+actual INA226 acquisition against transport NACK/data, actual TinyGPSPlus parser
+and status block, actual JPEGDEC baseline/progressive guard, and both WiFi-form
+render expressions/Connect predicate. DR-dependent JoinRequest reference values
+come from tools/airtime.py; no second airtime formula was added to the test PHY.
+Real RadioLib TX IRQ timeout and RX initial elapsed loop execute at ordinary host
+times. New tests demonstrated expected failure before the respective fixes; the
+f*-before logs are reproducers, not current failures. Final host.txt is the final
+result. TinyGPSPlus's existing intentional fallthrough warning is retained.
+
+No host test emulates an ESP32. Host unsigned long/RadioLibTime_t is64-bit;
+-m32 linking failed (Scrt1.o/crti.o/libstdc++ missing). Tests cover wrap-safe uint32
+application deadlines, age expiry and wrapped HAL values, including TX ending at0;
+they do NOT prove P4-width elapsed-loop behavior, target IRQ scheduling or receive
+window timing. RX ongoing/final300ms loops, physical UI refresh/touch, concurrency,
+JPEG/WAV fuzzing and full runtime call-stack maxima remain gaps. SD doubles do
+not model Hosted traffic/reset/recovery/forceful controller deinit.
+
+## Patch, build-input and asset audits
+
+- PASS: fresh exact7.8.1 apply, idempotence, modified-source refusal and real-library
+  test before/after hash assertions. See patch-check.txt. No marker macro,
+  branding comment, beforeUplink/afterUplink or per-frame reservation restored.
+- PASS: final canonical C++/headers match every build tree after Arduino's one-line
+  #line prefix. Linked downlink callback present; reservation-hook and SDMMCFS
+  begin/end symbols absent. Used library versions/paths checked in verbose output.
   See source-and-symbol-audit.txt and build-input-sha256.json.
-- PASS: format check and unchanged canonical formatter/analysis configurations.
-- PASS: repeated pinned Eagle net audit. Config.h, Application.cpp, Ui.cpp,
-  SdStorage.h, decoder, wiring graphics and UI previews match the starting commit.
-  Source photo SHA256 remains
-  5b2e2bdfefe5a38b7bbee5ef09f37c363579a8628f27df23f5702b5fcd6624ad;
-  the SVG-embedded photo matches its exact bytes. No geometry or pin changes.
+- PASS: pinned panel.sch/brd hashes, repeated nine-radio-GPIO/J7/Eagle audit,
+  Config/pin assignments, protocol/decoder/reference packet, UI previews, wiring
+  graphics/radio-nets and source photo unchanged. The SVG-embedded PNG is identical.
+  Source photo SHA256:
+  `5b2e2bdfefe5a38b7bbee5ef09f37c363579a8628f27df23f5702b5fcd6624ad`.
+  Individual locked hashes are in source-and-symbol-audit.txt.
+- PASS: canonical formatter/analysis settings unchanged and aligned with the shared
+  baseline. No cosmetic UI changes or generated-preview/wiring regeneration was
+  needed: their generators and geometry are unchanged. Behavioral status text changed.
+- `git diff --check` for project-owned sources/docs, excluding the dependency patch
+  and captured raw logs, passes. Raw Arduino CLI logs retain emitted trailing
+  spaces; the patch artifact retains upstream blank CONTEXT-line whitespace in
+  newly recorded hunks. Neither vendor source nor raw output was reformatted. This is not a format-check
+  failure in project-owned C++.
+- The earlier net audit did not cover core variant macros. Stock SD_MMC remains
+  unsafe for GPIO45 here; C1's separate IDF/POSIX solution and static assertions
+  remain. F4 means this does not prove SD/Hosted runtime exclusion.
 
-No physical hardware or RF is involved in the host tests. Host unsigned long
-width differs from P4; wrapped HAL values and uint32 application deadlines are
-modeled, but ESP IRQ/timer scheduling still needs a device test.
-The earlier net audit did not inspect core variant macros; C1 was separately
-traced and resolved by removing SD_MMC, with fixed IO_MUX static assertions and
-slot-lifecycle tests. It must not be described as proof that stock SD_MMC is safe.
+## Stack evidence and static analysis
 
-## Accepted patch scope and trace
+Target enabled-prev3 `-fstack-usage` output is preserved in stack-frames.txt:
+radioTask3616, applicationDownlink1120, post1088, sendReceive80, parseDownlink384,
+loadImage19120 and mediaTask272 bytes. Individual compiler frames are not a
+whole-call-chain bound. The outer callback returns before protocol recursion;
+it does not hold a second callback/post buffer alive as the review implied.
+The proven19120-byte media-frame versus12288-byte task mismatch was corrected
+by the approved single argument change to24576. More stack margin is not proof
+of radio/media safety; watermarks with real nested downlinks/JPEG/other activity
+remain hardware-only. No persistent instrumentation was added.
 
-Line references below are to the hash-checked, patched 7.8.1 dependency:
+Target clang-tidy exits1 for all three changed cpp files using the actual
+same-configuration compile_commands.json. Installed LLVM21.1.8 rejects
+`rv32imafc_zicsr_zifencei_xesppie`, GCC-only `-fno-tree-switch-conversion` /
+`-fstrict-volatile-bitfields`, and cannot resolve target cmath. See tidy-*.txt.
+No checks or flags were weakened to claim a pass.
+Supplemental host clang-tidy on radio.cpp and sensor.cpp exits0 with warnings,
+using the exact commands in host-tidy-0.txt/host-tidy-1.txt. Retained findings:
+three canonical MaxSize=-1 configuration warnings; named-parameter, const/static,
+implicit-bool, isolated-declaration, redundant-cast, DeMorgan boolean, uppercase
+literal suffix and redundant-void suggestions. Host diagnostics do not replace
+unavailable target analysis or physical testing.
 
-- LoRaWAN.cpp sendReceive:118/124 and activateOTAA:960/966: wrap-safe deadlines;
-  transmitUplink:1508/1511 and receiveClassA:1615 likewise; elapsed TX timeout,
-  millis0 receive reference and timeUntilUplink:3783 corrections remain.
-- activateOTAA:989 resets lastToA for each join.
-- transmitUplink:1522 counts an attempted launch before the potentially ambiguous
-  launchMode return, without a hook, NVS write or wait. This counts airtime
-  conservatively on errors; it is not a pre-transmission reservation.
-- parseDownlink:2146 forwards authenticated application data before recursive
-  handling; :2282–2284 retains outer airtime around the nested sendReceive call.
-- LoRaWAN.h adds only the protected applicationDownlink callback. No project
-  marker macro or patch-brand comment remains. Exact dependency hashes remain
-  the patcher's and integration tests' authority.
+## Change accounting and approvals
 
-The application spaces completed operations using aggregate airtime and one
-volatile deadline. It does not enforce separate intervals between internal MAC
-replies/repetitions and does not preserve airtime debt across resets. Repeated
-resets or interruption before accounting can exceed allowances. See airtime.md.
-
-## Static analysis
-
-Fresh target attempt with the actual default-prev3 compilation database:
-
-```sh
-clang-tidy -p "$B/default-prev3" "$B/default-prev3/sketch/Workers.cpp"
-```
-
-Exit1: installed Debian LLVM21.1.8 rejects xesppie and GCC-only
--fno-tree-switch-conversion/-fstrict-volatile-bitfields and cannot resolve the
-GCC target cmath header. Target clang-tidy did not pass. No checks were weakened.
-
-Supplemental runs completed with exit0 using canonical checks:
-
-```sh
-clang-tidy tests/radio.cpp -- -std=c++17 -I"$B/deps/RadioLib/src" -I. -I/tmp/codex/build/CrowPanelTelemetry/radio-tests
-clang-tidy tests/sd-storage.cpp -- -std=c++17 -Itests/sd-stubs -I.
-clang-tidy SdStorage.h -- -x c++ -std=c++17 -Itests/sd-stubs -I.
-```
-
-Warnings retained: three canonical MaxSize=-1 values rejected by this Clang,
-unnamed test parameters, const/readability suggestions, implicit integer-to-bool,
-float suffixes/multiple declarations, redundant host cast, header pragma style,
-and queue destination initialization suggestions. Logs preserve all diagnostics.
-Supplemental host analysis does not replace target analysis or hardware tests.
-
-## Change accounting and handover
-
-Relative to starting commit1e3cb01, added/removed physical lines:
+Physical lines relative to the recorded task baseline, added/removed separately:
 
 | Category | Added | Removed | Net |
 |---|---:|---:|---:|
-| Application production (.ino/.h/.cpp and decoder) | 12 | 31 | -19 |
-| Actual patched dependency source | 2 | 11 | -9 |
-| Tests | 27 | 43 | -16 |
-| Build/test tooling | 0 | 0 | 0 |
+| Application production (.ino/.h/.cpp/decoder) | 31 | 20 | +11 |
+| Actual patched dependency source | 11 | 7 | +4 |
+| Tests (text; two JPEG fixtures separate) | 516 | 13 | +503 |
+| Build/test tooling | 127 | 10 | +117 |
 
-This reshapes the existing deadline and deletes the reservation mechanism; no
-additional production architecture or net growth was introduced. Historical
-repair accounting remains in change-accounting.json, with this task separate.
-Historical review records and artifacts/CrowPanelTelemetry-delivery.zip remain
-unchanged and explicitly identify the prior snapshot, not this final revision.
-SHA256SUMS.json is regenerated for current repository files, excluding itself
-and Git internals.
+Application growth: approved F3+2, F9+2, F10+8; GPS reshape−1. F2/JPEG policy,
+uint32 backoff template clarification and approved media-stack argument are net0.
+F1's authority-level validation needed locals instead of committing members before
+MIC; app-side rollback was incomplete. F10's approved one helper replaces repeated
+validation with one authority and no error-state cache. Test/tool growth exercises
+real dependencies/production extraction; no new test framework. Binary fixtures
+are recorded separately by hashes/bytes, not physical LOC. Historical change
+entries remain, with a separate deep_review entry in change-accounting.json.
 
-Temporary remove-reservation, radio-tests and local task directories under
-/tmp/codex/build/CrowPanelTelemetry/ are removed after evidence is copied and
-verified. No alternate checkout or persistent build exists. User changes, pins,
-J7 wiring, SD ownership, UI visuals and source photo are preserved.
+Approval outcomes: path-only adjustment approved; F1 patch expansion11+/7−
+approved; F3 app4+/2− approved; F9 app8+/6− approved; F10 app11+/3− and helper
+approved; S1 media-task stack numeric change1+/1− approved. None pending.
+F4/F6/F7/F11/F12 remain intentionally unresolved in source, with reasons recorded;
+documentation does not label them fixed. No additional architecture was slipped in.
 
-Assembly and bench flashing remain conditional on unresolved physical checks in
-hardware-checklist.md; neither flashing nor RF is authorized or executed here.
-TCXO population, RF switch polarity, GPS voltage, shunt/straps, silicon/C6 version,
-10.1-inch timing, touch orientation and audio behavior remain unverified.
-Unattended TTN operation remains NO-GO until hardware acceptance and real airtime
-behavior pass. No display/touch/audio/WiFi/sensor/GPS/RF operation is claimed.
+Changed files and preserved pre-existing state are listed in
+validation-logs/deep-fix-changes.json. Protected hashes, raw reviews and historical
+`artifacts/CrowPanelTelemetry-delivery.zip` remain unchanged. No new archive.
+SHA256SUMS.json uses the existing sorted path→SHA256 format/scope, excluding itself,
+Git internals and ignored build/checkouts files.
+
+TaskT and the task-created default local host directory are removed after evidence
+is copied and checked. No persistent build, extra checkout or global install remains.
+Temporary dependency sources/CLI/compilation databases are cleaned too; exact commands,
+hashes, source inputs, outputs and stack-frame evidence are retained in docs.
+
+Assembly: conditional on physical connector/voltage/shunt/TCXO checks.
+Supervised bench flashing: conditional on those prerequisites and separately
+required flashing authorization. Unattended TTN: NO-GO until SD/WiFi stress,
+antenna/power compliance, real stacks/latency and the entire hardware checklist,
+including24h run, pass. No display/touch/audio/WiFi/SD/GPS/sensor/RF operation claimed.

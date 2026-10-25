@@ -62,5 +62,145 @@
   "tools/esp32p4_es-libs/3.3.12/include/esp_driver_sdmmc/include/driver/sdmmc_default_configs.h": {
     "sha256": "db9787e9a5c2d73e335b4ae973a9c5ba10e18a357ba8eb97b0c752c102ad83e3",
     "local_base": "/home/voc/.arduino15/packages/esp32"
+  },
+  "RadioLib/src/protocols/LoRaWAN/LoRaWANBands.cpp": {
+    "url": "https://raw.githubusercontent.com/jgromes/RadioLib/7.8.1/src/protocols/LoRaWAN/LoRaWANBands.cpp",
+    "sha256": "acc3c8a0170345e5568fdf7fc011e872f312ba63f06c607f420ec04fe30308b0",
+    "tag": "7.8.1",
+    "commit": "2325a38a89dd0f0e402c19f67fe910111da1e246"
+  },
+  "RadioLib/src/protocols/PhysicalLayer/PhysicalLayer.cpp": {
+    "url": "https://raw.githubusercontent.com/jgromes/RadioLib/7.8.1/src/protocols/PhysicalLayer/PhysicalLayer.cpp",
+    "sha256": "8c3a02e66375c9a98fd49823b86fb195bb5753ed8d2fbe761401306ce78e9968",
+    "tag": "7.8.1",
+    "commit": "2325a38a89dd0f0e402c19f67fe910111da1e246"
+  },
+  "RadioLib/src/Hal.cpp": {
+    "url": "https://raw.githubusercontent.com/jgromes/RadioLib/7.8.1/src/Hal.cpp",
+    "sha256": "47bd7ed96b171446ae1d34983f491c7c0c9dddb34beaf42781cd091baeeb296c",
+    "tag": "7.8.1",
+    "commit": "2325a38a89dd0f0e402c19f67fe910111da1e246"
+  },
+  "RadioLib/src/hal/Arduino/ArduinoHal.cpp": {
+    "url": "https://raw.githubusercontent.com/jgromes/RadioLib/7.8.1/src/hal/Arduino/ArduinoHal.cpp",
+    "sha256": "018c2555fd5f039e1b9159eded9c18bcdce19f72cadd6a929842d55d111160d1",
+    "tag": "7.8.1",
+    "commit": "2325a38a89dd0f0e402c19f67fe910111da1e246"
+  },
+  "INA226/INA226.cpp": {
+    "url": "https://raw.githubusercontent.com/RobTillaart/INA226/0.6.6/INA226.cpp",
+    "sha256": "7ea0108d5d025bb9a5ec4bc6e43e5dc1293f9d2c81a1dc1fc54fe6937fe7e841",
+    "tag": "0.6.6",
+    "commit": "9c441d5cddaff6dffb9f1ba76bb00f14303c0f0f"
+  },
+  "INA226/INA226.h": {
+    "url": "https://raw.githubusercontent.com/RobTillaart/INA226/0.6.6/INA226.h",
+    "sha256": "cbbd6a569cbd765b06818498588b38ebf98bef0f60cc57f73a837ed7681a4bc8",
+    "tag": "0.6.6",
+    "commit": "9c441d5cddaff6dffb9f1ba76bb00f14303c0f0f"
+  },
+  "TinyGPSPlus/src/TinyGPS++.cpp": {
+    "url": "https://raw.githubusercontent.com/mikalhart/TinyGPSPlus/v1.0.3a/src/TinyGPS++.cpp",
+    "sha256": "904b28be515b2b006afd25a7f54c510006edc2d33edf03b834936896a883804d",
+    "tag": "v1.0.3a",
+    "commit": "ca29434514a5c5172bd807af0608df7f296582a2"
+  },
+  "TinyGPSPlus/src/TinyGPS++.h": {
+    "url": "https://raw.githubusercontent.com/mikalhart/TinyGPSPlus/v1.0.3a/src/TinyGPS++.h",
+    "sha256": "16bce71f8442d9cf27e0dadd9a3db522daf5811e7a8c7ce63d2cd5c6f0829c50",
+    "tag": "v1.0.3a",
+    "commit": "ca29434514a5c5172bd807af0608df7f296582a2"
+  },
+  "JPEGDEC/src/JPEGDEC.cpp": {
+    "url": "https://raw.githubusercontent.com/bitbank2/JPEGDEC/1.8.4/src/JPEGDEC.cpp",
+    "sha256": "cce4a7cd6fe8fe26825276f9c65ed9c96bf1fe31a15c79e0169ee2385543d210",
+    "tag": "1.8.4",
+    "commit": "ae9705abeeebd057c3d0a50c1e58bdec532c76c6"
+  },
+  "JPEGDEC/src/JPEGDEC.h": {
+    "url": "https://raw.githubusercontent.com/bitbank2/JPEGDEC/1.8.4/src/JPEGDEC.h",
+    "sha256": "3c7ed1ec539bc581ee189aa27857c4a228cc6668455b8aca2912466efa881d34",
+    "tag": "1.8.4",
+    "commit": "ae9705abeeebd057c3d0a50c1e58bdec532c76c6"
+  },
+  "JPEGDEC/src/jpeg.inl": {
+    "url": "https://raw.githubusercontent.com/bitbank2/JPEGDEC/1.8.4/src/jpeg.inl",
+    "sha256": "ab6dd18350a8d1ab73ad8b296d7da7274684fa4571f9abdd46d5630709a0c7bc",
+    "tag": "1.8.4",
+    "commit": "ae9705abeeebd057c3d0a50c1e58bdec532c76c6"
+  },
+  "Arduino_GFX/src/databus/Arduino_ESP32DSIPanel.cpp": {
+    "url": "https://raw.githubusercontent.com/moononournation/Arduino_GFX/v1.6.9/src/databus/Arduino_ESP32DSIPanel.cpp",
+    "sha256": "c9e0c779ca9ecfabdb94108be86834079ee9ae5a11a56349a21eb4477cc6694c",
+    "tag": "v1.6.9",
+    "commit": "c2e39350ff09c3720702bd3f050cb581fa45a8e9"
+  },
+  "esp-idf/components/esp_driver_sdmmc/src/sdmmc_host.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-idf/v5.5.5/components/esp_driver_sdmmc/src/sdmmc_host.c",
+    "sha256": "366dcc3e7f72db930632e1e49cebb4ffa8bc080f631c0aecb179cf187315c0ff",
+    "tag": "v5.5.5",
+    "commit": "b774170ff46c393eeb5e495ea37936038d3f4f4f"
+  },
+  "esp-idf/components/esp_driver_sdmmc/src/sdmmc_transaction.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-idf/v5.5.5/components/esp_driver_sdmmc/src/sdmmc_transaction.c",
+    "sha256": "7cea7d649edbfa655ab3c3a26ba1d3d25290841091b8900f9643559bdb1bcad6",
+    "tag": "v5.5.5",
+    "commit": "b774170ff46c393eeb5e495ea37936038d3f4f4f"
+  },
+  "esp-idf/components/fatfs/vfs/vfs_fat_sdmmc.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-idf/v5.5.5/components/fatfs/vfs/vfs_fat_sdmmc.c",
+    "sha256": "5668001c1e9b0a9908e9636b9c64b5de9953e8872f97334c19b68dc1a13b2a1b",
+    "tag": "v5.5.5",
+    "commit": "b774170ff46c393eeb5e495ea37936038d3f4f4f"
+  },
+  "esp-idf/components/esp_common/include/esp_err.h": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-idf/v5.5.5/components/esp_common/include/esp_err.h",
+    "sha256": "dcea6a47531d34026f988052a143fd3a9a9af4b176dbc86931dc3c519275afad",
+    "tag": "v5.5.5",
+    "commit": "b774170ff46c393eeb5e495ea37936038d3f4f4f"
+  },
+  "esp-hosted-mcu/host/drivers/transport/sdio/sdio_drv.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-hosted-mcu/v2.12.13/host/drivers/transport/sdio/sdio_drv.c",
+    "sha256": "e45c99b5a1c8735eaaab635ab404ee6e34ae98c7f5b92de3db134c95b37ab86d",
+    "tag": "v2.12.13",
+    "commit": "dd0176e5fc959d79b306f6677a2f878123c58e9a"
+  },
+  "esp-hosted-mcu/host/port/esp/freertos/src/port_esp_hosted_host_sdio.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-hosted-mcu/v2.12.13/host/port/esp/freertos/src/port_esp_hosted_host_sdio.c",
+    "sha256": "34bc88b72951857c0f0179d18c90847219da1a42f777991942279d959281aa3a",
+    "tag": "v2.12.13",
+    "commit": "dd0176e5fc959d79b306f6677a2f878123c58e9a"
+  },
+  "esp-hosted-mcu/examples/host_sdcard_with_hosted/main/sd_card_example_main.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-hosted-mcu/v2.12.13/examples/host_sdcard_with_hosted/main/sd_card_example_main.c",
+    "sha256": "006e6bea3e883d40a3e4fec6389e11519b9735476f87200b564e305feef3ac44",
+    "tag": "v2.12.13",
+    "commit": "dd0176e5fc959d79b306f6677a2f878123c58e9a"
+  },
+  "esp-hosted-mcu/examples/host_sdcard_with_hosted/main/sd_card_functions.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-hosted-mcu/v2.12.13/examples/host_sdcard_with_hosted/main/sd_card_functions.c",
+    "sha256": "45aa6081f47c822a4847590c2acf2523d515d1562c009eea25545763b9f9acce",
+    "tag": "v2.12.13",
+    "commit": "dd0176e5fc959d79b306f6677a2f878123c58e9a"
+  },
+  "hardware/esp32/3.3.12/cores/esp32/main.cpp": {
+    "sha256": "3a80fad62e9a4243aeb67ed1215fac81f47ba4ddc707db57850ec8cab68f1291",
+    "local_base": "/home/voc/.arduino15/packages/esp32"
+  },
+  "hardware/esp32/3.3.12/cores/esp32/esp32-hal-misc.c": {
+    "sha256": "04ce322c477123980e396c12a981f412dbf402190136aad0c9a6acc1b25ce4d6",
+    "local_base": "/home/voc/.arduino15/packages/esp32"
+  },
+  "hardware/esp32/3.3.12/libraries/WiFi/src/STA.cpp": {
+    "sha256": "8e0033dc89aa1ee9c18e4032939eb0c8d774495fc3468988022185b4b1eb9f0c",
+    "local_base": "/home/voc/.arduino15/packages/esp32"
+  },
+  "tools/esp32p4-libs/3.3.12/qio_qspi/include/sdkconfig.h": {
+    "sha256": "d22029ff6e5870ca70f5e3065f3e9cd2e99c2c05ad0dbb73fb848189e063cd2b",
+    "local_base": "/home/voc/.arduino15/packages/esp32"
+  },
+  "tools/esp32p4_es-libs/3.3.12/qio_qspi/include/sdkconfig.h": {
+    "sha256": "dd497a65b33a006c3ede1c7bfccd7d04da8d2dc224862162eae75fa8ad359420",
+    "local_base": "/home/voc/.arduino15/packages/esp32"
   }
 }

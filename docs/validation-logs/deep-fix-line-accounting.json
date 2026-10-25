@@ -1,0 +1,18 @@
+{
+  "application": {
+    "added": 31,
+    "removed": 20
+  },
+  "tests": {
+    "added": 516,
+    "removed": 13
+  },
+  "tooling": {
+    "added": 127,
+    "removed": 10
+  },
+  "dependency_source": {
+    "added": 11,
+    "removed": 7
+  }
+}

@@ -1,0 +1,438 @@
+{
+  "head": "6fada32040bbcb982c99dd59e9b4f57c1b2eb7c3",
+  "status": " M SHA256SUMS.json\n M docs/review/README.md\n?? docs/review/claude-deep-fix-prompt.md\n?? docs/review/claude-deep-review.md\n?? docs/review/deep-fix-prompt-request.md\n?? docs/review/deep-review-assessment.md\n?? docs/review/deep-review-request.md\n",
+  "diff_stat": " SHA256SUMS.json       |  7 ++++++-\n docs/review/README.md | 27 +++++++++++++++++++++++++--\n 2 files changed, 31 insertions(+), 3 deletions(-)\n",
+  "files": {
+    "Ui.cpp": {
+      "sha256": "8a5d3c86bf3dfe9056a560bef9482a48e89a28a6680c8b5fc5481e522fadd715",
+      "physical_lines": 304
+    },
+    "App.h": {
+      "sha256": "d0605e5835f1b96ba591be6ef216d0ea9545cf6720b1976f2ea63293b45c69a4",
+      "physical_lines": 37
+    },
+    "SHA256SUMS.json": {
+      "sha256": "30ad1745056ea115898bce3c47d2da0b70228696ee807051f0452bedb4c39cd8",
+      "physical_lines": 87
+    },
+    ".gitignore": {
+      "sha256": "10539007bb4f153400d5d74774e9863b73a8a10c5e7544af3e3b7fee84c4beab",
+      "physical_lines": 5
+    },
+    "AGENTS.md": {
+      "sha256": "00f0f45b509798f7e13452929a723e5fc32928d69719f51115dbdbf468a63f87",
+      "physical_lines": 41
+    },
+    ".clang-format-ignore": {
+      "sha256": "137c5f6c1cc2192c3e29ee0748e6c68853e0e4b34a9697038840b3c865debcb9",
+      "physical_lines": 1
+    },
+    "Workers.cpp": {
+      "sha256": "9c877c3ecca32514d611aa807ed74b415f706480ede733acfd4fb3e2d9f1f554",
+      "physical_lines": 449
+    },
+    "Telemetry.h": {
+      "sha256": "833983f5f68926553875d2b090edff99c39c2b1775fb576e2435506e5fd9dd4d",
+      "physical_lines": 67
+    },
+    "SdStorage.h": {
+      "sha256": "4666121c4bc264d51b56639fbe73ac3863b6c7bd3dc0f4af451f7984400c96da",
+      "physical_lines": 57
+    },
+    ".clang-format": {
+      "sha256": "633441d2ab5699252d83520f001d61dc2d6dde90f76e3a99f799baf60f08aafa",
+      "physical_lines": 137
+    },
+    "Makefile": {
+      "sha256": "777e3deb7a7d9c6c33d4f1efeb3809481298c3a0999a75393369631d215da526",
+      "physical_lines": 17
+    },
+    "CrowPanelTelemetry.ino": {
+      "sha256": "8616017294cf1410aba9050ae24719e0b70b59e2b0b0695a454ff8e13289d452",
+      "physical_lines": 8
+    },
+    ".clangd": {
+      "sha256": "64de7616169b415a8bdfd8b91d405bfd2b0d723a0fc4738c30a83005f4b942bb",
+      "physical_lines": 2
+    },
+    "Config.h": {
+      "sha256": "640d3514ac9d89c24a968cb04df908a0af03c3d8ef747caec3973798d141a007",
+      "physical_lines": 42
+    },
+    ".clang-tidy": {
+      "sha256": "e81b15a50fc926a66e6e8aecd4647a850c3ef0c64781b61d61ad82d099b441cd",
+      "physical_lines": 173
+    },
+    "Application.cpp": {
+      "sha256": "656037c23d922728d6a8e95fc0f6efdb461af87a3f447b8c500a076c343afc88",
+      "physical_lines": 138
+    },
+    "ttn-decoder.js": {
+      "sha256": "74d5d6df05ddf85b452e6ebe148da80378108dd36ad7965669becef1e222cf0c",
+      "physical_lines": 41
+    },
+    "README.md": {
+      "sha256": "76e1f612c3c5080ac81736f71c649bf590d571a3bbfd18ced3ffe025ffd12a52",
+      "physical_lines": 245
+    },
+    "artifacts/CrowPanelTelemetry-delivery.zip": {
+      "sha256": "ed232d6bfdaa92758e8dee3578cbfcab3dcda5de403db72967c7aa0d8a719273",
+      "physical_lines": 65146
+    },
+    "artifacts/README.md": {
+      "sha256": "9624f67e9c83557b2126005587a25d6da47abdd17b1e1b2d856bd7ab683e665e",
+      "physical_lines": 7
+    },
+    "patches/radiolib-7.8.1-hashes.json": {
+      "sha256": "decb3a6611c2c1499ee03089985506fefb588e817055e55713f51d9a963a97f5",
+      "physical_lines": 10
+    },
+    "patches/radiolib-7.8.1.patch": {
+      "sha256": "58129ec71e00fb96ef1066605c41c4e60923815f8232eac3bb73c2094e907b56",
+      "physical_lines": 145
+    },
+    "tests/sd-storage.cpp": {
+      "sha256": "b925da47f54f1599c1ff053c22165081995b15b094c0e27adf2e3dcb55176b94",
+      "physical_lines": 92
+    },
+    "tests/codec.cpp": {
+      "sha256": "52cad259d53acc56a7adc48796e93df87daf6244e7402dd336aeec38910db501",
+      "physical_lines": 65
+    },
+    "tests/decoder.js": {
+      "sha256": "306ae9d30e5e096db60d5d81f266c456986756fb74a5077e9fbd06508250272d",
+      "physical_lines": 38
+    },
+    "tests/reference-packet.json": {
+      "sha256": "7830ef443d0513c4dd8f81f3e50378cc10ba1fb4ed7b077028c474d88977f1cc",
+      "physical_lines": 1
+    },
+    "tests/radio.cpp": {
+      "sha256": "dc1829fa5578e9a8af5a006a4ae94fa1d1d5072cb3a0e0bffea584193415de06",
+      "physical_lines": 387
+    },
+    "docs/visual-method.md": {
+      "sha256": "21c5f84c4bf3fc06f307064278be7c9e9df0a690b7d834e707749b146b1b7ce1",
+      "physical_lines": 31
+    },
+    "docs/ui.md": {
+      "sha256": "6fce1e06b93f10d8e5570b601762ce7d8b43ded372bd088e0c4f326a4f6746a2",
+      "physical_lines": 31
+    },
+    "docs/wiring.png": {
+      "sha256": "cfc66a6e92e80daf84971f187af663e27935d8e682d0856c146691641b303f47",
+      "physical_lines": 22369
+    },
+    "docs/validation.md": {
+      "sha256": "90de6801b78802b4552937cf6c47e570c23355d1854b749936dcfcaec5ab21a1",
+      "physical_lines": 173
+    },
+    "docs/wiring-verification.txt": {
+      "sha256": "ebd1a14c081a0d949952ba7b2e587530cee8b323a0a0e43f702bce481afa375d",
+      "physical_lines": 4
+    },
+    "docs/radio-nets.json": {
+      "sha256": "4c91b0e26380071b8dddf549c0622fb7e3915392c620d6902eb15a3d746635e9",
+      "physical_lines": 56
+    },
+    "docs/airtime.md": {
+      "sha256": "971eb88a4857d284097c7054a0194d8616961c8e8da2001ed3a86cc1fa35290b",
+      "physical_lines": 112
+    },
+    "docs/airtime-calculation.txt": {
+      "sha256": "4fff9c49bcb06c9ae738b43fa1e47e8c458935c53fe2a0d477747c0a2b4e8c45",
+      "physical_lines": 9
+    },
+    "docs/sources.md": {
+      "sha256": "a34fd7c421343b19a0f0894c6030a0453fdf719f91dba20290a36c6201c23291",
+      "physical_lines": 49
+    },
+    "docs/hardware-checklist.md": {
+      "sha256": "47ddf784e1cf33f5632f58365d14e6dfa09e3b0190f05bd8a2f9fd646a632d4e",
+      "physical_lines": 97
+    },
+    "docs/ui-preview.svg": {
+      "sha256": "201656131387b862c202eddf03b662c6d4b697e4307284b8db340431e19b46fa",
+      "physical_lines": 43
+    },
+    "docs/ui-preview.png": {
+      "sha256": "f973bbd21d6b9a91b201e3fda898a3e6cc9c4c143517e4c295321858197ba172",
+      "physical_lines": 655
+    },
+    "docs/correctness-source-hashes.json": {
+      "sha256": "0fca5a9edacded62ab340180cd306effa820a888e183ffd3b243f307e0e4de28",
+      "physical_lines": 66
+    },
+    "docs/wiring.svg": {
+      "sha256": "8f97266d4fc378f824e2264f48c57b012d070609c039676b2d14df398e665f28",
+      "physical_lines": 242
+    },
+    "docs/wiring.md": {
+      "sha256": "e93c44dacf15bb9c96945940bdc47ec53a2a80a6f5a04a141f0fe74962d256a1",
+      "physical_lines": 199
+    },
+    "docs/correctness-status.md": {
+      "sha256": "e571ae2b1fbc8652c1bd3b83144a361d8c1fecc26e27097a533056f50817664c",
+      "physical_lines": 85
+    },
+    "docs/change-accounting.json": {
+      "sha256": "1d95411d41d33bfe075633bf62504cb24f408636d895ac982aeef90052b54cbe",
+      "physical_lines": 70
+    },
+    "docs/source-photo.png": {
+      "sha256": "5b2e2bdfefe5a38b7bbee5ef09f37c363579a8628f27df23f5702b5fcd6624ad",
+      "physical_lines": 18789
+    },
+    "tools/airtime.py": {
+      "sha256": "24236724b3f55fe4def0253ff1985896bf790b02f74c3fc0bae13e4fb9029b71",
+      "physical_lines": 19
+    },
+    "tools/draw_ui.py": {
+      "sha256": "fe23921ae453969425524a55f46f746e652b953a15d823afaef88c365ac5d1a2",
+      "physical_lines": 51
+    },
+    "tools/test.py": {
+      "sha256": "45d15e114637caad93a7cd079a73027667c6c7c1ca92d0951b6e2485a9014dd5",
+      "physical_lines": 45
+    },
+    "tools/patch_radiolib.py": {
+      "sha256": "ffe75076e066a6a8ff6e8a29df53a360cf23d380190e66bf97a107451feb87a5",
+      "physical_lines": 20
+    },
+    "tools/check_wiring.py": {
+      "sha256": "d4ce81ca9504e05bc82e4733a456b532fdfa33afb19184456786c6c89fa562ac",
+      "physical_lines": 65
+    },
+    "tools/draw_wiring.py": {
+      "sha256": "90d742d0daf5402ffc9cffd57925271867a95277ad8521effa9716159de2c10d",
+      "physical_lines": 131
+    },
+    "tools/test_radio.py": {
+      "sha256": "98506bba9fdd752c00cabea9dbe2f3d85e9d469d1ac809af8c346f638b34ee52",
+      "physical_lines": 29
+    },
+    "docs/review/claude-stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "physical_lines": 0
+    },
+    "docs/review/fix-prompt-stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "physical_lines": 0
+    },
+    "docs/review/claude-deep-review.md": {
+      "sha256": "0d815bab5f4e994afda8b6900326f35d0fa3cd26eba1b7b34dd25e6732de2fcb",
+      "physical_lines": 188
+    },
+    "docs/review/claude-fix-prompt-raw.md": {
+      "sha256": "8bcfba751eeb6c0676ca60e5ce6d8569b31a34462294b1da92941b44725a0f31",
+      "physical_lines": 227
+    },
+    "docs/review/checkpoint-changes.json": {
+      "sha256": "638d5d8cb10fc7f716ed1a88d0ca9d986f96ea2eb3ff4d4ab05cbdf324c8a89b",
+      "physical_lines": 57
+    },
+    "docs/review/deep-fix-prompt-request.md": {
+      "sha256": "cafde5c240e1793595549e5eb76628cac1183c5844dc8c599c24df6ccf0198af",
+      "physical_lines": 41
+    },
+    "docs/review/fix-baseline.json": {
+      "sha256": "39ecf33843222e27c34bad45dbe02bb1622e8943f1440bafcc63183fbf4bbbdf",
+      "physical_lines": 178
+    },
+    "docs/review/request.md": {
+      "sha256": "6a244bfdab9f32266bd7366bf01e6a5a013f713c9aa5cd5f0a14806196d48a2e",
+      "physical_lines": 64
+    },
+    "docs/review/fix-prompt-request.md": {
+      "sha256": "1d8e15ee224a1ebec534dbd288cb2e048943289a73c748a1e3d96bd427e27612",
+      "physical_lines": 11
+    },
+    "docs/review/sd-start-manifest.json": {
+      "sha256": "b76fdd86a895d4c16b5361ab9f03a52c2ff9c632b31f03125a3624f77dee39ea",
+      "physical_lines": 48
+    },
+    "docs/review/fix-baseline-manifest.json": {
+      "sha256": "3edef85bbbe21be327916eb1c116f5afe26a0c5a01a8f5b23c4695710453f639",
+      "physical_lines": 45
+    },
+    "docs/review/deep-review-assessment.md": {
+      "sha256": "221b650b607151aea887e7391dde43c6573fa6efc9448dd31f0a59236f7189ad",
+      "physical_lines": 63
+    },
+    "docs/review/claude-review.md": {
+      "sha256": "cb96890703255a818d827945fe14f9567dfc2231edbac7ff712184c6e2270f1d",
+      "physical_lines": 163
+    },
+    "docs/review/claude-deep-fix-prompt.md": {
+      "sha256": "1e989ae209ff50213146bd7ae88d22f4297cfab49d030bf8e294db0dc17e3830",
+      "physical_lines": 530
+    },
+    "docs/review/deep-review-request.md": {
+      "sha256": "d54adedfcd329f275be933c0e79eb2f8dbc153418b65a291aaac3dae8a5997f0",
+      "physical_lines": 137
+    },
+    "docs/review/claude-fix-prompt.md": {
+      "sha256": "a30d255e5b09ce38b22c64f9d52a369cc6567d779fa5fb672a4937f77b6b3090",
+      "physical_lines": 223
+    },
+    "docs/review/README.md": {
+      "sha256": "f0bb6c9d5c798a036640f73c4fc02f6a0ff86f057365bfbe13722b32b188d032",
+      "physical_lines": 33
+    },
+    "docs/validation-logs/clang-tidy-target.txt": {
+      "sha256": "e66ab75201bf1d328b6339849928e67851b8c38812322324869d65e46b5dc29d",
+      "physical_lines": 9
+    },
+    "docs/validation-logs/default-prev3.txt": {
+      "sha256": "77fef05eeec0d4b9fe545c5eda55c5045e075e2fe818cf172dd7c8032a530010",
+      "physical_lines": 3
+    },
+    "docs/validation-logs/clang-tidy-host-storage.txt": {
+      "sha256": "b08acd68907d78766f2493c8d55f9e7bd9a59fc89c59ef0ad49be4884edd4606",
+      "physical_lines": 6
+    },
+    "docs/validation-logs/enabled-postv3.txt": {
+      "sha256": "9659642f437149b4ea53191bbc888e027a4136c77c28646d39812115bf7025a9",
+      "physical_lines": 3
+    },
+    "docs/validation-logs/build-input-sha256.json": {
+      "sha256": "1ec1aac5f04ebdc63211c2f0b7e33700126baa9be85f943a4de61d5a7492853b",
+      "physical_lines": 11
+    },
+    "docs/validation-logs/host-checks.txt": {
+      "sha256": "8dc4627a04e275749f759846b3f09a4d34d7d50dc51a0dc035caefb27fccd161",
+      "physical_lines": 13
+    },
+    "docs/validation-logs/patch-check.txt": {
+      "sha256": "4771613da71547fba8d1c2903b2a2cdefd2881fc2f646a518daf8f64dfc19c89",
+      "physical_lines": 5
+    },
+    "docs/validation-logs/source-and-symbol-audit.txt": {
+      "sha256": "1fadc597ddb1eafcc618df9e53e36a86185067ca03c29b5301ed28f866b3b31f",
+      "physical_lines": 14
+    },
+    "docs/validation-logs/enabled-prev3.txt": {
+      "sha256": "e02885898cc334a56609ca173fe9ce6d9c93b32f12d511001bb4ef25e8a7a635",
+      "physical_lines": 3
+    },
+    "docs/validation-logs/format.txt": {
+      "sha256": "88b1a9ef4eddfc84d4a1b83d3ab0dcbb89071b59609a420f8d8bb16bb182487b",
+      "physical_lines": 1
+    },
+    "docs/validation-logs/clang-tidy-host-radio.txt": {
+      "sha256": "965968e0a5485347a7fdb796ebbc9c6fb960996767ef7f4a426fe4a17c97676a",
+      "physical_lines": 146
+    },
+    "docs/validation-logs/wiring.txt": {
+      "sha256": "ebd1a14c081a0d949952ba7b2e587530cee8b323a0a0e43f702bce481afa375d",
+      "physical_lines": 4
+    },
+    "docs/validation-logs/clang-tidy-host-storage-header.txt": {
+      "sha256": "ec3f042b6c7dcf500401eae6913291a1dbb423d22446537f580e0e8861bf6060",
+      "physical_lines": 20
+    },
+    "tests/sd-stubs/esp32-hal-ldo.h": {
+      "sha256": "603b580fdd8114f4f1775e260c9394d70de84baba285d2cc5c64796c8cbce4ed",
+      "physical_lines": 4
+    },
+    "tests/sd-stubs/esp_vfs_fat.h": {
+      "sha256": "c6632eff16e46b645b4749417b6219c7bc744c7f17fe324c83c8375e90bc7a75",
+      "physical_lines": 9
+    },
+    "tests/sd-stubs/driver/sdmmc_host.h": {
+      "sha256": "2cea93d34fe2e5c4eb324af7e6da6f03332b3ca11b459858aae5bd1ddf7c4fa1",
+      "physical_lines": 22
+    },
+    "tests/sd-stubs/soc/sdmmc_pins.h": {
+      "sha256": "f3b18aaac987c2775108943b24d12a95e51a3cd4fc6ab64274818d5d55796542",
+      "physical_lines": 4
+    }
+  },
+  "manifest": {
+    ".clang-format": "633441d2ab5699252d83520f001d61dc2d6dde90f76e3a99f799baf60f08aafa",
+    ".clang-format-ignore": "137c5f6c1cc2192c3e29ee0748e6c68853e0e4b34a9697038840b3c865debcb9",
+    ".clang-tidy": "e81b15a50fc926a66e6e8aecd4647a850c3ef0c64781b61d61ad82d099b441cd",
+    ".clangd": "64de7616169b415a8bdfd8b91d405bfd2b0d723a0fc4738c30a83005f4b942bb",
+    ".gitignore": "10539007bb4f153400d5d74774e9863b73a8a10c5e7544af3e3b7fee84c4beab",
+    "AGENTS.md": "00f0f45b509798f7e13452929a723e5fc32928d69719f51115dbdbf468a63f87",
+    "App.h": "d0605e5835f1b96ba591be6ef216d0ea9545cf6720b1976f2ea63293b45c69a4",
+    "Application.cpp": "656037c23d922728d6a8e95fc0f6efdb461af87a3f447b8c500a076c343afc88",
+    "Config.h": "640d3514ac9d89c24a968cb04df908a0af03c3d8ef747caec3973798d141a007",
+    "CrowPanelTelemetry.ino": "8616017294cf1410aba9050ae24719e0b70b59e2b0b0695a454ff8e13289d452",
+    "Makefile": "777e3deb7a7d9c6c33d4f1efeb3809481298c3a0999a75393369631d215da526",
+    "README.md": "76e1f612c3c5080ac81736f71c649bf590d571a3bbfd18ced3ffe025ffd12a52",
+    "SdStorage.h": "4666121c4bc264d51b56639fbe73ac3863b6c7bd3dc0f4af451f7984400c96da",
+    "Telemetry.h": "833983f5f68926553875d2b090edff99c39c2b1775fb576e2435506e5fd9dd4d",
+    "Ui.cpp": "8a5d3c86bf3dfe9056a560bef9482a48e89a28a6680c8b5fc5481e522fadd715",
+    "Workers.cpp": "9c877c3ecca32514d611aa807ed74b415f706480ede733acfd4fb3e2d9f1f554",
+    "artifacts/CrowPanelTelemetry-delivery.zip": "ed232d6bfdaa92758e8dee3578cbfcab3dcda5de403db72967c7aa0d8a719273",
+    "artifacts/README.md": "9624f67e9c83557b2126005587a25d6da47abdd17b1e1b2d856bd7ab683e665e",
+    "docs/airtime-calculation.txt": "4fff9c49bcb06c9ae738b43fa1e47e8c458935c53fe2a0d477747c0a2b4e8c45",
+    "docs/airtime.md": "971eb88a4857d284097c7054a0194d8616961c8e8da2001ed3a86cc1fa35290b",
+    "docs/change-accounting.json": "1d95411d41d33bfe075633bf62504cb24f408636d895ac982aeef90052b54cbe",
+    "docs/correctness-source-hashes.json": "0fca5a9edacded62ab340180cd306effa820a888e183ffd3b243f307e0e4de28",
+    "docs/correctness-status.md": "e571ae2b1fbc8652c1bd3b83144a361d8c1fecc26e27097a533056f50817664c",
+    "docs/hardware-checklist.md": "47ddf784e1cf33f5632f58365d14e6dfa09e3b0190f05bd8a2f9fd646a632d4e",
+    "docs/radio-nets.json": "4c91b0e26380071b8dddf549c0622fb7e3915392c620d6902eb15a3d746635e9",
+    "docs/review/README.md": "f0bb6c9d5c798a036640f73c4fc02f6a0ff86f057365bfbe13722b32b188d032",
+    "docs/review/checkpoint-changes.json": "638d5d8cb10fc7f716ed1a88d0ca9d986f96ea2eb3ff4d4ab05cbdf324c8a89b",
+    "docs/review/claude-deep-fix-prompt.md": "1e989ae209ff50213146bd7ae88d22f4297cfab49d030bf8e294db0dc17e3830",
+    "docs/review/claude-deep-review.md": "0d815bab5f4e994afda8b6900326f35d0fa3cd26eba1b7b34dd25e6732de2fcb",
+    "docs/review/claude-fix-prompt-raw.md": "8bcfba751eeb6c0676ca60e5ce6d8569b31a34462294b1da92941b44725a0f31",
+    "docs/review/claude-fix-prompt.md": "a30d255e5b09ce38b22c64f9d52a369cc6567d779fa5fb672a4937f77b6b3090",
+    "docs/review/claude-review.md": "cb96890703255a818d827945fe14f9567dfc2231edbac7ff712184c6e2270f1d",
+    "docs/review/claude-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/review/deep-fix-prompt-request.md": "cafde5c240e1793595549e5eb76628cac1183c5844dc8c599c24df6ccf0198af",
+    "docs/review/deep-review-assessment.md": "221b650b607151aea887e7391dde43c6573fa6efc9448dd31f0a59236f7189ad",
+    "docs/review/deep-review-request.md": "d54adedfcd329f275be933c0e79eb2f8dbc153418b65a291aaac3dae8a5997f0",
+    "docs/review/fix-baseline-manifest.json": "3edef85bbbe21be327916eb1c116f5afe26a0c5a01a8f5b23c4695710453f639",
+    "docs/review/fix-baseline.json": "39ecf33843222e27c34bad45dbe02bb1622e8943f1440bafcc63183fbf4bbbdf",
+    "docs/review/fix-prompt-request.md": "1d8e15ee224a1ebec534dbd288cb2e048943289a73c748a1e3d96bd427e27612",
+    "docs/review/fix-prompt-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/review/request.md": "6a244bfdab9f32266bd7366bf01e6a5a013f713c9aa5cd5f0a14806196d48a2e",
+    "docs/review/sd-start-manifest.json": "b76fdd86a895d4c16b5361ab9f03a52c2ff9c632b31f03125a3624f77dee39ea",
+    "docs/source-photo.png": "5b2e2bdfefe5a38b7bbee5ef09f37c363579a8628f27df23f5702b5fcd6624ad",
+    "docs/sources.md": "a34fd7c421343b19a0f0894c6030a0453fdf719f91dba20290a36c6201c23291",
+    "docs/ui-preview.png": "f973bbd21d6b9a91b201e3fda898a3e6cc9c4c143517e4c295321858197ba172",
+    "docs/ui-preview.svg": "201656131387b862c202eddf03b662c6d4b697e4307284b8db340431e19b46fa",
+    "docs/ui.md": "6fce1e06b93f10d8e5570b601762ce7d8b43ded372bd088e0c4f326a4f6746a2",
+    "docs/validation-logs/build-input-sha256.json": "1ec1aac5f04ebdc63211c2f0b7e33700126baa9be85f943a4de61d5a7492853b",
+    "docs/validation-logs/clang-tidy-host-radio.txt": "965968e0a5485347a7fdb796ebbc9c6fb960996767ef7f4a426fe4a17c97676a",
+    "docs/validation-logs/clang-tidy-host-storage-header.txt": "ec3f042b6c7dcf500401eae6913291a1dbb423d22446537f580e0e8861bf6060",
+    "docs/validation-logs/clang-tidy-host-storage.txt": "b08acd68907d78766f2493c8d55f9e7bd9a59fc89c59ef0ad49be4884edd4606",
+    "docs/validation-logs/clang-tidy-target.txt": "e66ab75201bf1d328b6339849928e67851b8c38812322324869d65e46b5dc29d",
+    "docs/validation-logs/default-prev3.txt": "77fef05eeec0d4b9fe545c5eda55c5045e075e2fe818cf172dd7c8032a530010",
+    "docs/validation-logs/enabled-postv3.txt": "9659642f437149b4ea53191bbc888e027a4136c77c28646d39812115bf7025a9",
+    "docs/validation-logs/enabled-prev3.txt": "e02885898cc334a56609ca173fe9ce6d9c93b32f12d511001bb4ef25e8a7a635",
+    "docs/validation-logs/format.txt": "88b1a9ef4eddfc84d4a1b83d3ab0dcbb89071b59609a420f8d8bb16bb182487b",
+    "docs/validation-logs/host-checks.txt": "8dc4627a04e275749f759846b3f09a4d34d7d50dc51a0dc035caefb27fccd161",
+    "docs/validation-logs/patch-check.txt": "4771613da71547fba8d1c2903b2a2cdefd2881fc2f646a518daf8f64dfc19c89",
+    "docs/validation-logs/source-and-symbol-audit.txt": "1fadc597ddb1eafcc618df9e53e36a86185067ca03c29b5301ed28f866b3b31f",
+    "docs/validation-logs/wiring.txt": "ebd1a14c081a0d949952ba7b2e587530cee8b323a0a0e43f702bce481afa375d",
+    "docs/validation.md": "90de6801b78802b4552937cf6c47e570c23355d1854b749936dcfcaec5ab21a1",
+    "docs/visual-method.md": "21c5f84c4bf3fc06f307064278be7c9e9df0a690b7d834e707749b146b1b7ce1",
+    "docs/wiring-verification.txt": "ebd1a14c081a0d949952ba7b2e587530cee8b323a0a0e43f702bce481afa375d",
+    "docs/wiring.md": "e93c44dacf15bb9c96945940bdc47ec53a2a80a6f5a04a141f0fe74962d256a1",
+    "docs/wiring.png": "cfc66a6e92e80daf84971f187af663e27935d8e682d0856c146691641b303f47",
+    "docs/wiring.svg": "8f97266d4fc378f824e2264f48c57b012d070609c039676b2d14df398e665f28",
+    "patches/radiolib-7.8.1-hashes.json": "decb3a6611c2c1499ee03089985506fefb588e817055e55713f51d9a963a97f5",
+    "patches/radiolib-7.8.1.patch": "58129ec71e00fb96ef1066605c41c4e60923815f8232eac3bb73c2094e907b56",
+    "tests/codec.cpp": "52cad259d53acc56a7adc48796e93df87daf6244e7402dd336aeec38910db501",
+    "tests/decoder.js": "306ae9d30e5e096db60d5d81f266c456986756fb74a5077e9fbd06508250272d",
+    "tests/radio.cpp": "dc1829fa5578e9a8af5a006a4ae94fa1d1d5072cb3a0e0bffea584193415de06",
+    "tests/reference-packet.json": "7830ef443d0513c4dd8f81f3e50378cc10ba1fb4ed7b077028c474d88977f1cc",
+    "tests/sd-storage.cpp": "b925da47f54f1599c1ff053c22165081995b15b094c0e27adf2e3dcb55176b94",
+    "tests/sd-stubs/driver/sdmmc_host.h": "2cea93d34fe2e5c4eb324af7e6da6f03332b3ca11b459858aae5bd1ddf7c4fa1",
+    "tests/sd-stubs/esp32-hal-ldo.h": "603b580fdd8114f4f1775e260c9394d70de84baba285d2cc5c64796c8cbce4ed",
+    "tests/sd-stubs/esp_vfs_fat.h": "c6632eff16e46b645b4749417b6219c7bc744c7f17fe324c83c8375e90bc7a75",
+    "tests/sd-stubs/soc/sdmmc_pins.h": "f3b18aaac987c2775108943b24d12a95e51a3cd4fc6ab64274818d5d55796542",
+    "tools/airtime.py": "24236724b3f55fe4def0253ff1985896bf790b02f74c3fc0bae13e4fb9029b71",
+    "tools/check_wiring.py": "d4ce81ca9504e05bc82e4733a456b532fdfa33afb19184456786c6c89fa562ac",
+    "tools/draw_ui.py": "fe23921ae453969425524a55f46f746e652b953a15d823afaef88c365ac5d1a2",
+    "tools/draw_wiring.py": "90d742d0daf5402ffc9cffd57925271867a95277ad8521effa9716159de2c10d",
+    "tools/patch_radiolib.py": "ffe75076e066a6a8ff6e8a29df53a360cf23d380190e66bf97a107451feb87a5",
+    "tools/test.py": "45d15e114637caad93a7cd079a73027667c6c7c1ca92d0951b6e2485a9014dd5",
+    "tools/test_radio.py": "98506bba9fdd752c00cabea9dbe2f3d85e9d469d1ac809af8c346f638b34ee52",
+    "ttn-decoder.js": "74d5d6df05ddf85b452e6ebe148da80378108dd36ad7965669becef1e222cf0c"
+  }
+}

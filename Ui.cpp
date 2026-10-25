@@ -57,6 +57,14 @@ static void drawImage() {
     button(Play, "Play sound", true);
     button(Remount, "Retry SD");
 }
+static const char* wifiInputError() {
+    const size_t length = strlen(credentials.password);
+    return !credentials.ssid[0] ? "Enter an SSID"
+           : (length == 0 || (length >= 8 && length <= 63) ||
+              (length == 64 && strspn(credentials.password, "0123456789abcdefABCDEF") == 64))
+               ? nullptr
+               : "Password: 8-63 characters or 64 hex digits; empty for open WiFi";
+}
 static void drawKeyboard() {
     display.fillScreen(Bg);
     text(32, 28, "CONNECT TO WIFI", 3);
@@ -71,7 +79,7 @@ static void drawKeyboard() {
     }
     text(36, 180, mask, 2, passwordField ? Bg : Ink);
     if (latest) {
-        lines(32, 225, latest->wifi, 78, 2, Muted);
+        lines(32, 225, wifiInputError() ? wifiInputError() : latest->wifi, 78, 2, Muted);
     }
     const char* keys = keyboards[keyboardPage];
     for (size_t n = 0; n < strlen(keys) && n < 50; ++n) {
@@ -127,7 +135,7 @@ void updateUi(Model& model, bool force) {
         lastRefresh = millis();
     } else if (refresh && screen == Screen::Wifi) {
         display.fillRect(32, 225, 960, 40, Bg);
-        lines(32, 225, model.wifi, 78, 2, Muted);
+        lines(32, 225, wifiInputError() ? wifiInputError() : model.wifi, 78, 2, Muted);
         lastRefresh = millis();
     } else if (refresh && screen == Screen::Downlink) {
         display.fillScreen(Bg);
@@ -216,7 +224,7 @@ static void tap(int x, int y) {
         } else if (Rect{356, 510, 150, 52}.contains(x, y)) {
             keyboardPage = (keyboardPage + 1) % 3;
         } else if (Rect{680, 510, 150, 52}.contains(x, y)) {
-            if (credentials.ssid[0] && (strlen(credentials.password) == 0 || strlen(credentials.password) >= 8)) {
+            if (wifiInputError() == nullptr) {
                 xQueueOverwrite(wifiCommands, &credentials);
                 memset(credentials.password, 0, sizeof(credentials.password));
                 screen = Screen::Dashboard;

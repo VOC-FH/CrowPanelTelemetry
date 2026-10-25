@@ -1,0 +1,1 @@
+PASS: real Connect decision/status: empty SSID, short/open/8-character/64-hex/non-hex passwords and periodic updates

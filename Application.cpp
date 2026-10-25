@@ -54,8 +54,7 @@ void setupApplication() {
 void loopApplication() {
     uint32_t now = millis();
     while (Serial1.available()) {
-        gps.encode(Serial1.read());
-        lastGpsData = now;
+        lastGpsData = gps.encode(Serial1.read()) ? now : lastGpsData;
     }
     bool fresh = gps.location.isValid() && gps.location.age() < 10000;
     if (fresh) {
@@ -64,8 +63,8 @@ void loopApplication() {
         snprintf(text, sizeof(text), "%.6f, %.6f  |  %s sats", gps.location.lat(), gps.location.lng(), satellites.c_str());
         model.gps = text;
     } else {
-        model.gps =
-            (gps.charsProcessed() == 0 || now - lastGpsData >= 10000) ? "No GPS data / check UART" : "No fresh fix / move antenna outdoors";
+        model.gps = (gps.passedChecksum() == 0 || now - lastGpsData >= 10000) ? "No valid NMEA / check UART, baud"
+                                                                              : "No fresh fix / move antenna outdoors";
     }
     if (static_cast<int32_t>(now - nextSample) >= 0) {
         // Account for missed deadlines as invalid slots; never fabricate catch-up readings.
@@ -73,8 +72,10 @@ void loopApplication() {
             model.minute++;
             Reading reading;
             bool currentSlot = static_cast<int32_t>(now - nextSample) < 60000;
-            model.sensor = meter.isConnected();
-            model.calibrated = model.sensor && INA_SHUNT_OHMS > 0 && meter.setMaxCurrentShunt(INA_MAX_CURRENT_A, INA_SHUNT_OHMS) == 0;
+            model.sensor =
+                meter.isConnected() &&
+                (INA_SHUNT_OHMS <= 0 || (meter.setMaxCurrentShunt(INA_MAX_CURRENT_A, INA_SHUNT_OHMS) == 0 && meter.getLastError() == 0));
+            model.calibrated = model.sensor && INA_SHUNT_OHMS > 0;
             if (currentSlot && model.sensor) {
                 // Trigger one coherent conversion after calibration. The bounded
                 // <=60 ms sensor wait leaves radio/audio on their own tasks.

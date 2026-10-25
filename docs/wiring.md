@@ -51,8 +51,12 @@ Use a suitable carrier for the castellated module, short digital wires, and a
 short ground return. Do not run ANT along a breadboard jumper: use a proper
 antenna connector/coax and ground layout. Attach the antenna before transmitting.
 Radio initialization requests14dBm; LoRaWAN/ADR subsequently controls power up
-to the EU868 profile maximum (16dBm). Verify actual conducted power and total
-EIRP with the antenna/cable you actually use before RF testing.
+to a RadioLib request of 16dBm conducted power at TXPower 0. The regional
+parameter default is 16dBm EIRP, not conducted power. In 868.0–868.6MHz the
+25mW ERP limit is about 13.98dBm ERP / 16.13dBm EIRP. Include antenna gain and
+cable loss: EIRP = conducted dBm + gain dBi − loss dB; ERP = EIRP − 2.15dB.
+See sources.md. Measure under separately authorized RF testing before operation;
+no antenna gain, power cap or compliance is assumed.
 
 RXEN and TXEN are **separate switch inputs**. RX uses RXEN=1/TXEN=0; TX uses
 RXEN=0/TXEN=1; idle uses both low. RadioLib controls them through

@@ -1,0 +1,2 @@
+sensor-0.1f: /home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/sensor.cpp:33: int main(): Assertion `!model.sensor && !model.calibrated' failed.
+PASS: production acquisition + real INA226 calibration NACK, true zero and voltage-only contract
