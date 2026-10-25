@@ -136,3 +136,31 @@ shunt value and supply/load/antenna configuration with each test run.
   actual P4 revision/Chip Variant and C6 firmware compatibility with Hosted2.12.13.
   Verify10.1-inch DSI timing, GT911 orientation and ES8311 retention across MCLK gap.
   Wire DIO1/DIO2 from the table, not from the photographed pad placement.
+
+
+## Re-review follow-up — all unexecuted
+
+- N2/F4: during the existing ≥50 Retry SD cycles and cold boots, verify the P4
+  does not reboot. Record reset reason and Hosted transport-failure/restart logs
+  using separately authorized bench instrumentation. The lifecycle snapshot guard
+  is not a concurrency guarantee.
+- N7: change credentials while connected; test rejected begin, rapid reconnect,
+  same SSID with a changed password, open networks and NVS write failures. Verify
+  the intended association and saved credentials after reboot. Save errors should
+  remain visible for their report interval; the association defect is still open.
+- N8: scope GPIO30 and speaker output through reset, codec initialization and DSI
+  startup; inspect R71/R147 and verify actual amplifier enable polarity. GPIO30 is
+  already driven LOW before beginUi, so distinguish these startup intervals.
+- N9: inspect R29/R33 population and measure SD DAT3/CS idle voltage with the actual
+  card. The schematic's divider is not a measurement or an instruction to remove
+  a component.
+- N1: verify that the approved decoder guard rejects invalid resources visibly on
+  the P4; baseline browsing and progressive rejection must remain correct. Host
+  sanitizer checks do not prove target recovery, every parser boundary or stack
+  safety.
+- F7: disturbing the shared sensor I2C bus can intentionally latch GT911 lost/restart;
+  repair and restart. F8: checksum-helper permissiveness does not establish any
+  field probability for wrong-baud noise.
+- Preserve all previous TCXO, RF-switch, antenna/EIRP/ERP, GPS logic/power, shunt/
+  straps/pull-ups, J2/J13 orientation, P4/C6 versions, display/touch timing, ES8311
+  clock-gap, stack/latency and 24-hour checks. No physical or RF test was executed.

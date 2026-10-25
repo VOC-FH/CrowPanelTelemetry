@@ -33,11 +33,14 @@ end = source.index('    Batch batch;', start)
 start = source.index('        if (ready && node.canTransmit() && !node.isActivated())')
 end = source.index('        if (ready && node.isActivated() && offset == 10', start)
 (build/'Radio-join-under-test.h').write_text(source[start:end])
+start = source.index('        if (!ready && DEV_EUI')
+end = source.index('        vTaskDelay(', start)
+(build/'Radio-stop-under-test.h').write_text(source[start:end])
 
 files = [root/'src/Hal.cpp', root/'src/Module.cpp', root/'src/utils/Cryptography.cpp',
          root/'src/utils/Utils.cpp', root/'src/protocols/PhysicalLayer/PhysicalLayer.cpp']
 files += sorted((root/'src/protocols/LoRaWAN').glob('*.cpp'))
-command = ['c++', '-std=c++17', '-O1', '-ffunction-sections', '-fdata-sections',
+command = ['c++', '-std=c++17', '-O1', '-DDEV_EUI=1ULL', '-ffunction-sections', '-fdata-sections',
            '-I'+str(root/'src'), '-I'+str(project), '-I'+str(build), str(project/'tests/radio.cpp')]
 command += [str(path) for path in files]
 command += ['-Wl,--gc-sections', '-o', str(build/'radio')]

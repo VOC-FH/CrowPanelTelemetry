@@ -1,0 +1,18 @@
+--- a/src/protocols/LoRaWAN/LoRaWAN.cpp
++++ b/src/protocols/LoRaWAN/LoRaWAN.cpp
+@@ -158,7 +158,6 @@
+     memset(this->fOptsUp, 0, RADIOLIB_LORAWAN_FHDR_FOPTS_MAX_LEN);
+     this->fOptsUpLen = 0;
+ 
+-    this->isMACPayload = false; // reset for next uplink
+ 
+   // if there is user payload, move this to the FRMPayload
+   } else {
+@@ -166,6 +165,7 @@
+     frmLen = lenUp;
+   }
+   
++  this->isMACPayload = false; // reset for next uplink
+   // build the encrypted uplink message
+   this->composeUplink(frmPayload, frmLen, uplinkMsg, fPort, isConfirmed);
+ 

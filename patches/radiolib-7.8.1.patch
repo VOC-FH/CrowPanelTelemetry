@@ -1,198 +1,86 @@
 --- a/src/protocols/LoRaWAN/LoRaWAN.cpp
 +++ b/src/protocols/LoRaWAN/LoRaWAN.cpp
-@@ -115,13 +115,13 @@
-   Module *mod = this->phyLayer->getMod();
-   RadioLibTime_t tNow = mod->hal->millis();
-   // if scheduled uplink time is in the past, reschedule to now
+@@ -118 +118 @@
 -  if(this->tUplink < tNow) {
 +  if(static_cast<int32_t>(this->tUplink - tNow) < 0) {
-     this->tUplink = tNow;
-   }
- 
-   // if dutycycle is enabled and the time since last uplink + interval has not elapsed, return an error
-   if(this->dutyCycleEnabled) {
+@@ -124 +124 @@
 -    if(this->tUplinkEnd + (RadioLibTime_t)dutyCycleInterval(this->dutyCycle, this->lastToA) > this->tUplink) {
 +    if(static_cast<int32_t>(this->tUplinkEnd + dutyCycleInterval(this->dutyCycle, this->lastToA) - this->tUplink) > 0) {
-       return(RADIOLIB_ERR_UPLINK_UNAVAILABLE);
-     }
-   }
-@@ -801,24 +801,23 @@
-       return(RADIOLIB_ERR_JOIN_NONCE_INVALID);
-     }
-   }
+@@ -161 +160,0 @@
+-    this->isMACPayload = false; // reset for next uplink
+@@ -168,0 +168 @@
++  this->isMACPayload = false; // reset for next uplink
+@@ -804 +803,0 @@
 -  this->joinNonce = joinNonceNew;
- 
-   uint32_t homeNetId = LoRaWANNode::ntoh<uint32_t>(&joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_HOME_NET_ID_POS], 3);
+@@ -807 +805,0 @@
 -  this->devAddr = LoRaWANNode::ntoh<uint32_t>(&joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_DEV_ADDR_POS]);
- 
-   // check LoRaWAN revision (the MIC verification depends on this)
-   uint8_t dlSettings = joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_DL_SETTINGS_POS];
+@@ -811,2 +809,2 @@
 -  this->rev = (dlSettings & RADIOLIB_LORAWAN_JOIN_ACCEPT_R_1_1) >> 7;
 -  RADIOLIB_DEBUG_PROTOCOL_PRINTLN("LoRaWAN revision: 1.%d", this->rev);
 +  uint8_t revNew = (dlSettings & RADIOLIB_LORAWAN_JOIN_ACCEPT_R_1_1) >> 7;
 +  RADIOLIB_DEBUG_PROTOCOL_PRINTLN("LoRaWAN revision: 1.%d", revNew);
- 
-   // verify MIC
+@@ -815 +813 @@
 -  if(this->rev == 1) {
 +  if(revNew == 1) {
-     // 1.1 version, first we need to derive the join accept integrity key
-     uint8_t keyDerivationBuff[RADIOLIB_AES128_BLOCK_SIZE] = { 0 };
+@@ -817,0 +816 @@
 +    uint8_t jSIntKey[RADIOLIB_AES128_KEY_SIZE];
-     keyDerivationBuff[0] = RADIOLIB_LORAWAN_JOIN_ACCEPT_JS_INT_KEY;
-     LoRaWANNode::hton<uint64_t>(&keyDerivationBuff[1], this->devEUI);
-     mod->hal->aes128->init(this->nwkKey);
+@@ -821 +820 @@
 -    mod->hal->aes128->encryptECB(keyDerivationBuff, RADIOLIB_AES128_BLOCK_SIZE, this->jSIntKey);
 +    mod->hal->aes128->encryptECB(keyDerivationBuff, RADIOLIB_AES128_BLOCK_SIZE, jSIntKey);
- 
-     // prepare the buffer for MIC calculation
-     uint8_t micBuff[3*RADIOLIB_AES128_BLOCK_SIZE] = { 0 };
-@@ -827,9 +826,10 @@
-     LoRaWANNode::hton<uint16_t>(&micBuff[9], this->devNonce - 1);
-     memcpy(&micBuff[11], joinAcceptMsg, lenRx);
-     
+@@ -830 +829 @@
 -    if(!verifyMIC(micBuff, lenRx + 11, this->jSIntKey)) {
 +    if(!verifyMIC(micBuff, lenRx + 11, jSIntKey)) {
-       return(RADIOLIB_ERR_MIC_MISMATCH);
-     }
+@@ -832,0 +832 @@
 +    memcpy(this->jSIntKey, jSIntKey, RADIOLIB_AES128_KEY_SIZE);
-   
-   } else {
-     // 1.0 version
-@@ -838,6 +838,10 @@
-     }
- 
-   }
+@@ -840,0 +841,4 @@
 +
 +  this->joinNonce = joinNonceNew;
 +  this->rev = revNew;
 +  this->devAddr = LoRaWANNode::ntoh<uint32_t>(&joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_DEV_ADDR_POS]);
- 
-   uint8_t cOcts[5];
-   uint8_t cid = RADIOLIB_LORAWAN_MAC_RX_PARAM_SETUP;
-@@ -957,13 +961,13 @@
-   Module *mod = this->phyLayer->getMod();
-   RadioLibTime_t tNow = mod->hal->millis();
-   // if scheduled uplink time is in the past, reschedule to now
+@@ -960 +964 @@
 -  if(this->tUplink < tNow) {
 +  if(static_cast<int32_t>(this->tUplink - tNow) < 0) {
-     this->tUplink = tNow;
-   }
- 
-   // if dutycycle is enabled and the time since last uplink + interval has not elapsed, return an error
-   if(this->dutyCycleEnabled) {
+@@ -966 +970 @@
 -    if(this->tUplinkEnd + (RadioLibTime_t)dutyCycleInterval(this->dutyCycle, this->lastToA) > this->tUplink) {
 +    if(static_cast<int32_t>(this->tUplinkEnd + dutyCycleInterval(this->dutyCycle, this->lastToA) - this->tUplink) > 0) {
-       return(RADIOLIB_ERR_UPLINK_UNAVAILABLE);
-     }
-   }
-@@ -986,6 +990,7 @@
-   RADIOLIB_DEBUG_PROTOCOL_PRINTLN("JoinRequest (DevNonce = %d):", this->devNonce);
-   RADIOLIB_DEBUG_PROTOCOL_HEXDUMP(joinRequestMsg, RADIOLIB_LORAWAN_JOIN_REQUEST_LEN);
- 
+@@ -988,0 +993 @@
 +  this->lastToA = 0;
-   state = this->transmitUplink(&this->channels[RADIOLIB_LORAWAN_UPLINK], 
-                                 joinRequestMsg, 
-                                 RADIOLIB_LORAWAN_JOIN_REQUEST_LEN);
-@@ -1504,10 +1509,10 @@
-   
-   // if requested, wait until transmitting uplink
-   RadioLibTime_t tNow = mod->hal->millis();
+@@ -1507 +1512 @@
 -  if(this->tUplink > tNow + this->launchDuration) {
 +  if(static_cast<int32_t>(this->tUplink - tNow - this->launchDuration) > 0) {
-     RADIOLIB_DEBUG_PROTOCOL_PRINTLN("Delaying transmission by %lu ms", (unsigned long)(this->tUplink - tNow - this->launchDuration));
-     tNow = mod->hal->millis();
+@@ -1510 +1515 @@
 -    if(this->tUplink > tNow + this->launchDuration) {
 +    if(static_cast<int32_t>(this->tUplink - tNow - this->launchDuration) > 0) {
-       this->sleepDelay(this->tUplink - tNow - this->launchDuration);
-     }
-   }
-@@ -1518,6 +1523,7 @@
- 
-   // start transmission, and time the duration of launchMode() to offset window timing
-   RadioLibTime_t spiStart = mod->hal->millis();
+@@ -1520,0 +1526 @@
 +  this->lastToA += toa;
-   state = this->phyLayer->launchMode();
-   RadioLibTime_t spiEnd = mod->hal->millis();
-   this->launchDuration = spiEnd - spiStart;
-@@ -1532,7 +1538,7 @@
-     // yield for multi-threaded platforms
-     mod->hal->yield();
- 
+@@ -1535 +1541 @@
 -    if(mod->hal->millis() > txEnd + this->scanGuard) {
 +    if(static_cast<RadioLibTime_t>(mod->hal->millis() - txEnd) > this->scanGuard) {
-       return(RADIOLIB_ERR_TX_TIMEOUT);
-     }
-   }
-@@ -1546,9 +1552,6 @@
-   }
- 
-   RADIOLIB_DEBUG_PROTOCOL_PRINTLN("Uplink sent (ToA = %d ms)", toa);
+@@ -1549,3 +1554,0 @@
 -
 -  // increase Time on Air of the uplink sequence
 -  this->lastToA += toa;
- 
-   return(state);
- }
-@@ -1570,7 +1573,7 @@
-   int16_t state = RADIOLIB_ERR_UNKNOWN;
- 
-   // either both must be set or none
+@@ -1573 +1576 @@
 -  if((dlDelay == 0 && tReference > 0) || (dlDelay > 0 && tReference == 0)) {
 +  if(dlDelay == 0 && tReference > 0) {
-     return(RADIOLIB_ERR_NO_RX_WINDOW);
-   }
- 
-@@ -1608,12 +1611,12 @@
- 
-   // if the Rx window must be awaited, do so
-   RadioLibTime_t tNow = mod->hal->millis();
+@@ -1611 +1614 @@
 -  if(dlDelay > 0 && tReference > 0) {
 +  if(dlDelay > 0) {
-     // calculate time at which the window should open
-     // - the launch of Rx window takes a few milliseconds, so shorten the waitLen a bit (launchDuration)
-     // - the Rx window is padded using scanGuard, so shorten the waitLen a bit (scanGuard / 2)
-     RadioLibTime_t tWindow = tReference + dlDelay - this->launchDuration - this->scanGuard / 2;
+@@ -1616 +1619 @@
 -    if(tNow > tWindow) {
 +    if(static_cast<int32_t>(tNow - tWindow) > 0) {
-       RADIOLIB_DEBUG_PROTOCOL_PRINTLN("Window too late by %d ms", tNow - tWindow);
-       return(RADIOLIB_ERR_NO_RX_WINDOW);
-     }
-@@ -2143,6 +2146,9 @@
-   uint8_t* payloadPtr = &downlinkMsg[RADIOLIB_LORAWAN_FRAME_PAYLOAD_POS(fOptsLen)];
-   processAES(payloadPtr, payLen, encKey, payloadPtr, addr, devFCnt32, RADIOLIB_LORAWAN_DOWNLINK, 0x00, true);
-   memcpy(data, payloadPtr, payLen);
+@@ -2145,0 +2149,3 @@
 +  if(fPort > 0) {
 +    this->applicationDownlink(data, payLen, fPort);
 +  }
- 
-   RADIOLIB_DEBUG_PROTOCOL_PRINTLN("Downlink (%sFCntDown = %lu) decoded:", 
-                                   (multicast) ? "M" : (isAppDownlink ? "A" : "N"), (unsigned long)devFCnt32);
-@@ -2277,7 +2283,9 @@
-       // temporarily lift dutyCycle restrictions to allow immediate MAC response
-       bool prevDC = this->dutyCycleEnabled;
-       this->dutyCycleEnabled = false;
+@@ -2279,0 +2286 @@
 +      RadioLibTime_t outerToA = this->lastToA;
-       this->sendReceive(fOptsRe, fOptsReLen, RADIOLIB_LORAWAN_FPORT_MAC_COMMAND);
+@@ -2280,0 +2288 @@
 +      this->lastToA += outerToA;
-       this->dutyCycleEnabled = prevDC;
- 
-     } else { // fOptsReLen <= 15
-@@ -3776,7 +3784,7 @@
- RadioLibTime_t LoRaWANNode::timeUntilUplink() {
-   Module* mod = this->phyLayer->getMod();
-   RadioLibTime_t nextUplink = this->tUplinkEnd + dutyCycleInterval(this->dutyCycle, this->lastToA);
+@@ -3779 +3787 @@
 -  if(mod->hal->millis() > nextUplink){
 +  if(static_cast<int32_t>(mod->hal->millis() - nextUplink) >= 0){
-     return(0);
-   }
-   return(nextUplink - mod->hal->millis() + 1);
 --- a/src/protocols/LoRaWAN/LoRaWAN.h
 +++ b/src/protocols/LoRaWAN/LoRaWAN.h
-@@ -992,6 +992,7 @@
- #if !RADIOLIB_GODMODE
-   protected:
- #endif
+@@ -994,0 +995 @@
 +    virtual void applicationDownlink(const uint8_t*, size_t, uint8_t) {}
-     PhysicalLayer* phyLayer = NULL;
-     const LoRaWANBand_t* band = NULL;
- 

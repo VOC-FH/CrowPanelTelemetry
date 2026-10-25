@@ -1,0 +1,11 @@
+patching file src/protocols/LoRaWAN/LoRaWAN.cpp
+patching file src/protocols/LoRaWAN/LoRaWAN.h
+patching file src/protocols/LoRaWAN/LoRaWAN.cpp
+patching file src/protocols/LoRaWAN/LoRaWAN.h
+PASS: exact radiolib-7.8.1 patch applied and verified
+PASS: radiolib-7.8.1 patch already applied
+patching file src/jpeg.inl
+patching file src/jpeg.inl
+PASS: exact jpegdec-1.8.4 patch applied and verified
+PASS: jpegdec-1.8.4 patch already applied
+PASS: both dependency patches: exact-source apply, idempotence, modified-source refusal

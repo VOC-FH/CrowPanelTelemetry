@@ -1,0 +1,37 @@
+--- a/Workers.cpp
++++ b/Workers.cpp
+@@ -239,9 +239,9 @@
+     Preferences prefs;
+     bool ok = prefs.begin("crow-wifi", false);
+     WifiCommand command{};
+-    if (ok) {
+-        strlcpy(command.ssid, prefs.getString("ssid").c_str(), sizeof(command.ssid));
+-        strlcpy(command.password, prefs.getString("password").c_str(), sizeof(command.password));
++    if (ok && (prefs.getBytes("credentials", &command, sizeof(command)) != sizeof(command) ||
++               command.ssid[sizeof(command.ssid) - 1] != 0 || command.password[sizeof(command.password) - 1] != 0)) {
++        command = {};
+     }
+     WiFi.setPins(Pins::WifiClk, Pins::WifiCmd, Pins::WifiD0, Pins::WifiD1, Pins::WifiD2, Pins::WifiD3, Pins::WifiReset);
+     bool online = WiFi.mode(WIFI_STA);
+@@ -257,18 +257,15 @@
+     bool saveOnConnect = false;
+     for (;;) {
+         if (xQueueReceive(wifiCommands, &command, pdMS_TO_TICKS(100)) == pdTRUE && online) {
+-            WiFi.disconnect(false, false);
+-            WiFi.begin(command.ssid, command.password);
++            saveOnConnect = WiFi.STA.connect(command.ssid, command.password);
+             connectAt = millis();
+-            saveOnConnect = true;
+         }
+         if (millis() - reportAt >= 2000) {
+             char text[160];
+-            if (WiFi.status() == WL_CONNECTED) {
++            if (WiFi.STA.connected() && WiFi.STA.hasIP()) {
+                 snprintf(text, sizeof(text), "%s / %s", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str());
+                 if (saveOnConnect && ok) {
+-                    bool saved = prefs.putString("ssid", command.ssid) > 0;
+-                    saved = prefs.putString("password", command.password) == strlen(command.password) && saved;
++                    bool saved = prefs.putBytes("credentials", &command, sizeof(command)) == sizeof(command);
+                     if (!saved) {
+                         snprintf(text, sizeof(text), "Connected; saving credentials failed");
+                     }

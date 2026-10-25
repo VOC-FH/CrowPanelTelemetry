@@ -88,5 +88,49 @@
       }
     },
     "scope": "F1/F2/F3/F8/F9/F10/F13 correctness; approved media stack increase; qualified retained F4/F6/F7/F11/F12; no hardware operation. Binary JPEG fixtures excluded from physical LOC."
+  },
+  "rereview_checkpoint": {
+    "baseline_commit": "c6fe271124666c82f92733a8c0f161697761367d",
+    "lines": {
+      "application": {
+        "added": 1,
+        "removed": 1
+      },
+      "dependency_source": {
+        "added": 0,
+        "removed": 0
+      },
+      "tests": {
+        "added": 73,
+        "removed": 0
+      },
+      "tooling": {
+        "added": 20,
+        "removed": 1
+      }
+    },
+    "scope": "Incomplete N1\u2013N9 task: credential-save status overwrite only; proposals unapplied; no dependency production changes."
+  },
+  "rereview_approved_stage": {
+    "baseline_commit": "c6fe271124666c82f92733a8c0f161697761367d",
+    "lines": {
+      "application": {
+        "added": 3,
+        "removed": 1
+      },
+      "dependency_source": {
+        "added": 8,
+        "removed": 1
+      },
+      "tests": {
+        "added": 144,
+        "removed": 11
+      },
+      "tooling": {
+        "added": 111,
+        "removed": 27
+      }
+    },
+    "scope": "N1 approved seven-line JPEG parser guard; N5 MAC flag lifetime; N6 two-line task stop; prior WiFi diagnostic. One replacement patch tool serves both dependencies; N4/N7/F8 proposals excluded."
   }
 }

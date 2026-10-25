@@ -17,7 +17,11 @@ and NVS nonces; completed operations extend that deadline using total airtime.
 Preserve pre-RF DevNonce reservation, including ambiguous TX errors. Airtime is
 not persisted or reserved before transmissions; internal MAC replies are not
 held by the application deadline. Apply the patch only to the selected isolated
-dependency. Do not edit installed SDK sources.
+dependency. The hash-checked JPEGDEC 1.8.4 patch bounds SOF metadata before writes.
+Use tools/patch_dependency.py as the sole patch-application implementation for both
+libraries; the former RadioLib-only tool is replaced. The approved seven-line
+JPEGParseInfo guard retains the vendor error-return idiom as a narrow style
+exception; no other vendor style exception is implied. Do not edit installed SDK sources.
 The media worker uses SdStorage (IDF slot 0, default deinit flags, fixed shared
 3.3 V VO4 reference) and POSIX files. It starts after WiFi.mode completes so
 application init calls are ordered; Hosted traffic is not serialized with SD mounts. Its cleanup callback must

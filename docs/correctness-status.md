@@ -19,9 +19,10 @@ The media worker owns one IDF/POSIX mount, slot 0 and a fixed shared3.3V rail
 reference. The rail is retained for that worker's lifetime, including failed mounts.
 No SD GPIO can reconfigure45/46. The default DEINIT_ARG flag stays intact; a cleanup
 callback checks the SDK's slot count against the pre-mount snapshot before calling
-slot-0 deinit. This also avoids IDF's uncounted-slot cleanup on early init failure.
+slot-0 deinit. With quiescent slot lifecycles this avoids IDF's uncounted-slot cleanup on early init failure.
 An early failed initialization can leave the single controller initialized for
-reuse; it does not accumulate slot references or tear down C6. Application init calls are ordered
+reuse. This guard has not established safety against concurrent Hosted recovery;
+slot-count changes can race it. Application init calls are ordered
 after WiFi.mode; Hosted traffic and SD mount/clock/deinit are not serialized; failed C6 startup requires restart rather than implicit reinit.
 An ambiguous unmount error latches storage unavailable until restart, preventing
 reuse/double cleanup. This is tested at the API boundary; actual SD/C6 operation
@@ -118,3 +119,15 @@ retention remain physical prerequisites. The pinned schematic confirms the
 GPIO30/R147/R71 path only, not its fitted state or measured behavior.
 Assembly/bench flashing remain conditional on those checks and separate flash
 permission; unattended TTN remains NO-GO until full acceptance including24h run.
+
+
+## Re-review N1–N9 checkpoint
+
+See [current verification and dispositions](review/rereview-fix-status.md).
+The earlier completed-fix statements above describe the prior repair checkpoint,
+not resolution of these new findings. Approved N1 JPEG bounds, N5 MAC-flag lifetime
+and N6 final radio diagnostics are now source-corrected and tested. Counter-zero
+handling and coexistence remain open. The credential-save status overwrite is
+corrected; WiFi association/persistence and strict GPS checksum parsing are not
+yet resolved. No hardware evidence
+was added. Unattended TTN operation remains NO-GO.

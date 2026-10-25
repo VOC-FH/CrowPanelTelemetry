@@ -77,3 +77,35 @@ RadioLib EU868 powerMax16 is passed to the PHY as conducted dBm, with no antenna
 gain/cable-loss adjustment in this app. Initial radio.begin requests14dBm; ADR can
 request16dBm. Measure conducted power, antenna gain/loss, EIRP and ERP separately;
 no default or antenna value was changed. RF measurements need separate authorization.
+
+
+## Re-review checkpoint sources
+
+Exact-tag downloads and newly relied-on file hashes are saved separately in
+validation-logs/rereview-fix/dependencies.json and source-sha256.json; original
+hash records are not overwritten. Source-only claims, diagnostic reproductions
+and hardware prerequisites are distinguished in review/rereview-fix-status.md.
+
+- [LoRa Alliance LoRaWAN 1.1 publication](https://resources.lora-alliance.org/technical-specifications/lorawan-specification-v1-1)
+  links the official specification viewer. Section4.3.1.5, printed page23,
+  requires duplicate downlinks not to be processed again, including repeated
+  acknowledgements. This is the protocol basis for the N4 regression requirement;
+  an application-side text filter would not repair the radio protocol state.
+- [Official viewer, frame counters](https://read.uberflip.com/i/1428365-lorawan-specification-v1-1/22).
+- [Hosted v2.12.13 SD coexistence example](https://github.com/espressif/esp-hosted-mcu/tree/v2.12.13/examples/host_sdcard_with_hosted)
+  demonstrates a particular startup/mount sequence, not exclusion of all runtime
+  mount, deinit and recovery paths. Installed SDK restart-on-failure configuration
+  and the exact source's esp_restart call establish a conditional P4 reset path.
+- [JPEGDEC 1.8.4 parser](https://github.com/bitbank2/JPEGDEC/blob/1.8.4/src/jpeg.inl):
+  openRAM parsing precedes the application's admission guard. The approved N1
+  parser-authority patch now validates SOF metadata before writes. Its original
+  and patched hashes are in patches/jpegdec-1.8.4-hashes.json.
+
+
+- [Espressif P4 schematic checklist: GPIO/USB](https://docs.espressif.com/projects/esp-hardware-design-guidelines/en/latest/esp32p4/schematic-checklist-esp32p4.html#usb)
+  distinguishes default USB serial/JTAG GPIO24/25 from FS-OTG GPIO26/27.
+- [IDF v5.5.5 P4 GPIO low-level driver](https://github.com/espressif/esp-idf/blob/v5.5.5/components/hal/esp32p4/include/hal/gpio_ll.h)
+  explicitly disables default USB pads during IOMUX selection and overrides the
+  default DP pull-up during pull-up disable. The installed header is byte-identical;
+  its hash is recorded. This qualifies the review's low-confidence runtime-conflict
+  suggestion, without claiming measured reset-time or MCLK behavior.

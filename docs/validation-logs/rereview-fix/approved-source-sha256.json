@@ -1,0 +1,23 @@
+{
+  "JPEGDEC-1.8.4/jpeg.inl": "ab6dd18350a8d1ab73ad8b296d7da7274684fa4571f9abdd46d5630709a0c7bc",
+  "JPEGDEC-1.8.4/JPEGDEC.h": "3c7ed1ec539bc581ee189aa27857c4a228cc6668455b8aca2912466efa881d34",
+  "patched-RadioLib-7.8.1/LoRaWAN.cpp": "2bbaac518b9968d96920cbdc2475a39c7a3e8066c000a44c5969c570a1ccbee0",
+  "patched-RadioLib-7.8.1/LoRaWAN.h": "26463ca942f369d847d2567f0584864a2151c187c18b7e1c478c673d07d0b388",
+  "esp-idf-v5.5.5/sdmmc_host.c": "366dcc3e7f72db930632e1e49cebb4ffa8bc080f631c0aecb179cf187315c0ff",
+  "esp-idf-v5.5.5/sdmmc_transaction.c": "7cea7d649edbfa655ab3c3a26ba1d3d25290841091b8900f9643559bdb1bcad6",
+  "Hosted-v2.12.13/sdio_drv.c": "e45c99b5a1c8735eaaab635ab404ee6e34ae98c7f5b92de3db134c95b37ab86d",
+  "Hosted-v2.12.13/port_esp_hosted_host_os.c": "8dce9bdf20bea89e0a3e0eff893733e3cda65775dbd0f98a9e8af55ddc36c245",
+  "Hosted-v2.12.13/sd_card_functions.c": "45aa6081f47c822a4847590c2acf2523d515d1562c009eea25545763b9f9acce",
+  "TinyGPSPlus-v1.0.3a/TinyGPS++.cpp": "904b28be515b2b006afd25a7f54c510006edc2d33edf03b834936896a883804d",
+  "panel.sch": "7f9ac57dab96110467e4a9728cfb71b46024ea57f28a2d9d8b545b3ff0d0c172",
+  "panel.brd": "29cd4115b1d16de5b1c5f99582b83e8fb3ef5616acd920dfa609b7d7424f9430",
+  "core-3.3.12/libraries/WiFi/src/WiFiSTA.cpp": "ae665d9b0469c58017ad193a47bf2e2409acc69e955f409e156ae5896201497f",
+  "core-3.3.12/libraries/WiFi/src/STA.cpp": "8e0033dc89aa1ee9c18e4032939eb0c8d774495fc3468988022185b4b1eb9f0c",
+  "core-3.3.12/libraries/Preferences/src/Preferences.cpp": "346fa41649decf26c62660b671891e9815eeab2d4539543cd36b6a0d54bf9dab",
+  "core-3.3.12/libraries/Network/src/NetworkInterface.cpp": "16c8b9866e544a938dd921c474d24d6fbaf0796173d34546c0061223205042e5",
+  "esp32p4-libs/sdkconfig.h": "d22029ff6e5870ca70f5e3065f3e9cd2e99c2c05ad0dbb73fb848189e063cd2b",
+  "esp32p4_es-libs/sdkconfig.h": "dd497a65b33a006c3ede1c7bfccd7d04da8d2dc224862162eae75fa8ad359420",
+  "patched-JPEGDEC-1.8.4/jpeg.inl": "a14f53115053a4b5b2d8e865c661460fe23b68afbb478d54ef4a1eafeefa97a8",
+  "installed-P4-sdk/gpio_ll.h": "8352a7e462ebfac20ed441501f9234cc2e107b5e39bf8315238fbe16b96d48ef",
+  "esp-idf-v5.5.5/gpio.c": "5533690740837025221a4ab64a9cf1557aeb2d7754f0ded630884e658464f291"
+}

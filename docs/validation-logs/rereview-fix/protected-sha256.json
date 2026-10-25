@@ -1,0 +1,13 @@
+{
+  "Config.h": "640d3514ac9d89c24a968cb04df908a0af03c3d8ef747caec3973798d141a007",
+  "docs/source-photo.png": "5b2e2bdfefe5a38b7bbee5ef09f37c363579a8628f27df23f5702b5fcd6624ad",
+  "docs/ui-preview.svg": "201656131387b862c202eddf03b662c6d4b697e4307284b8db340431e19b46fa",
+  "docs/ui-preview.png": "f973bbd21d6b9a91b201e3fda898a3e6cc9c4c143517e4c295321858197ba172",
+  "docs/wiring.svg": "8f97266d4fc378f824e2264f48c57b012d070609c039676b2d14df398e665f28",
+  "docs/wiring.png": "cfc66a6e92e80daf84971f187af663e27935d8e682d0856c146691641b303f47",
+  "docs/radio-nets.json": "4c91b0e26380071b8dddf549c0622fb7e3915392c620d6902eb15a3d746635e9",
+  "Telemetry.h": "833983f5f68926553875d2b090edff99c39c2b1775fb576e2435506e5fd9dd4d",
+  "ttn-decoder.js": "74d5d6df05ddf85b452e6ebe148da80378108dd36ad7965669becef1e222cf0c",
+  "tests/reference-packet.json": "7830ef443d0513c4dd8f81f3e50378cc10ba1fb4ed7b077028c474d88977f1cc",
+  "artifacts/CrowPanelTelemetry-delivery.zip": "ed232d6bfdaa92758e8dee3578cbfcab3dcda5de403db72967c7aa0d8a719273"
+}

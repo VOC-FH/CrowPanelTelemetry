@@ -1,0 +1,94 @@
+--- a/src/protocols/LoRaWAN/LoRaWAN.h
++++ b/src/protocols/LoRaWAN/LoRaWAN.h
+@@ -1040,6 +1040,7 @@
+     uint32_t fCntUp = 0;
+     uint32_t aFCntDown = 0;
+     uint32_t nFCntDown = 0;
++    uint8_t downlinkSeen = 0;      // Accepted App/Nwk counter state, bits 0/1
+     uint32_t confFCntUp = RADIOLIB_LORAWAN_FCNT_NONE;
+     uint32_t confFCntDown = RADIOLIB_LORAWAN_FCNT_NONE;
+     uint32_t adrFCnt = 0;
+--- a/src/protocols/LoRaWAN/LoRaWAN.cpp
++++ b/src/protocols/LoRaWAN/LoRaWAN.cpp
+@@ -360,6 +360,7 @@
+   this->fCntUp = 0;
+   this->aFCntDown = 0;
+   this->nFCntDown = 0;
++  this->downlinkSeen = 0;
+   this->confFCntUp = RADIOLIB_LORAWAN_FCNT_NONE;
+   this->confFCntDown = RADIOLIB_LORAWAN_FCNT_NONE;
+   this->adrFCnt = 0;
+@@ -524,7 +525,7 @@
+   memcpy(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_AVAILABLE_CHANNELS], this->channelFlags, sizeof(this->channelFlags));
+ 
+   // store the session status
+-  LoRaWANNode::hton<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS], this->sessionStatus);
++  LoRaWANNode::hton<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS], this->sessionStatus | 0x80 | (this->downlinkSeen << 4));
+ 
+   // generate the signature of the Session buffer, and store it in the last two bytes of the Session buffer
+   uint16_t signature = LoRaWANNode::checkSum16(this->bufferSession, RADIOLIB_LORAWAN_SESSION_BUF_SIZE - 2);
+@@ -540,6 +541,9 @@
+   }
+ 
+   int16_t state = LoRaWANNode::checkBufferCommon(persistentBuffer, RADIOLIB_LORAWAN_SESSION_BUF_SIZE);
++  if(state == RADIOLIB_ERR_NONE && !(persistentBuffer[RADIOLIB_LORAWAN_SESSION_STATUS] & 0x80)) {
++    state = RADIOLIB_ERR_SESSION_DISCARDED;
++  }
+   RADIOLIB_ASSERT(state);
+ 
+   // the Nonces buffer holds a checksum signature - compare this to the signature that is in the session buffer
+@@ -609,7 +613,8 @@
+   memcpy(this->channelFlags, &this->bufferSession[RADIOLIB_LORAWAN_SESSION_AVAILABLE_CHANNELS], RADIOLIB_LORAWAN_MAX_NUM_SUBBANDS);
+ 
+   // restore the session status
+-  this->sessionStatus = LoRaWANNode::ntoh<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS]);
++  this->sessionStatus = LoRaWANNode::ntoh<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS]) & 0x0F;
++  this->downlinkSeen = (this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS] >> 4) & 0x03;
+ 
+   // check if the session is active, if not, don't restore anything else
+   if(this->sessionStatus != RADIOLIB_LORAWAN_SESSION_ACTIVE) {
+@@ -2003,7 +2008,7 @@
+   uint16_t payFCnt16 = LoRaWANNode::ntoh<uint16_t>(&downlinkMsg[RADIOLIB_LORAWAN_FHDR_FCNT_POS]);
+ 
+   // check the FCntDown value (Network or Application, or Multicast)
+-  uint32_t devFCnt32 = 0;
++  uint64_t devFCnt32 = 0;
+   if(multicast) {
+     // multicast
+     devFCnt32 = this->mcGroups[mcGroupId].mcFCnt;
+@@ -2019,7 +2024,7 @@
+   // assume a rollover if the FCnt16 in the payload is equal to / smaller 
+   // than the previous FCnt16 known by device
+   // (MAX_FCNT_GAP is deprecated for 1.0.4 / 1.1, TTS and CS both apply a 16-bit rollover)
+-  if(devFCnt32 > 0 && payFCnt16 <= (uint16_t)devFCnt32) {
++  if((devFCnt32 > 0 || (!multicast && (this->downlinkSeen & (isAppDownlink ? 1 : 2)))) && payFCnt16 <= (uint16_t)devFCnt32) {
+     RADIOLIB_DEBUG_PROTOCOL_PRINTLN("FCnt rollover: %d -> %d", (uint16_t)devFCnt32, payFCnt16);
+     devFCnt32 += 0x10000;   // add 16-bit value
+   }
+@@ -2027,13 +2032,11 @@
+   devFCnt32 |= payFCnt16;   // set lower 16 bits from payload
+ 
+   // for multicast, a maximum FCnt value is defined in TS005
+-  if(multicast) {
+-    if(devFCnt32 > this->mcGroups[mcGroupId].mcFCntMax) {
+-      #if !RADIOLIB_STATIC_ONLY
+-        delete[] downlinkMsg;
+-      #endif
+-      return(RADIOLIB_ERR_MULTICAST_FCNT_INVALID);
+-    }
++  if(devFCnt32 > UINT32_MAX || (multicast && devFCnt32 > this->mcGroups[mcGroupId].mcFCntMax)) {
++    #if !RADIOLIB_STATIC_ONLY
++      delete[] downlinkMsg;
++    #endif
++    return(multicast ? RADIOLIB_ERR_MULTICAST_FCNT_INVALID : RADIOLIB_ERR_DOWNLINK_MALFORMED);
+   }
+ 
+   bool isConfirmedDown = false;
+@@ -2095,6 +2098,7 @@
+     } else {
+       this->nFCntDown = devFCnt32;
+     }
++    this->downlinkSeen |= isAppDownlink ? 1 : 2;
+   }
+ 
+   // if this is a confirmed downlink, save the downlink FCnt value

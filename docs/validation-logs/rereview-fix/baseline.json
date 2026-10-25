@@ -1,0 +1,556 @@
+{
+  "head": "c6fe271124666c82f92733a8c0f161697761367d",
+  "status": " M SHA256SUMS.json\n M docs/review/README.md\n?? docs/review/rereview-fix-prompt-request.md\n?? docs/review/rereview-fix-prompt-run.json\n",
+  "diff_stat": " SHA256SUMS.json       |  4 +++-\n docs/review/README.md | 13 +++++++++++++\n 2 files changed, 16 insertions(+), 1 deletion(-)\n",
+  "manifest": "{\n  \".clang-format\": \"633441d2ab5699252d83520f001d61dc2d6dde90f76e3a99f799baf60f08aafa\",\n  \".clang-format-ignore\": \"137c5f6c1cc2192c3e29ee0748e6c68853e0e4b34a9697038840b3c865debcb9\",\n  \".clang-tidy\": \"e81b15a50fc926a66e6e8aecd4647a850c3ef0c64781b61d61ad82d099b441cd\",\n  \".clangd\": \"64de7616169b415a8bdfd8b91d405bfd2b0d723a0fc4738c30a83005f4b942bb\",\n  \".gitignore\": \"10539007bb4f153400d5d74774e9863b73a8a10c5e7544af3e3b7fee84c4beab\",\n  \"AGENTS.md\": \"c5f2bdc9e0ade8644d2c6b94534685bac956f1a6aab2e7ca284ce2dd624aaa06\",\n  \"App.h\": \"d0605e5835f1b96ba591be6ef216d0ea9545cf6720b1976f2ea63293b45c69a4\",\n  \"Application.cpp\": \"e52bfc0d80f7e22d173b44e9f2a0dae46e091d40814126d86fba396d5e7eaeb0\",\n  \"Config.h\": \"640d3514ac9d89c24a968cb04df908a0af03c3d8ef747caec3973798d141a007\",\n  \"CrowPanelTelemetry.ino\": \"8616017294cf1410aba9050ae24719e0b70b59e2b0b0695a454ff8e13289d452\",\n  \"Makefile\": \"18fe91b5b664a4704cb5c0eb808114bc532e70ed9ab34f89d402ef57cecffd50\",\n  \"README.md\": \"2122e535b233095181b5597effb4eb57406e75e7cd2b51c9c0b1427bcb1c89dc\",\n  \"SdStorage.h\": \"4666121c4bc264d51b56639fbe73ac3863b6c7bd3dc0f4af451f7984400c96da\",\n  \"Telemetry.h\": \"833983f5f68926553875d2b090edff99c39c2b1775fb576e2435506e5fd9dd4d\",\n  \"Ui.cpp\": \"9c0e8531ab362003841004fe50642f7d67dcb617e8f709f98aae99cf3389993f\",\n  \"Workers.cpp\": \"19ef10f243d3312b9d6c774d4820ce2818cae9ca06927c2949f448011ab22e1f\",\n  \"artifacts/CrowPanelTelemetry-delivery.zip\": \"ed232d6bfdaa92758e8dee3578cbfcab3dcda5de403db72967c7aa0d8a719273\",\n  \"artifacts/README.md\": \"9624f67e9c83557b2126005587a25d6da47abdd17b1e1b2d856bd7ab683e665e\",\n  \"docs/airtime-calculation.txt\": \"4fff9c49bcb06c9ae738b43fa1e47e8c458935c53fe2a0d477747c0a2b4e8c45\",\n  \"docs/airtime.md\": \"4c0d7d1102560914ec55d3432a7338f4293260d44314d76cab6161b6b7197d11\",\n  \"docs/change-accounting.json\": \"00229f284641d1d65586722c458396b1088918147b74945bdfaa1c6ad56e5925\",\n  \"docs/correctness-source-hashes.json\": \"57b189c42a5bf8cadbe44abfec1221e4e852b000f57817165452cc7b8b17bbdb\",\n  \"docs/correctness-status.md\": \"98587dc0272bc994dbc73ea35e76ecfd7b4d5e81b10e5805560bb6bce811005d\",\n  \"docs/hardware-checklist.md\": \"1016934eade038b48ab0fde59f30e337fc383741e988a686051330be195bf065\",\n  \"docs/radio-nets.json\": \"4c91b0e26380071b8dddf549c0622fb7e3915392c620d6902eb15a3d746635e9\",\n  \"docs/review/README.md\": \"4fcdb2b7832939616b8956e47e08371d56d6c460e8afa5661d573e0b02580268\",\n  \"docs/review/checkpoint-changes.json\": \"638d5d8cb10fc7f716ed1a88d0ca9d986f96ea2eb3ff4d4ab05cbdf324c8a89b\",\n  \"docs/review/claude-deep-fix-prompt.md\": \"1e989ae209ff50213146bd7ae88d22f4297cfab49d030bf8e294db0dc17e3830\",\n  \"docs/review/claude-deep-rereview.md\": \"0385e0d7cc56b4bfb63705a739382e5b132b0f045dc2fc27837c2c9a440e7e34\",\n  \"docs/review/claude-deep-review.md\": \"0d815bab5f4e994afda8b6900326f35d0fa3cd26eba1b7b34dd25e6732de2fcb\",\n  \"docs/review/claude-fix-prompt-raw.md\": \"8bcfba751eeb6c0676ca60e5ce6d8569b31a34462294b1da92941b44725a0f31\",\n  \"docs/review/claude-fix-prompt.md\": \"a30d255e5b09ce38b22c64f9d52a369cc6567d779fa5fb672a4937f77b6b3090\",\n  \"docs/review/claude-review.md\": \"cb96890703255a818d827945fe14f9567dfc2231edbac7ff712184c6e2270f1d\",\n  \"docs/review/claude-stderr.log\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n  \"docs/review/deep-fix-dispositions.md\": \"12684a1e5e6a8fe0e5439a671a43e58e9f1144ac67d982097d0a0dbffd929dbd\",\n  \"docs/review/deep-fix-prompt-request.md\": \"cafde5c240e1793595549e5eb76628cac1183c5844dc8c599c24df6ccf0198af\",\n  \"docs/review/deep-rereview-request.md\": \"ec3e3a64b569c7fa3c4b13eb7fe4d81d3167c95fda3b21c9e85d2fc16dbb3d4b\",\n  \"docs/review/deep-rereview-run.json\": \"eddc9293673c70d86fa175f7af4807dfc0fdb56a6b8dff09ab9cc2a3ca087b3a\",\n  \"docs/review/deep-review-assessment.md\": \"221b650b607151aea887e7391dde43c6573fa6efc9448dd31f0a59236f7189ad\",\n  \"docs/review/deep-review-request.md\": \"d54adedfcd329f275be933c0e79eb2f8dbc153418b65a291aaac3dae8a5997f0\",\n  \"docs/review/f1-proposed.patch\": \"1aa8d5c26d7b70929ba50ea959d2f08a71d28d527672d7523b0dcd0042cc2974\",\n  \"docs/review/f10-proposed.patch\": \"06e10808f1ec3064b644deb62e737fc09d13e7c5e280bff733973529baed604c\",\n  \"docs/review/f3-proposed.patch\": \"2a087adf407751c784826c81a345999ec3eb3c44a3d7d27ae9eee2f7f09fc3c9\",\n  \"docs/review/f9-proposed.patch\": \"1746f949c2cbdeec88bd4263c9d242e3845a8feac9ae5b5b0de2695c180af0f0\",\n  \"docs/review/fix-baseline-manifest.json\": \"3edef85bbbe21be327916eb1c116f5afe26a0c5a01a8f5b23c4695710453f639\",\n  \"docs/review/fix-baseline.json\": \"39ecf33843222e27c34bad45dbe02bb1622e8943f1440bafcc63183fbf4bbbdf\",\n  \"docs/review/fix-prompt-request.md\": \"1d8e15ee224a1ebec534dbd288cb2e048943289a73c748a1e3d96bd427e27612\",\n  \"docs/review/fix-prompt-stderr.log\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n  \"docs/review/request.md\": \"6a244bfdab9f32266bd7366bf01e6a5a013f713c9aa5cd5f0a14806196d48a2e\",\n  \"docs/review/rereview-fix-prompt-request.md\": \"135030f6551269fd98fe1dbd6420a27dbbd37c336e5366c296c80083b344fce9\",\n  \"docs/review/rereview-fix-prompt-run.json\": \"62b8cf5b4398856643ac776da7c87da550a8415004c29fb2f1d6456a247a99be\",\n  \"docs/review/sd-start-manifest.json\": \"b76fdd86a895d4c16b5361ab9f03a52c2ff9c632b31f03125a3624f77dee39ea\",\n  \"docs/source-photo.png\": \"5b2e2bdfefe5a38b7bbee5ef09f37c363579a8628f27df23f5702b5fcd6624ad\",\n  \"docs/sources.md\": \"44d5cad23abacfd1b2693b49f9a4644c742156fbcffccdd92c970d6b82871a01\",\n  \"docs/ui-preview.png\": \"f973bbd21d6b9a91b201e3fda898a3e6cc9c4c143517e4c295321858197ba172\",\n  \"docs/ui-preview.svg\": \"201656131387b862c202eddf03b662c6d4b697e4307284b8db340431e19b46fa\",\n  \"docs/ui.md\": \"162572f7777b427eb196de19ad2b435cc2aa44467fe546b61f3a974cf2a676b4\",\n  \"docs/validation-logs/arduino-cli-1.5.1-checksums.txt\": \"1deac1e8d8eff69ef1b0cb8c5d4be2a3a81224b103eaf3403b77ff470c7f4ec6\",\n  \"docs/validation-logs/baseline-format.txt\": \"88b1a9ef4eddfc84d4a1b83d3ab0dcbb89071b59609a420f8d8bb16bb182487b\",\n  \"docs/validation-logs/baseline-host.txt\": \"bc6649874b2d7c7a02cb36b2b6563faf71ce8b1422ffca01969481d4c67da891\",\n  \"docs/validation-logs/build-input-sha256.json\": \"32f6911934e301fd78404254ddc318c84c0f91ee0de6521868304b14a28f4209\",\n  \"docs/validation-logs/deep-fix-baseline.json\": \"0ff62d69540d3e599fd7ff427504e8f07d2b7b643f87afea346af0e8263a6a2a\",\n  \"docs/validation-logs/deep-fix-build-results.json\": \"d2d941640fbd6d66859a88573094984a23209fc924dee0b71a89e71439373b06\",\n  \"docs/validation-logs/deep-fix-changes.json\": \"8ca71f3ab70cdceb800e4c093e9e315f0312bd97b7e86c4727da7372465a56ce\",\n  \"docs/validation-logs/deep-fix-dependencies.json\": \"e29d80de5112319b09cd6c106fec12a4364a22cdc103c91a6872801b57eaa678\",\n  \"docs/validation-logs/deep-fix-line-accounting.json\": \"702f911ab2568a510e39593e51a0145034061f0b55eac8c4d196892a5559ad7a\",\n  \"docs/validation-logs/default-prev3.txt\": \"b3d1e9504d02a06c83a5cf0d2e60d04a58930b721c25292db96997908cfde6be\",\n  \"docs/validation-logs/enabled-postv3.txt\": \"884ef403443638156a8dec44c5bd5dd64614bebbe84c3dc17fdac49b02485736\",\n  \"docs/validation-logs/enabled-prev3.txt\": \"dac1d79ff4da32f813110fb4a112064a891f7438d0f6ff73a9cd7aa7fe7c4c7a\",\n  \"docs/validation-logs/f1-after.txt\": \"2816c341087d4d2b7c6f5d6a9801c333e5109f5594f964f235b3e8723b0d4861\",\n  \"docs/validation-logs/f1-reproducer-before.txt\": \"d370113720c03ee00f9d49fd46df0adca866b4fb5a2264b133e04d8651fd3cd5\",\n  \"docs/validation-logs/f10-after.txt\": \"deed1b231cb9f8f943cb74a8af05c25da038f53316ce92d3b5795b9f95ad4819\",\n  \"docs/validation-logs/f10-before.txt\": \"19504bc32d0087aace1b650fcbba767bc8fd0d527e4a80c173495b236a5325e6\",\n  \"docs/validation-logs/f13-after.txt\": \"581aa03690b4e2989535bbc8d2ceac56d6a6ea4dfd6732c478bbbe231e8642bc\",\n  \"docs/validation-logs/f13-before.txt\": \"ece3821738d3f82c3896a27a79cad67c46d559c63eb38c280b28d7d3922cd440\",\n  \"docs/validation-logs/f2-after.txt\": \"2816c341087d4d2b7c6f5d6a9801c333e5109f5594f964f235b3e8723b0d4861\",\n  \"docs/validation-logs/f2-before.txt\": \"a17b31abe972639f5edcd764fe926c866c3cfaaee2e74678c738b70a7b21f597\",\n  \"docs/validation-logs/f3-after.txt\": \"fedd65e783b19395f3ebed9fb607a7c30cafcf68e4e99664363d9f40626e28c8\",\n  \"docs/validation-logs/f3-before.txt\": \"df741b18f60857bf2173cb863034943ee347afeb0f1b87ac97df6ef35c0857a1\",\n  \"docs/validation-logs/f8-after.txt\": \"402ed267a2665bd02990653010e61138264469e35fa903d3149ca3baca43970e\",\n  \"docs/validation-logs/f8-before.txt\": \"ef1924f42b8a4f3e9623d1f4e29f41cacfe5709e05ce314fdf144c3bd1947700\",\n  \"docs/validation-logs/f9-after.txt\": \"2816c341087d4d2b7c6f5d6a9801c333e5109f5594f964f235b3e8723b0d4861\",\n  \"docs/validation-logs/f9-before.txt\": \"e87ce0d9e9f7d3a2dbc391f6a840e41c6e30f85b1433bf346180548b9ae3d5f2\",\n  \"docs/validation-logs/format-check.txt\": \"6431ef2ece98cb41071129a0dd078e54f1c2d434980bde7dc55503a5cbedeca2\",\n  \"docs/validation-logs/format.txt\": \"ff0be77f522bca308ac2fc8f317371f32605dc79daee9d920ad1dec9b8109738\",\n  \"docs/validation-logs/host-tidy-0.txt\": \"9be4d565f602db52761744d35869fd8c9da38160fcf0ccc6524169d999598074\",\n  \"docs/validation-logs/host-tidy-1.txt\": \"93f3b73a46fdbd5652c4000d91aedb4c7e7cad0b5c1d8a6389763b478ecffc27\",\n  \"docs/validation-logs/host.txt\": \"b95ddc12519d14054f0f05b1cad727c921a047178fa2e27a01659a352f180767\",\n  \"docs/validation-logs/m32.txt\": \"479e6a31741c7ae49e0f3d0ae6f3104c09d226b0bd50adc1ab4e35077de770e6\",\n  \"docs/validation-logs/patch-check.txt\": \"aa69dee4c2f55bfd0950f95cda4d91ddec674b2f8b024ed285fed277b85eff91\",\n  \"docs/validation-logs/radio-expanded.txt\": \"2816c341087d4d2b7c6f5d6a9801c333e5109f5594f964f235b3e8723b0d4861\",\n  \"docs/validation-logs/source-and-symbol-audit.txt\": \"150cb86c2aab8f2d26401f0c4f93f6d6903f5ce8c825e1c317c5e9dc9b19386a\",\n  \"docs/validation-logs/stack-frames.txt\": \"7f6eecddbd63b7ad178efa9feac9fab24da51343a964d4daeec6b3687b4af7ae\",\n  \"docs/validation-logs/stack-prev3.txt\": \"bdb96cbe311d3e29595c28ada56345bbf014c72b7fab46a4879d27cb74fef2bb\",\n  \"docs/validation-logs/tidy-Application.cpp.txt\": \"3478b8777decfbda935030539bfade1a32780aacfd1ffb7a0e74cdaf0b36b582\",\n  \"docs/validation-logs/tidy-Ui.cpp.txt\": \"6e1436d57266fd2407760a0da155d19151ad87e6342bfdc6e918fea16f95276f\",\n  \"docs/validation-logs/tidy-Workers.cpp.txt\": \"c5575d51575c0166326c61163fe7eb70fcdeab0e60bd98fbc10a4cd9dd048e01\",\n  \"docs/validation-logs/tool-versions.txt\": \"c15d0eaab21fe3c74a70798034a7cea00cae9511def755150cda06b51ccc9437\",\n  \"docs/validation-logs/wiring.txt\": \"ebd1a14c081a0d949952ba7b2e587530cee8b323a0a0e43f702bce481afa375d\",\n  \"docs/validation.md\": \"cea97ea3ecc0c2475f05dc8273a91e4f015e1effa37c84f453e2c6bfac933f08\",\n  \"docs/visual-method.md\": \"21c5f84c4bf3fc06f307064278be7c9e9df0a690b7d834e707749b146b1b7ce1\",\n  \"docs/wiring-verification.txt\": \"ebd1a14c081a0d949952ba7b2e587530cee8b323a0a0e43f702bce481afa375d\",\n  \"docs/wiring.md\": \"0eed4eb1d5710231fe72c68f8b213e8d9d85c04cbb56c8a840442a7d55438806\",\n  \"docs/wiring.png\": \"cfc66a6e92e80daf84971f187af663e27935d8e682d0856c146691641b303f47\",\n  \"docs/wiring.svg\": \"8f97266d4fc378f824e2264f48c57b012d070609c039676b2d14df398e665f28\",\n  \"patches/radiolib-7.8.1-hashes.json\": \"7dde851940a7ac53ba6ce6bd2520462c06350a558718b1301b927f7f61ca3ee6\",\n  \"patches/radiolib-7.8.1.patch\": \"540f60a9cd502f0e9781d1f549799db9b7e44829c9f5dfcf56b518b4d267149d\",\n  \"tests/arduino-stubs/Arduino.h\": \"23c34e0aaba7c52b01314c8f90ce4b165ef6e76ee7f8336b5faec942aea013e3\",\n  \"tests/arduino-stubs/Wire.h\": \"2a1899738c6c75d8b92110bd9b2c7713c6b1f36a4f0a70c7fd3c1d8e2f26bac1\",\n  \"tests/codec.cpp\": \"52cad259d53acc56a7adc48796e93df87daf6244e7402dd336aeec38910db501\",\n  \"tests/decoder.js\": \"306ae9d30e5e096db60d5d81f266c456986756fb74a5077e9fbd06508250272d\",\n  \"tests/fixtures/baseline.jpg\": \"412a5f85b3379c8af544e99a145f85373158f000d4d96e8629d52629c9e3b85c\",\n  \"tests/fixtures/progressive.jpg\": \"ebdb649b44ce0e9dce4e5ebadb9b52554dcc1d3cabafb5cf49f027e1693a58c0\",\n  \"tests/gps.cpp\": \"849cc9ff0ccf94f0079e065118520e679ff5549b82a182d6c07ffbc393a434ba\",\n  \"tests/jpeg.cpp\": \"c3de32e76a593438929a0ee97d93346d269fcac01f9a3db85da5e41c7de92276\",\n  \"tests/radio.cpp\": \"7bf5c60b959e9a84cffc6a7ddbc6564c0d256aa202f74192816a4618d59713a3\",\n  \"tests/reference-packet.json\": \"7830ef443d0513c4dd8f81f3e50378cc10ba1fb4ed7b077028c474d88977f1cc\",\n  \"tests/sd-storage.cpp\": \"b925da47f54f1599c1ff053c22165081995b15b094c0e27adf2e3dcb55176b94\",\n  \"tests/sd-stubs/driver/sdmmc_host.h\": \"2cea93d34fe2e5c4eb324af7e6da6f03332b3ca11b459858aae5bd1ddf7c4fa1\",\n  \"tests/sd-stubs/esp32-hal-ldo.h\": \"603b580fdd8114f4f1775e260c9394d70de84baba285d2cc5c64796c8cbce4ed\",\n  \"tests/sd-stubs/esp_vfs_fat.h\": \"c6632eff16e46b645b4749417b6219c7bc744c7f17fe324c83c8375e90bc7a75\",\n  \"tests/sd-stubs/soc/sdmmc_pins.h\": \"f3b18aaac987c2775108943b24d12a95e51a3cd4fc6ab64274818d5d55796542\",\n  \"tests/sensor.cpp\": \"d92dfba58eb326c02f0e0c599c77e19e3e14abda366b0a3269e5337ef44267c6\",\n  \"tests/wifi-form.cpp\": \"69be2d74991d947490d14c415dd6833e69ab49614c6b7b88f02a208a1870a1cf\",\n  \"tools/airtime.py\": \"24236724b3f55fe4def0253ff1985896bf790b02f74c3fc0bae13e4fb9029b71\",\n  \"tools/check_wiring.py\": \"d4ce81ca9504e05bc82e4733a456b532fdfa33afb19184456786c6c89fa562ac\",\n  \"tools/draw_ui.py\": \"fe23921ae453969425524a55f46f746e652b953a15d823afaef88c365ac5d1a2\",\n  \"tools/draw_wiring.py\": \"90d742d0daf5402ffc9cffd57925271867a95277ad8521effa9716159de2c10d\",\n  \"tools/patch_radiolib.py\": \"ffe75076e066a6a8ff6e8a29df53a360cf23d380190e66bf97a107451feb87a5\",\n  \"tools/test.py\": \"7e2749ccdf0a9baa06c577abf9166b2a050d51781c01fe56a41eefdc86d97737\",\n  \"tools/test_gps.py\": \"86cd3a750a5247a704b57edbe72d13d01f0a5eaf1d4d8883d0c9176a08319a15\",\n  \"tools/test_jpeg.py\": \"4cac59edf058fd784f7b208afe493d84c2aca0ab7fffa5c55f1370b9733a70ba\",\n  \"tools/test_radio.py\": \"9e42a5f5fc082188f3be71731f6edaf9ad58de2f86724969ab652249d4aa4210\",\n  \"tools/test_sensor.py\": \"2efabebcbc610f0d06202934053dbd3461024f5dc616f93ecb2e6e4273acc3e0\",\n  \"tools/test_wifi_form.py\": \"64b1893b67d787e2027fc03e8ad9fd1b3e37c4d62cc97352e543c1abce97e85a\",\n  \"ttn-decoder.js\": \"74d5d6df05ddf85b452e6ebe148da80378108dd36ad7965669becef1e222cf0c\"\n}\n",
+  "files": {
+    "Ui.cpp": {
+      "sha256": "9c0e8531ab362003841004fe50642f7d67dcb617e8f709f98aae99cf3389993f",
+      "physical_lines": 312
+    },
+    "App.h": {
+      "sha256": "d0605e5835f1b96ba591be6ef216d0ea9545cf6720b1976f2ea63293b45c69a4",
+      "physical_lines": 37
+    },
+    "SHA256SUMS.json": {
+      "sha256": "674546d8b561a452fb8a6b832faf784e83d1eebbc288f8b1c73c2d7a8399f148",
+      "physical_lines": 138
+    },
+    ".gitignore": {
+      "sha256": "10539007bb4f153400d5d74774e9863b73a8a10c5e7544af3e3b7fee84c4beab",
+      "physical_lines": 5
+    },
+    "AGENTS.md": {
+      "sha256": "c5f2bdc9e0ade8644d2c6b94534685bac956f1a6aab2e7ca284ce2dd624aaa06",
+      "physical_lines": 41
+    },
+    ".clang-format-ignore": {
+      "sha256": "137c5f6c1cc2192c3e29ee0748e6c68853e0e4b34a9697038840b3c865debcb9",
+      "physical_lines": 1
+    },
+    "Workers.cpp": {
+      "sha256": "19ef10f243d3312b9d6c774d4820ce2818cae9ca06927c2949f448011ab22e1f",
+      "physical_lines": 451
+    },
+    "Telemetry.h": {
+      "sha256": "833983f5f68926553875d2b090edff99c39c2b1775fb576e2435506e5fd9dd4d",
+      "physical_lines": 67
+    },
+    "SdStorage.h": {
+      "sha256": "4666121c4bc264d51b56639fbe73ac3863b6c7bd3dc0f4af451f7984400c96da",
+      "physical_lines": 57
+    },
+    ".clang-format": {
+      "sha256": "633441d2ab5699252d83520f001d61dc2d6dde90f76e3a99f799baf60f08aafa",
+      "physical_lines": 137
+    },
+    "Makefile": {
+      "sha256": "18fe91b5b664a4704cb5c0eb808114bc532e70ed9ab34f89d402ef57cecffd50",
+      "physical_lines": 17
+    },
+    "CrowPanelTelemetry.ino": {
+      "sha256": "8616017294cf1410aba9050ae24719e0b70b59e2b0b0695a454ff8e13289d452",
+      "physical_lines": 8
+    },
+    ".clangd": {
+      "sha256": "64de7616169b415a8bdfd8b91d405bfd2b0d723a0fc4738c30a83005f4b942bb",
+      "physical_lines": 2
+    },
+    "Config.h": {
+      "sha256": "640d3514ac9d89c24a968cb04df908a0af03c3d8ef747caec3973798d141a007",
+      "physical_lines": 42
+    },
+    ".clang-tidy": {
+      "sha256": "e81b15a50fc926a66e6e8aecd4647a850c3ef0c64781b61d61ad82d099b441cd",
+      "physical_lines": 173
+    },
+    "Application.cpp": {
+      "sha256": "e52bfc0d80f7e22d173b44e9f2a0dae46e091d40814126d86fba396d5e7eaeb0",
+      "physical_lines": 139
+    },
+    "ttn-decoder.js": {
+      "sha256": "74d5d6df05ddf85b452e6ebe148da80378108dd36ad7965669becef1e222cf0c",
+      "physical_lines": 41
+    },
+    "README.md": {
+      "sha256": "2122e535b233095181b5597effb4eb57406e75e7cd2b51c9c0b1427bcb1c89dc",
+      "physical_lines": 260
+    },
+    "artifacts/CrowPanelTelemetry-delivery.zip": {
+      "sha256": "ed232d6bfdaa92758e8dee3578cbfcab3dcda5de403db72967c7aa0d8a719273",
+      "physical_lines": 65146
+    },
+    "artifacts/README.md": {
+      "sha256": "9624f67e9c83557b2126005587a25d6da47abdd17b1e1b2d856bd7ab683e665e",
+      "physical_lines": 7
+    },
+    "patches/radiolib-7.8.1-hashes.json": {
+      "sha256": "7dde851940a7ac53ba6ce6bd2520462c06350a558718b1301b927f7f61ca3ee6",
+      "physical_lines": 10
+    },
+    "patches/radiolib-7.8.1.patch": {
+      "sha256": "540f60a9cd502f0e9781d1f549799db9b7e44829c9f5dfcf56b518b4d267149d",
+      "physical_lines": 198
+    },
+    "tests/sd-storage.cpp": {
+      "sha256": "b925da47f54f1599c1ff053c22165081995b15b094c0e27adf2e3dcb55176b94",
+      "physical_lines": 92
+    },
+    "tests/sensor.cpp": {
+      "sha256": "d92dfba58eb326c02f0e0c599c77e19e3e14abda366b0a3269e5337ef44267c6",
+      "physical_lines": 52
+    },
+    "tests/codec.cpp": {
+      "sha256": "52cad259d53acc56a7adc48796e93df87daf6244e7402dd336aeec38910db501",
+      "physical_lines": 65
+    },
+    "tests/gps.cpp": {
+      "sha256": "849cc9ff0ccf94f0079e065118520e679ff5549b82a182d6c07ffbc393a434ba",
+      "physical_lines": 65
+    },
+    "tests/jpeg.cpp": {
+      "sha256": "c3de32e76a593438929a0ee97d93346d269fcac01f9a3db85da5e41c7de92276",
+      "physical_lines": 29
+    },
+    "tests/decoder.js": {
+      "sha256": "306ae9d30e5e096db60d5d81f266c456986756fb74a5077e9fbd06508250272d",
+      "physical_lines": 38
+    },
+    "tests/reference-packet.json": {
+      "sha256": "7830ef443d0513c4dd8f81f3e50378cc10ba1fb4ed7b077028c474d88977f1cc",
+      "physical_lines": 1
+    },
+    "tests/wifi-form.cpp": {
+      "sha256": "69be2d74991d947490d14c415dd6833e69ab49614c6b7b88f02a208a1870a1cf",
+      "physical_lines": 45
+    },
+    "tests/radio.cpp": {
+      "sha256": "7bf5c60b959e9a84cffc6a7ddbc6564c0d256aa202f74192816a4618d59713a3",
+      "physical_lines": 628
+    },
+    "docs/visual-method.md": {
+      "sha256": "21c5f84c4bf3fc06f307064278be7c9e9df0a690b7d834e707749b146b1b7ce1",
+      "physical_lines": 31
+    },
+    "docs/ui.md": {
+      "sha256": "162572f7777b427eb196de19ad2b435cc2aa44467fe546b61f3a974cf2a676b4",
+      "physical_lines": 32
+    },
+    "docs/wiring.png": {
+      "sha256": "cfc66a6e92e80daf84971f187af663e27935d8e682d0856c146691641b303f47",
+      "physical_lines": 22369
+    },
+    "docs/validation.md": {
+      "sha256": "cea97ea3ecc0c2475f05dc8273a91e4f015e1effa37c84f453e2c6bfac933f08",
+      "physical_lines": 206
+    },
+    "docs/wiring-verification.txt": {
+      "sha256": "ebd1a14c081a0d949952ba7b2e587530cee8b323a0a0e43f702bce481afa375d",
+      "physical_lines": 4
+    },
+    "docs/radio-nets.json": {
+      "sha256": "4c91b0e26380071b8dddf549c0622fb7e3915392c620d6902eb15a3d746635e9",
+      "physical_lines": 56
+    },
+    "docs/airtime.md": {
+      "sha256": "4c0d7d1102560914ec55d3432a7338f4293260d44314d76cab6161b6b7197d11",
+      "physical_lines": 136
+    },
+    "docs/airtime-calculation.txt": {
+      "sha256": "4fff9c49bcb06c9ae738b43fa1e47e8c458935c53fe2a0d477747c0a2b4e8c45",
+      "physical_lines": 9
+    },
+    "docs/sources.md": {
+      "sha256": "44d5cad23abacfd1b2693b49f9a4644c742156fbcffccdd92c970d6b82871a01",
+      "physical_lines": 79
+    },
+    "docs/hardware-checklist.md": {
+      "sha256": "1016934eade038b48ab0fde59f30e337fc383741e988a686051330be195bf065",
+      "physical_lines": 138
+    },
+    "docs/ui-preview.svg": {
+      "sha256": "201656131387b862c202eddf03b662c6d4b697e4307284b8db340431e19b46fa",
+      "physical_lines": 43
+    },
+    "docs/ui-preview.png": {
+      "sha256": "f973bbd21d6b9a91b201e3fda898a3e6cc9c4c143517e4c295321858197ba172",
+      "physical_lines": 655
+    },
+    "docs/correctness-source-hashes.json": {
+      "sha256": "57b189c42a5bf8cadbe44abfec1221e4e852b000f57817165452cc7b8b17bbdb",
+      "physical_lines": 206
+    },
+    "docs/wiring.svg": {
+      "sha256": "8f97266d4fc378f824e2264f48c57b012d070609c039676b2d14df398e665f28",
+      "physical_lines": 242
+    },
+    "docs/wiring.md": {
+      "sha256": "0eed4eb1d5710231fe72c68f8b213e8d9d85c04cbb56c8a840442a7d55438806",
+      "physical_lines": 203
+    },
+    "docs/correctness-status.md": {
+      "sha256": "98587dc0272bc994dbc73ea35e76ecfd7b4d5e81b10e5805560bb6bce811005d",
+      "physical_lines": 120
+    },
+    "docs/change-accounting.json": {
+      "sha256": "00229f284641d1d65586722c458396b1088918147b74945bdfaa1c6ad56e5925",
+      "physical_lines": 92
+    },
+    "docs/source-photo.png": {
+      "sha256": "5b2e2bdfefe5a38b7bbee5ef09f37c363579a8628f27df23f5702b5fcd6624ad",
+      "physical_lines": 18789
+    },
+    "tools/airtime.py": {
+      "sha256": "24236724b3f55fe4def0253ff1985896bf790b02f74c3fc0bae13e4fb9029b71",
+      "physical_lines": 19
+    },
+    "tools/draw_ui.py": {
+      "sha256": "fe23921ae453969425524a55f46f746e652b953a15d823afaef88c365ac5d1a2",
+      "physical_lines": 51
+    },
+    "tools/test.py": {
+      "sha256": "7e2749ccdf0a9baa06c577abf9166b2a050d51781c01fe56a41eefdc86d97737",
+      "physical_lines": 51
+    },
+    "tools/test_wifi_form.py": {
+      "sha256": "64b1893b67d787e2027fc03e8ad9fd1b3e37c4d62cc97352e543c1abce97e85a",
+      "physical_lines": 29
+    },
+    "tools/patch_radiolib.py": {
+      "sha256": "ffe75076e066a6a8ff6e8a29df53a360cf23d380190e66bf97a107451feb87a5",
+      "physical_lines": 20
+    },
+    "tools/check_wiring.py": {
+      "sha256": "d4ce81ca9504e05bc82e4733a456b532fdfa33afb19184456786c6c89fa562ac",
+      "physical_lines": 65
+    },
+    "tools/test_jpeg.py": {
+      "sha256": "4cac59edf058fd784f7b208afe493d84c2aca0ab7fffa5c55f1370b9733a70ba",
+      "physical_lines": 18
+    },
+    "tools/test_sensor.py": {
+      "sha256": "2efabebcbc610f0d06202934053dbd3461024f5dc616f93ecb2e6e4273acc3e0",
+      "physical_lines": 25
+    },
+    "tools/draw_wiring.py": {
+      "sha256": "90d742d0daf5402ffc9cffd57925271867a95277ad8521effa9716159de2c10d",
+      "physical_lines": 131
+    },
+    "tools/test_gps.py": {
+      "sha256": "86cd3a750a5247a704b57edbe72d13d01f0a5eaf1d4d8883d0c9176a08319a15",
+      "physical_lines": 23
+    },
+    "tools/test_radio.py": {
+      "sha256": "9e42a5f5fc082188f3be71731f6edaf9ad58de2f86724969ab652249d4aa4210",
+      "physical_lines": 45
+    },
+    "docs/review/claude-deep-rereview.md": {
+      "sha256": "0385e0d7cc56b4bfb63705a739382e5b132b0f045dc2fc27837c2c9a440e7e34",
+      "physical_lines": 228
+    },
+    "docs/review/f3-proposed.patch": {
+      "sha256": "2a087adf407751c784826c81a345999ec3eb3c44a3d7d27ae9eee2f7f09fc3c9",
+      "physical_lines": 15
+    },
+    "docs/review/claude-stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "physical_lines": 0
+    },
+    "docs/review/fix-prompt-stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "physical_lines": 0
+    },
+    "docs/review/claude-deep-review.md": {
+      "sha256": "0d815bab5f4e994afda8b6900326f35d0fa3cd26eba1b7b34dd25e6732de2fcb",
+      "physical_lines": 188
+    },
+    "docs/review/claude-fix-prompt-raw.md": {
+      "sha256": "8bcfba751eeb6c0676ca60e5ce6d8569b31a34462294b1da92941b44725a0f31",
+      "physical_lines": 227
+    },
+    "docs/review/checkpoint-changes.json": {
+      "sha256": "638d5d8cb10fc7f716ed1a88d0ca9d986f96ea2eb3ff4d4ab05cbdf324c8a89b",
+      "physical_lines": 57
+    },
+    "docs/review/deep-fix-prompt-request.md": {
+      "sha256": "cafde5c240e1793595549e5eb76628cac1183c5844dc8c599c24df6ccf0198af",
+      "physical_lines": 41
+    },
+    "docs/review/f10-proposed.patch": {
+      "sha256": "06e10808f1ec3064b644deb62e737fc09d13e7c5e280bff733973529baed604c",
+      "physical_lines": 44
+    },
+    "docs/review/fix-baseline.json": {
+      "sha256": "39ecf33843222e27c34bad45dbe02bb1622e8943f1440bafcc63183fbf4bbbdf",
+      "physical_lines": 178
+    },
+    "docs/review/request.md": {
+      "sha256": "6a244bfdab9f32266bd7366bf01e6a5a013f713c9aa5cd5f0a14806196d48a2e",
+      "physical_lines": 64
+    },
+    "docs/review/fix-prompt-request.md": {
+      "sha256": "1d8e15ee224a1ebec534dbd288cb2e048943289a73c748a1e3d96bd427e27612",
+      "physical_lines": 11
+    },
+    "docs/review/sd-start-manifest.json": {
+      "sha256": "b76fdd86a895d4c16b5361ab9f03a52c2ff9c632b31f03125a3624f77dee39ea",
+      "physical_lines": 48
+    },
+    "docs/review/rereview-fix-prompt-run.json": {
+      "sha256": "62b8cf5b4398856643ac776da7c87da550a8415004c29fb2f1d6456a247a99be",
+      "physical_lines": 50
+    },
+    "docs/review/deep-rereview-request.md": {
+      "sha256": "ec3e3a64b569c7fa3c4b13eb7fe4d81d3167c95fda3b21c9e85d2fc16dbb3d4b",
+      "physical_lines": 140
+    },
+    "docs/review/f9-proposed.patch": {
+      "sha256": "1746f949c2cbdeec88bd4263c9d242e3845a8feac9ae5b5b0de2695c180af0f0",
+      "physical_lines": 27
+    },
+    "docs/review/deep-fix-dispositions.md": {
+      "sha256": "12684a1e5e6a8fe0e5439a671a43e58e9f1144ac67d982097d0a0dbffd929dbd",
+      "physical_lines": 302
+    },
+    "docs/review/fix-baseline-manifest.json": {
+      "sha256": "3edef85bbbe21be327916eb1c116f5afe26a0c5a01a8f5b23c4695710453f639",
+      "physical_lines": 45
+    },
+    "docs/review/deep-review-assessment.md": {
+      "sha256": "221b650b607151aea887e7391dde43c6573fa6efc9448dd31f0a59236f7189ad",
+      "physical_lines": 63
+    },
+    "docs/review/claude-review.md": {
+      "sha256": "cb96890703255a818d827945fe14f9567dfc2231edbac7ff712184c6e2270f1d",
+      "physical_lines": 163
+    },
+    "docs/review/claude-deep-fix-prompt.md": {
+      "sha256": "1e989ae209ff50213146bd7ae88d22f4297cfab49d030bf8e294db0dc17e3830",
+      "physical_lines": 530
+    },
+    "docs/review/f1-proposed.patch": {
+      "sha256": "1aa8d5c26d7b70929ba50ea959d2f08a71d28d527672d7523b0dcd0042cc2974",
+      "physical_lines": 55
+    },
+    "docs/review/deep-review-request.md": {
+      "sha256": "d54adedfcd329f275be933c0e79eb2f8dbc153418b65a291aaac3dae8a5997f0",
+      "physical_lines": 137
+    },
+    "docs/review/rereview-fix-prompt-request.md": {
+      "sha256": "135030f6551269fd98fe1dbd6420a27dbbd37c336e5366c296c80083b344fce9",
+      "physical_lines": 300
+    },
+    "docs/review/claude-fix-prompt.md": {
+      "sha256": "a30d255e5b09ce38b22c64f9d52a369cc6567d779fa5fb672a4937f77b6b3090",
+      "physical_lines": 223
+    },
+    "docs/review/deep-rereview-run.json": {
+      "sha256": "eddc9293673c70d86fa175f7af4807dfc0fdb56a6b8dff09ab9cc2a3ca087b3a",
+      "physical_lines": 1034
+    },
+    "docs/review/README.md": {
+      "sha256": "4fcdb2b7832939616b8956e47e08371d56d6c460e8afa5661d573e0b02580268",
+      "physical_lines": 86
+    },
+    "docs/validation-logs/m32.txt": {
+      "sha256": "479e6a31741c7ae49e0f3d0ae6f3104c09d226b0bd50adc1ab4e35077de770e6",
+      "physical_lines": 13
+    },
+    "docs/validation-logs/deep-fix-line-accounting.json": {
+      "sha256": "702f911ab2568a510e39593e51a0145034061f0b55eac8c4d196892a5559ad7a",
+      "physical_lines": 18
+    },
+    "docs/validation-logs/f9-after.txt": {
+      "sha256": "2816c341087d4d2b7c6f5d6a9801c333e5109f5594f964f235b3e8723b0d4861",
+      "physical_lines": 1
+    },
+    "docs/validation-logs/deep-fix-changes.json": {
+      "sha256": "8ca71f3ab70cdceb800e4c093e9e315f0312bd97b7e86c4727da7372465a56ce",
+      "physical_lines": 110
+    },
+    "docs/validation-logs/tidy-Workers.cpp.txt": {
+      "sha256": "c5575d51575c0166326c61163fe7eb70fcdeab0e60bd98fbc10a4cd9dd048e01",
+      "physical_lines": 10
+    },
+    "docs/validation-logs/default-prev3.txt": {
+      "sha256": "b3d1e9504d02a06c83a5cf0d2e60d04a58930b721c25292db96997908cfde6be",
+      "physical_lines": 678
+    },
+    "docs/validation-logs/enabled-postv3.txt": {
+      "sha256": "884ef403443638156a8dec44c5bd5dd64614bebbe84c3dc17fdac49b02485736",
+      "physical_lines": 678
+    },
+    "docs/validation-logs/host-tidy-0.txt": {
+      "sha256": "9be4d565f602db52761744d35869fd8c9da38160fcf0ccc6524169d999598074",
+      "physical_lines": 242
+    },
+    "docs/validation-logs/f3-after.txt": {
+      "sha256": "fedd65e783b19395f3ebed9fb607a7c30cafcf68e4e99664363d9f40626e28c8",
+      "physical_lines": 2
+    },
+    "docs/validation-logs/baseline-host.txt": {
+      "sha256": "bc6649874b2d7c7a02cb36b2b6563faf71ce8b1422ffca01969481d4c67da891",
+      "physical_lines": 13
+    },
+    "docs/validation-logs/build-input-sha256.json": {
+      "sha256": "32f6911934e301fd78404254ddc318c84c0f91ee0de6521868304b14a28f4209",
+      "physical_lines": 38
+    },
+    "docs/validation-logs/host-tidy-1.txt": {
+      "sha256": "93f3b73a46fdbd5652c4000d91aedb4c7e7cad0b5c1d8a6389763b478ecffc27",
+      "physical_lines": 25
+    },
+    "docs/validation-logs/tidy-Application.cpp.txt": {
+      "sha256": "3478b8777decfbda935030539bfade1a32780aacfd1ffb7a0e74cdaf0b36b582",
+      "physical_lines": 10
+    },
+    "docs/validation-logs/f13-before.txt": {
+      "sha256": "ece3821738d3f82c3896a27a79cad67c46d559c63eb38c280b28d7d3922cd440",
+      "physical_lines": 11
+    },
+    "docs/validation-logs/deep-fix-dependencies.json": {
+      "sha256": "e29d80de5112319b09cd6c106fec12a4364a22cdc103c91a6872801b57eaa678",
+      "physical_lines": 58
+    },
+    "docs/validation-logs/f10-after.txt": {
+      "sha256": "deed1b231cb9f8f943cb74a8af05c25da038f53316ce92d3b5795b9f95ad4819",
+      "physical_lines": 1
+    },
+    "docs/validation-logs/stack-frames.txt": {
+      "sha256": "7f6eecddbd63b7ad178efa9feac9fab24da51343a964d4daeec6b3687b4af7ae",
+      "physical_lines": 2592
+    },
+    "docs/validation-logs/arduino-cli-1.5.1-checksums.txt": {
+      "sha256": "1deac1e8d8eff69ef1b0cb8c5d4be2a3a81224b103eaf3403b77ff470c7f4ec6",
+      "physical_lines": 17
+    },
+    "docs/validation-logs/f13-after.txt": {
+      "sha256": "581aa03690b4e2989535bbc8d2ceac56d6a6ea4dfd6732c478bbbe231e8642bc",
+      "physical_lines": 1
+    },
+    "docs/validation-logs/host.txt": {
+      "sha256": "b95ddc12519d14054f0f05b1cad727c921a047178fa2e27a01659a352f180767",
+      "physical_lines": 25
+    },
+    "docs/validation-logs/baseline-format.txt": {
+      "sha256": "88b1a9ef4eddfc84d4a1b83d3ab0dcbb89071b59609a420f8d8bb16bb182487b",
+      "physical_lines": 1
+    },
+    "docs/validation-logs/deep-fix-build-results.json": {
+      "sha256": "d2d941640fbd6d66859a88573094984a23209fc924dee0b71a89e71439373b06",
+      "physical_lines": 80
+    },
+    "docs/validation-logs/patch-check.txt": {
+      "sha256": "aa69dee4c2f55bfd0950f95cda4d91ddec674b2f8b024ed285fed277b85eff91",
+      "physical_lines": 6
+    },
+    "docs/validation-logs/radio-expanded.txt": {
+      "sha256": "2816c341087d4d2b7c6f5d6a9801c333e5109f5594f964f235b3e8723b0d4861",
+      "physical_lines": 1
+    },
+    "docs/validation-logs/tool-versions.txt": {
+      "sha256": "c15d0eaab21fe3c74a70798034a7cea00cae9511def755150cda06b51ccc9437",
+      "physical_lines": 5
+    },
+    "docs/validation-logs/format-check.txt": {
+      "sha256": "6431ef2ece98cb41071129a0dd078e54f1c2d434980bde7dc55503a5cbedeca2",
+      "physical_lines": 1
+    },
+    "docs/validation-logs/source-and-symbol-audit.txt": {
+      "sha256": "150cb86c2aab8f2d26401f0c4f93f6d6903f5ce8c825e1c317c5e9dc9b19386a",
+      "physical_lines": 26
+    },
+    "docs/validation-logs/enabled-prev3.txt": {
+      "sha256": "dac1d79ff4da32f813110fb4a112064a891f7438d0f6ff73a9cd7aa7fe7c4c7a",
+      "physical_lines": 678
+    },
+    "docs/validation-logs/f9-before.txt": {
+      "sha256": "e87ce0d9e9f7d3a2dbc391f6a840e41c6e30f85b1433bf346180548b9ae3d5f2",
+      "physical_lines": 9
+    },
+    "docs/validation-logs/deep-fix-baseline.json": {
+      "sha256": "0ff62d69540d3e599fd7ff427504e8f07d2b7b643f87afea346af0e8263a6a2a",
+      "physical_lines": 438
+    },
+    "docs/validation-logs/format.txt": {
+      "sha256": "ff0be77f522bca308ac2fc8f317371f32605dc79daee9d920ad1dec9b8109738",
+      "physical_lines": 1
+    },
+    "docs/validation-logs/f2-before.txt": {
+      "sha256": "a17b31abe972639f5edcd764fe926c866c3cfaaee2e74678c738b70a7b21f597",
+      "physical_lines": 9
+    },
+    "docs/validation-logs/f1-reproducer-before.txt": {
+      "sha256": "d370113720c03ee00f9d49fd46df0adca866b4fb5a2264b133e04d8651fd3cd5",
+      "physical_lines": 9
+    },
+    "docs/validation-logs/tidy-Ui.cpp.txt": {
+      "sha256": "6e1436d57266fd2407760a0da155d19151ad87e6342bfdc6e918fea16f95276f",
+      "physical_lines": 10
+    },
+    "docs/validation-logs/f8-before.txt": {
+      "sha256": "ef1924f42b8a4f3e9623d1f4e29f41cacfe5709e05ce314fdf144c3bd1947700",
+      "physical_lines": 16
+    },
+    "docs/validation-logs/f1-after.txt": {
+      "sha256": "2816c341087d4d2b7c6f5d6a9801c333e5109f5594f964f235b3e8723b0d4861",
+      "physical_lines": 1
+    },
+    "docs/validation-logs/wiring.txt": {
+      "sha256": "ebd1a14c081a0d949952ba7b2e587530cee8b323a0a0e43f702bce481afa375d",
+      "physical_lines": 4
+    },
+    "docs/validation-logs/stack-prev3.txt": {
+      "sha256": "bdb96cbe311d3e29595c28ada56345bbf014c72b7fab46a4879d27cb74fef2bb",
+      "physical_lines": 678
+    },
+    "docs/validation-logs/f8-after.txt": {
+      "sha256": "402ed267a2665bd02990653010e61138264469e35fa903d3149ca3baca43970e",
+      "physical_lines": 8
+    },
+    "docs/validation-logs/f2-after.txt": {
+      "sha256": "2816c341087d4d2b7c6f5d6a9801c333e5109f5594f964f235b3e8723b0d4861",
+      "physical_lines": 1
+    },
+    "docs/validation-logs/f3-before.txt": {
+      "sha256": "df741b18f60857bf2173cb863034943ee347afeb0f1b87ac97df6ef35c0857a1",
+      "physical_lines": 2
+    },
+    "docs/validation-logs/f10-before.txt": {
+      "sha256": "19504bc32d0087aace1b650fcbba767bc8fd0d527e4a80c173495b236a5325e6",
+      "physical_lines": 9
+    },
+    "tests/fixtures/progressive.jpg": {
+      "sha256": "ebdb649b44ce0e9dce4e5ebadb9b52554dcc1d3cabafb5cf49f027e1693a58c0",
+      "physical_lines": 5
+    },
+    "tests/fixtures/baseline.jpg": {
+      "sha256": "412a5f85b3379c8af544e99a145f85373158f000d4d96e8629d52629c9e3b85c",
+      "physical_lines": 9
+    },
+    "tests/arduino-stubs/Arduino.h": {
+      "sha256": "23c34e0aaba7c52b01314c8f90ce4b165ef6e76ee7f8336b5faec942aea013e3",
+      "physical_lines": 30
+    },
+    "tests/arduino-stubs/Wire.h": {
+      "sha256": "2a1899738c6c75d8b92110bd9b2c7713c6b1f36a4f0a70c7fd3c1d8e2f26bac1",
+      "physical_lines": 41
+    },
+    "tests/sd-stubs/esp32-hal-ldo.h": {
+      "sha256": "603b580fdd8114f4f1775e260c9394d70de84baba285d2cc5c64796c8cbce4ed",
+      "physical_lines": 4
+    },
+    "tests/sd-stubs/esp_vfs_fat.h": {
+      "sha256": "c6632eff16e46b645b4749417b6219c7bc744c7f17fe324c83c8375e90bc7a75",
+      "physical_lines": 9
+    },
+    "tests/sd-stubs/driver/sdmmc_host.h": {
+      "sha256": "2cea93d34fe2e5c4eb324af7e6da6f03332b3ca11b459858aae5bd1ddf7c4fa1",
+      "physical_lines": 22
+    },
+    "tests/sd-stubs/soc/sdmmc_pins.h": {
+      "sha256": "f3b18aaac987c2775108943b24d12a95e51a3cd4fc6ab64274818d5d55796542",
+      "physical_lines": 4
+    }
+  }
+}

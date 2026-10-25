@@ -1,0 +1,25 @@
+BUILD='/tmp/codex/build/CrowPanelTelemetry/rereview-fix' python3 tools/test.py
+C++ encoder -> TTN decoder: values, limits, invalid slots, fragments and malformed packets passed
+47 application bytes + 13 overhead; 125kHz, CR4/5, explicit header, CRC, preamble8
+DR | SF | packet ms | 144 batches/day seconds | pacing interval seconds
+0 | 12 | 2629.632 | 378.667 | 7574
+1 | 11 | 1478.656 | 212.926 | 4259
+2 | 10 | 698.368 | 100.565 | 2012
+3 | 9 | 369.664 | 53.232 | 1065
+4 | 8 | 205.312 | 29.565 | 592
+5 | 7 | 112.896 | 16.257 | 326
+PASS: reference 10-byte SF7 airtime; normal packet; low-rate policy conflict.
+PASS: real Connect decision/status: empty SSID, short/open/8-character/64-hex/non-hex passwords and periodic updates
+/tmp/codex/build/CrowPanelTelemetry/rereview-fix/deps/TinyGPSPlus/src/TinyGPS++.cpp: In member function ‘bool TinyGPSPlus::encode(char)’:
+/tmp/codex/build/CrowPanelTelemetry/rereview-fix/deps/TinyGPSPlus/src/TinyGPS++.cpp:63:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   63 |     parity ^= (uint8_t)c;
+      |     ~~~~~~~^~~~~~~~~~~~~
+/tmp/codex/build/CrowPanelTelemetry/rereview-fix/deps/TinyGPSPlus/src/TinyGPS++.cpp:64:3: note: here
+   64 |   case '\r':
+      |   ^~~~
+PASS: real TinyGPSPlus + production GPS status: garbage, valid no-fix/fix, satellites, silence and uint32 wrap
+PASS: real JPEGDEC with production guard: baseline decoded; progressive rejected
+PASS: production acquisition + real INA226 calibration NACK, true zero and voltage-only contract
+PASS: production acquisition + real INA226 calibration NACK, true zero and voltage-only contract
+PASS: real RadioLib + production node: joins, wrap, aggregate pacing, immediate nested MAC/downlinks, nonce TX-error/reset recovery, fairness/fragments and NVS fail-stop
+PASS: all independent checks

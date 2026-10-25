@@ -1,0 +1,14 @@
+#include <JPEGDEC.h>
+#include <fstream>
+#include <iterator>
+#include <vector>
+#include <cstdio>
+static int draw(JPEGDRAW*) { return 1; }
+int main(int argc, char** argv) {
+    std::ifstream file(argv[1], std::ios::binary);
+    std::vector<unsigned char> data((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    JPEGDEC jpeg;
+    int accepted = jpeg.openRAM(data.data(), data.size(), draw);
+    std::printf("openRAM=%d (expected 0)\n", accepted);
+    return 0;
+}

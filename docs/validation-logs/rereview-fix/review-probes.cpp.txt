@@ -1,0 +1,31 @@
+#define main baselineTestsMain
+#include "/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp"
+#undef main
+int main() {
+    uint8_t payload = 1;
+    Preferences storage;
+    TestPhy phy;
+    ProbeNode node(&phy, storage);
+    initialize(node);
+    node.activeSession();
+    auto frame = node.gatewayFrame(0, "sample", 0);
+    phy.replies.push_back(frame);
+    node.scheduleTransmission(millis());
+    int first = node.sendReceive(&payload, 1, 1);
+    clockMs += 3600000;
+    phy.replies.push_back(frame);
+    node.scheduleTransmission(millis());
+    int duplicate = node.sendReceive(&payload, 1, 1);
+    std::printf("N4: first=%d duplicate=%d delivered=%zu\n", first, duplicate, messages.size());
+    clockMs += 3600000;
+    phy.replies.push_back(node.gatewayFrame(1, "large MAC response", 6));
+    node.scheduleTransmission(millis());
+    node.sendReceive(&payload, 1, 1);
+    size_t before = phy.sent.size();
+    clockMs += 3600000;
+    phy.replies.push_back(node.gatewayFrame(2, "small MAC response", 1));
+    node.scheduleTransmission(millis());
+    node.sendReceive(&payload, 1, 1);
+    std::printf("N5: following small response physical frames=%zu (expected 1)\n", phy.sent.size()-before);
+    return 0;
+}

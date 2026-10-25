@@ -1,0 +1,4 @@
+PASS: blank-prev3 canonical C++ bytes match after the Arduino-generated #line directive
+PASS: enabled-prev3 canonical C++ bytes match after the Arduino-generated #line directive
+PASS: enabled-postv3 canonical C++ bytes match after the Arduino-generated #line directive
+PASS: enabled ELF callback present; no beforeUplink/afterUplink/SDMMCFS symbols

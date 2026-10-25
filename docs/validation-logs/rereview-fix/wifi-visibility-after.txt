@@ -1,0 +1,1 @@
+PASS: verbatim WiFi worker retains credential-save error in final status

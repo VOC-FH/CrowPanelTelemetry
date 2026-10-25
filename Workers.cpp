@@ -130,6 +130,7 @@ static void radioTask(void*) {
         }
         if (!ready) {
             post(EventKind::Radio, text);
+            vTaskSuspend(nullptr);
         }
     }
     if (ready) {
@@ -140,6 +141,7 @@ static void radioTask(void*) {
         }
         if (!ready) {
             post(EventKind::Radio, "Invalid saved nonces/config; see recovery guide");
+            vTaskSuspend(nullptr);
         }
         node.setDutyCycle(false); // The application spaces completed operations by aggregate airtime.
         node.setADR(true);
@@ -268,7 +270,7 @@ static void wifiTask(void*) {
                     bool saved = prefs.putString("ssid", command.ssid) > 0;
                     saved = prefs.putString("password", command.password) == strlen(command.password) && saved;
                     if (!saved) {
-                        post(EventKind::Wifi, "Connected; saving credentials failed");
+                        snprintf(text, sizeof(text), "Connected; saving credentials failed");
                     }
                     saveOnConnect = false;
                 }

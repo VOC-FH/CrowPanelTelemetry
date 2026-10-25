@@ -31,13 +31,15 @@ else:
     failures.append('SD lifecycle test compile')
 for name, command in [('TTN decoder' , ['node', 'tests/decoder.js', 'tests/reference-packet.json']),
                       ('Airtime', ['python3', 'tools/airtime.py']),
-                      ('WiFi input/status', ['python3', 'tools/test_wifi_form.py'])]:
+                      ('WiFi input/status', ['python3', 'tools/test_wifi_form.py']),
+                      ('WiFi worker status', ['python3', 'tools/test_wifi_worker.py'])]:
     result = subprocess.run(command, cwd=root, env=env)
     if result.returncode != 0:
         failures.append(name)
 radio = os.environ.get('RADIOLIB_DIR')
 if radio:
     for name, command in [
+        ('Dependency patch integrity', ['python3', 'tools/test_patches.py', radio]),
         ('Real TinyGPSPlus status', ['python3', 'tools/test_gps.py', str(Path(radio).parent/'TinyGPSPlus')]),
         ('Real JPEGDEC admission', ['python3', 'tools/test_jpeg.py', str(Path(radio).parent/'JPEGDEC')]),
         ('Real INA226 acquisition', ['python3', 'tools/test_sensor.py', str(Path(radio).parent/'INA226')]),

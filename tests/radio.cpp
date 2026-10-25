@@ -42,6 +42,10 @@ struct Preferences {
     }
 };
 enum class EventKind { Radio, Downlink };
+struct TaskSuspended {};
+static void vTaskSuspend(void*) {
+    throw TaskSuspended{};
+}
 static std::vector<std::string> messages, radioMessages;
 static void post(EventKind kind, const char* text) {
     if (kind == EventKind::Radio) {
@@ -270,7 +274,7 @@ public:
         processAES(&frame[port + 1], payload.size(), appSKey, payload.data(), devAddr, counter, 0, 0, true);
         return payload;
     }
-    std::vector<uint8_t> gatewayFrame(uint32_t counter, const std::string& payload, uint8_t requests) {
+    std::vector<uint8_t> gatewayFrame(uint32_t counter, const std::string& payload, uint8_t requests, bool rekey = false) {
         size_t length = 13 + requests + payload.size();
         std::vector<uint8_t> frame(16 + length, 0);
         frame[16] = 0x60;
@@ -278,6 +282,10 @@ public:
         frame[21] = requests;
         hton<uint16_t>(&frame[22], counter);
         std::vector<uint8_t> opts(requests, RADIOLIB_LORAWAN_MAC_DEV_STATUS);
+        if (rekey) {
+            assert(requests == 2);
+            opts = {RADIOLIB_LORAWAN_MAC_REKEY, 1};
+        }
         processAES(opts.data(), opts.size(), nwkSEncKey, &frame[24], devAddr, counter, 1, 2, true);
         frame[24 + requests] = 10;
         processAES(
@@ -334,6 +342,10 @@ static void initializeRadio(ProbeNode& node, TestPhy& radio, Preferences& store,
 static void joinIteration(ProbeNode& node, bool& ready, uint32_t& joinRetry) {
 #include "Radio-join-under-test.h"
 }
+static void stopIteration(bool ready) {
+    uint8_t anyApp = 1, anyNwk = 1;
+#include "Radio-stop-under-test.h"
+}
 static void testInitialization() {
     for (unsigned fault = 0; fault < 5; ++fault) {
         Preferences store;
@@ -347,10 +359,24 @@ static void testInitialization() {
         if (fault == 4) {
             store.nonces.assign(3, 0); // too short to be a valid saved nonce buffer
         }
-        initializeRadio(node, phy, store, ready);
-        assert(!ready && phy.sent.empty());
+        radioMessages.clear();
+        bool suspended = false;
+        try {
+            initializeRadio(node, phy, store, ready);
+            stopIteration(ready);
+        } catch (const TaskSuspended&) {
+            suspended = true;
+        }
+        assert(suspended && !ready && phy.sent.empty());
+        assert(radioMessages.size() == 1);
         if (fault == 0) {
             assert(phy.beginCalls == 0 && radioMessages.back().find("NVS open failed") == 0);
+        } else if (fault == 1 || fault == 2) {
+            assert(radioMessages.back().find("Radio init failed") == 0);
+        } else if (fault == 4) {
+            assert(radioMessages.back().find("Invalid saved nonces/config") == 0);
+        } else {
+            assert(radioMessages.back().find("Radio stopped:") == 0);
         }
         uint32_t retry = 60000;
         joinIteration(node, ready, retry);
@@ -365,6 +391,13 @@ static void testInitialization() {
     phy.replies.push_back(node.gatewayAccept(1, true, 33, 0));
     joinIteration(node, ready, retry);
     assert(!ready && !node.isActivated()); // authenticated 1.0 still fails closed
+    bool suspended = false;
+    try {
+        stopIteration(ready);
+    } catch (const TaskSuspended&) {
+        suspended = true;
+    }
+    assert(suspended && radioMessages.back().find("Radio stopped:") == 0);
     size_t sent = phy.sent.size();
     joinIteration(node, ready, retry);
     assert(phy.sent.size() == sent);
@@ -449,6 +482,26 @@ static void testTransmitOutcome() {
     clockMs += 3600000;
     serviceIteration(node, ready, batch, offset, demoTurn);
     assert(offset == 7); // outer completed even though its nested MAC launch failed
+}
+static void testMacPayloadLifetime() {
+    Preferences storage;
+    TestPhy phy;
+    ProbeNode node(&phy, storage);
+    initialize(node);
+    node.activeSession();
+    uint8_t payload = 1;
+    for (unsigned step = 0; step < 3; ++step) {
+        unsigned expected = step == 0 ? 2 : 1;
+        uint8_t requests = step == 0 ? 6 : (step == 1 ? 1 : 2);
+        size_t before = phy.sent.size();
+        clockMs += 3600000;
+        phy.replies.push_back(node.gatewayFrame(step + 1, "MAC lifetime", requests, step == 2));
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) > 0);
+        assert(phy.sent.size() - before == expected);
+        assert(node.getLastToA() == expected * 112);
+        assert(messages.back() == "Port 10: MAC lifetime");
+    }
 }
 static void testJoinAuthentication() {
     for (unsigned fault = 0; fault < 5; ++fault) {
@@ -615,6 +668,7 @@ int main() {
     assert(failedNode.setDatarate(5) == 0);
     assert(failedNode.activateOTAA(&event) < 0);
     assert(!failedNode.healthy && failedPhy.sent.empty());
+    testMacPayloadLifetime();
     testJoinAuthentication();
     testTransmitOutcome();
     testInitialization();

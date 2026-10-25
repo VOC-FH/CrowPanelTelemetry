@@ -1,0 +1,2 @@
+N4: first=1 duplicate=1 delivered=2
+N5: following small response physical frames=2 (expected 1)

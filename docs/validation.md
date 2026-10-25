@@ -3,7 +3,7 @@
 Canonical checkout:
 `/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry`.
 Private repository: `git@github.com:VOC-FH/CrowPanelTelemetry.git`.
-Default/current branch `main`; HEAD remains
+At the prior deep-fix validation checkpoint, default/current branch was `main`; HEAD was
 `6fada32040bbcb982c99dd59e9b4f57c1b2eb7c3`; local main/origin/main ahead0/behind0
 against the existing tracking ref. No fetch/pull or ref change. Read-only
 `gh pr list --repo VOC-FH/CrowPanelTelemetry --state open --json number,title,headRefName,baseRefName,url`
@@ -204,3 +204,183 @@ Supervised bench flashing: conditional on those prerequisites and separately
 required flashing authorization. Unattended TTN: NO-GO until SD/WiFi stress,
 antenna/power compliance, real stacks/latency and the entire hardware checklist,
 including24h run, pass. No display/touch/audio/WiFi/SD/GPS/sensor/RF operation claimed.
+
+
+## Re-review correction checkpoint — 2026-10-25 (incomplete)
+
+Current main HEAD is `c6fe271124666c82f92733a8c0f161697761367d`. Local changes
+include the user's authorized editorial changes and the prior drafting records;
+these were preserved. No commit/push or branch/ref change was made. The application
+change in this checkpoint replaces a WiFi save-failure post with formatting into
+the existing report buffer, preventing the next post from hiding the error.
+Association/persistence correctness and other re-review findings remain open:
+[dispositions and pending proposals](review/rereview-fix-status.md).
+
+Temporary task root is `/tmp/codex/build/CrowPanelTelemetry/rereview-fix` (`T`).
+The exact-tag dependencies are retained there for continuation, not installed.
+CLI1.5.1 was verified against its official release checksum; installed core3.3.12
+and both P4 SDK variants were read-only. Dependencies and source-file hashes are
+recorded in validation-logs/rereview-fix/. The unchanged baseline passed host,
+format and all three compiles before production edits. Both phases use the common
+FQBN documented above, isolated `--libraries "$T/deps"`, separate configuration
+build paths, task-controlled TMPDIR and caches. External Used library paths resolve
+to the six pinned isolated dependencies; bundled libraries resolve to core3.3.12.
+
+| Configuration | Baseline flash | Current flash | Static RAM (both) | Both builds |
+|---|---:|---:|---:|---|
+| prev3, blank Config.h | 1,202,482 | 1,202,484 | 39,364 | PASS |
+| prev3, dummy credentials/shunt | 1,209,592 | 1,209,594 | 39,436 | PASS |
+| postv3, same dummy flags | 1,211,154 | 1,211,156 | 39,436 | PASS |
+
+Exact compile arguments and exit codes are preserved in baseline-build-results.json
+and current-build-results.json in that evidence directory; complete output is in
+the corresponding log files. These are checkpoint builds, not validation of the
+unapplied proposals. No timing/throughput or runtime stack measurement is claimed.
+
+Commands run from the canonical checkout (T expanded to the path above):
+
+```sh
+BUILD="$T" RADIOLIB_DIR="$T/deps/RadioLib" make test
+make format-check
+python3 "$T/build.py" baseline
+python3 "$T/build.py" current
+BUILD="$T" python3 tools/test_wifi_worker.py
+clang-format -i tests/wifi-worker.cpp
+clang-tidy --config-file=.clang-tidy -p "$T/enabled-prev3" "$T/enabled-prev3/sketch/Workers.cpp"
+python3 tools/check_wiring.py "$T/panel.sch" "$T/panel.brd"
+```
+
+Host checks and format passed for current production, including the new independent
+verbatim WiFi worker check. That check failed before the correction; original
+failure and passing output are saved. All independent checks execute even if
+another fails. Target clang-tidy returned1: unsupported `xesppie` RISC-V extension,
+unknown `-fno-tree-switch-conversion` and `-fstrict-volatile-bitfields`, and missing
+`cmath`; it also reports existing canonical check-option warnings. No analysis
+configuration was weakened. It is not a successful target analysis.
+
+The temporary diagnostic drivers used the real decoder and real RadioLib with
+local inputs/simulated PHY only. N1 bounds-only sanitizer failed at jpeg.inl:1694,
+array index4; full UBSan first stopped on the decoder's existing host unaligned
+access. N4 delivered a counter-zero application frame twice. N5 submitted two
+frames after a subsequent small MAC request where one was expected. These are
+reproductions of open findings, not passing regression tests or ESP32 emulation.
+They did not transmit RF. Network-counter/persistence coverage is still incomplete.
+
+Audits confirmed canonical C++ bytes in all three build trees after removing only
+the Arduino-generated initial #line directive. Enabled ELF has the downlink
+callback and no beforeUplink/afterUplink/SDMMCFS symbols. Wiring checks pass with
+unchanged J7 results. Protected Config, UI previews, photo, SVG-embedded photo,
+wiring, telemetry/decoder/reference and historical archive are byte-identical;
+hashes are in protected-sha256.json. No preview regeneration was necessary.
+
+Physical line accounting for this checkpoint (unapplied proposals excluded):
+
+| Category | Added | Removed |
+|---|---:|---:|
+| Application production | 1 | 1 |
+| Dependency production | 0 | 0 |
+| Tests | 73 | 0 |
+| Test/build tooling | 20 | 1 |
+
+The new test exercises the existing worker report interface, not ESP-Hosted/WiFi
+thread scheduling. It does not prove the unresolved association/save policy.
+No hardware, RF, stack safety or unattended-operation acceptance is claimed.
+The task directory is intentionally retained while patch approvals and repair
+work remain pending; no persistent build, extra checkout, global install or archive
+was created. Unattended TTN remains NO-GO. Assembly/bench remain conditional on the
+physical checklist and separate flashing/RF authorization.
+
+
+## Approved N1/N5/N6 stage — 2026-10-25
+
+The user approved these three concrete proposals, including N1's narrow vendor
+error-return exception and N6's two extra application lines. They are implemented
+locally on the same main HEAD. Remaining N4/N7/F8 proposals are unapplied and this
+broader task remains incomplete. Earlier checkpoint evidence above is retained.
+
+The single `tools/patch_dependency.py` replaces `tools/patch_radiolib.py`; the old
+command in historical validation logs describes the earlier tool revision. Use:
+
+```sh
+python3 tools/patch_dependency.py radiolib-7.8.1 "$T/deps/RadioLib"
+python3 tools/patch_dependency.py jpegdec-1.8.4 "$T/deps/JPEGDEC"
+BUILD="$T" RADIOLIB_DIR="$T/deps/RadioLib" make test
+make format
+make format-check
+python3 "$T/build.py" approved
+clang-tidy --config-file=.clang-tidy -p "$T/enabled-prev3" "$T/enabled-prev3/sketch/Workers.cpp"
+```
+
+Both pinned original/patched source hashes are authoritative in patches/.
+The integrity test reverses each patch in a disposable dependency-file tree,
+verifies the original hash, then checks fresh apply, repeated apply and refusal of
+modified input without changing that input. No installed library/SDK was edited.
+No generic plugin/patch framework or compatibility shim was added. RadioLib's
+zero-context diff presentation avoids copying trailing vendor whitespace into new
+patch context; exact-source hashes remain mandatory before application.
+
+The independent host suite passes. JPEG tests use the real decoder and generated
+invalid SOF inputs under `-fsanitize=address,bounds -fno-sanitize-recover=all`;
+baseline decoding, progressive rejection and16 invalid metadata cases pass. The
+previous full-UBSan alignment diagnostic is retained rather than hidden: that run
+stopped on the vendor's existing unaligned access, while bounds-only testing
+isolated N1. No complete decoder-input safety claim is made.
+
+The real-library N5 regression confirms required large MAC replies, subsequent
+small/no-reply handling, callbacks and aggregate airtime. The N6 test now extracts
+the final stop block as well as init/join blocks, modelling suspension at the task
+boundary and checking the final posted diagnostic. It covers NVS open, radio and
+switch init, invalid nonces, boot-ID write and negotiated1.0 stop paths. N1/N5/N6
+regressions each fail before the relevant correction and pass after; their logs
+are stored separately, not mistaken for successful baseline checks.
+
+| Approved source configuration | Flash bytes | Static RAM bytes | Result |
+|---|---:|---:|---|
+| prev3, blank | 1,202,534 | 39,364 | PASS |
+| prev3, dummy enabled | 1,209,668 | 39,436 | PASS |
+| postv3, same dummies | 1,211,230 | 39,436 | PASS |
+
+Exact commands/results and complete build output are in
+validation-logs/rereview-fix/approved-*. No pinned versions, FQBN or board settings
+changed. Target clang-tidy was attempted again on the final approved source and
+failed on the same unsupported Espressif arch/compiler flags and missing target
+C++ headers; no successful target analysis is claimed. Format and diff checks
+pass. Protected-file/compiled-source/ELF checks pass; no reservation hook or
+SDMMCFS symbol was restored.
+
+An additional same-configuration prev3 enabled build passed with
+`compiler.cpp.extra_flags=-DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f -fstack-usage`,
+using the same libraries/FQBN, jobs3, build path `$T/stack-approved`, TMPDIR
+`$T/stack-approved-tmp` and cache `$T/stack-approved-cache`. Static frames:
+radioTask3616, loadImage19120, applicationDownlink1120, JPEGParseInfo112,
+parseDownlink384, main sendReceive80 bytes (wrapper288). The full relevant .su
+entries and build output are saved. These are individual frame sizes, not maximum
+stack depth or a watermark measurement;12KiB radio/24KiB media allocations are
+unchanged and still require the physical checklist.
+
+Physical line accounting versus this task's HEAD, including the prior status fix:
+
+| Category | Added | Removed |
+|---|---:|---:|
+| Application production | 3 | 1 |
+| Patched dependency production | 8 | 1 |
+| Tests | 144 | 11 |
+| Test/build tooling | 111 | 27 |
+
+Dependency counts measure changed vendor source, not diff-file context/packaging.
+N1 adds7 and N5 moves1 line; N6 adds2 application lines. Test/tooling growth adds
+regressions and patch integrity checks; the old patch implementation was removed.
+No N4/N7/F8 production proposal is included. Source hashes, line accounting,
+protected hashes and command logs are saved under the same evidence directory.
+Temporary task sources/builds are retained for continuation; no archive, install,
+flash, RF transmission, TTN access, branch, commit or push was performed. UI,
+pins/J7, protocol/decoder/reference and source photo remain unchanged. Physical
+operation and unattended TTN acceptance remain unverified.
+
+
+Publication check: after staging the new evidence, full git diff --cached --check
+reports trailing spaces in byte-preserved raw tool output and vendor patch context
+(including unapplied proposals). These data findings are retained, not reported as
+a passing full staged whitespace check. Source/configuration/prose whitespace and
+make format-check pass. No source or regression assertion was weakened. The
+user separately authorized commit/push; prior local-only statements are historical.

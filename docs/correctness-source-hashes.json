@@ -127,7 +127,9 @@
     "url": "https://raw.githubusercontent.com/bitbank2/JPEGDEC/1.8.4/src/jpeg.inl",
     "sha256": "ab6dd18350a8d1ab73ad8b296d7da7274684fa4571f9abdd46d5630709a0c7bc",
     "tag": "1.8.4",
-    "commit": "ae9705abeeebd057c3d0a50c1e58bdec532c76c6"
+    "commit": "ae9705abeeebd057c3d0a50c1e58bdec532c76c6",
+    "patch": "patches/jpegdec-1.8.4.patch",
+    "patched_sha256": "a14f53115053a4b5b2d8e865c661460fe23b68afbb478d54ef4a1eafeefa97a8"
   },
   "Arduino_GFX/src/databus/Arduino_ESP32DSIPanel.cpp": {
     "url": "https://raw.githubusercontent.com/moononournation/Arduino_GFX/v1.6.9/src/databus/Arduino_ESP32DSIPanel.cpp",
@@ -202,5 +204,11 @@
   "tools/esp32p4_es-libs/3.3.12/qio_qspi/include/sdkconfig.h": {
     "sha256": "dd497a65b33a006c3ede1c7bfccd7d04da8d2dc224862162eae75fa8ad359420",
     "local_base": "/home/voc/.arduino15/packages/esp32"
+  },
+  "esp-idf/components/hal/esp32p4/include/hal/gpio_ll.h": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-idf/v5.5.5/components/hal/esp32p4/include/hal/gpio_ll.h",
+    "tag": "v5.5.5",
+    "sha256": "8352a7e462ebfac20ed441501f9234cc2e107b5e39bf8315238fbe16b96d48ef",
+    "installed_copy_matches_tag": true
   }
 }

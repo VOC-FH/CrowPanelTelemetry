@@ -1,0 +1,4 @@
+/tmp/codex/build/CrowPanelTelemetry/rereview-fix/deps/JPEGDEC/src/jpeg.inl:1637:20: runtime error: load of misaligned address 0x7fff257d0431 for type 'uint16_t', which requires 2 byte alignment
+0x7fff257d0431: note: pointer points here
+ 2e 33 34  32 ff db 00 43 01 09 09  09 0c 0b 0c 18 0d 0d 18  32 21 1c 21 32 32 32 32  32 32 32 32 32
+              ^ 

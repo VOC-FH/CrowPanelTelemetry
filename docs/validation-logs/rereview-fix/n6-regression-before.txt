@@ -1,0 +1,9 @@
+radio: /home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:371: void testInitialization(): Assertion `radioMessages.size() == 1' failed.
+Traceback (most recent call last):
+  File "/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tools/test_radio.py", line 48, in <module>
+    subprocess.run([str(build/'radio')], check=True, timeout=30, cwd=build)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/tmp/codex/build/CrowPanelTelemetry/rereview-fix/radio']' died with <Signals.SIGABRT: 6>.

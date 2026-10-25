@@ -1,0 +1,18 @@
+--- a/Workers.cpp
++++ b/Workers.cpp
+@@ -130,6 +130,7 @@
+         }
+         if (!ready) {
+             post(EventKind::Radio, text);
++            vTaskSuspend(nullptr);
+         }
+     }
+     if (ready) {
+@@ -140,6 +141,7 @@
+         }
+         if (!ready) {
+             post(EventKind::Radio, "Invalid saved nonces/config; see recovery guide");
++            vTaskSuspend(nullptr);
+         }
+         node.setDutyCycle(false); // The application spaces completed operations by aggregate airtime.
+         node.setADR(true);

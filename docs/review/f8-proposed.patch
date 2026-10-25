@@ -1,0 +1,35 @@
+--- a/src/TinyGPS++.cpp
++++ b/src/TinyGPS++.cpp
+@@ -102,12 +102,15 @@
+ //
+ int TinyGPSPlus::fromHex(char a)
+ {
+-  if (a >= 'A' && a <= 'F')
+-    return a - 'A' + 10;
+-  else if (a >= 'a' && a <= 'f')
+-    return a - 'a' + 10;
+-  else
+-    return a - '0';
++  int value = -1;
++  if (a >= 'A' && a <= 'F') {
++    value = a - 'A' + 10;
++  } else if (a >= 'a' && a <= 'f') {
++    value = a - 'a' + 10;
++  } else if (a >= '0' && a <= '9') {
++    value = a - '0';
++  }
++  return value;
+ }
+ 
+ // static
+@@ -161,8 +164,8 @@
+   // If it's the checksum term, and the checksum checks out, commit
+   if (isChecksumTerm)
+   {
+-    byte checksum = 16 * fromHex(term[0]) + fromHex(term[1]);
+-    if (checksum == parity)
++    int high = fromHex(term[0]), low = fromHex(term[1]);
++    if (curTermOffset == 2 && high >= 0 && low >= 0 && 16 * high + low == parity)
+     {
+       passedChecksumCount++;
+       if (sentenceHasFix)

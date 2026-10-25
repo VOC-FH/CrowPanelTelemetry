@@ -1,0 +1,1 @@
+Residual F8: non-hex checksum accepted=1; status=No fresh fix / move antenna outdoors (expected no valid NMEA)

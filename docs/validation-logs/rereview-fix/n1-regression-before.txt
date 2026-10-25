@@ -1,0 +1,11 @@
+jpeg: /home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/jpeg.cpp:20: int main(int, char**): Assertion `!ok' failed.
+Traceback (most recent call last):
+  File "/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tools/test_jpeg.py", line 33, in <module>
+    subprocess.run([str(build/'jpeg'), str(project/'tests/fixtures/baseline.jpg'),
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        str(project/'tests/fixtures/progressive.jpg')] + invalid, cwd=build, check=True)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/tmp/codex/build/CrowPanelTelemetry/rereview-fix/jpeg', '/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/fixtures/baseline.jpg', '/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/fixtures/progressive.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/components-0.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/components-5.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/components-6.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/components-7.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/components-8.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/components-9.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/components-10.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/components-11.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/components-255.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/length-2.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/length-7.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/length-8.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/length-10.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/length-16.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/length-18.jpg', '/tmp/codex/build/CrowPanelTelemetry/rereview-fix/length-65535.jpg']' died with <Signals.SIGABRT: 6>.

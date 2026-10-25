@@ -1,0 +1,16 @@
+--- a/src/jpeg.inl
++++ b/src/jpeg.inl
+@@ -1677,6 +1677,13 @@
+                 break;
+             case 0xffc0: // SOFx - start of frame (baseline)
+             case 0xffc2: // (progressive)
++                if (usLen < 8 || iOffset + usLen > iBytesRead ||
++                    s[iOffset+7] == 0 || s[iOffset+7] > MAX_COMPS_IN_SCAN ||
++                    usLen != 8 + 3 * s[iOffset+7])
++                {
++                    pPage->iError = JPEG_INVALID_FILE;
++                    return 0;
++                }
+                 pPage->ucMode = (uint8_t)usMarker;
+                 pPage->ucBpp = s[iOffset+2]; // bits per sample
+                 pPage->iCropX = pPage->iCropY = 0; // initialize crop rectangle to full image size

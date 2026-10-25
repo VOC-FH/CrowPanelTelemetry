@@ -1,5 +1,7 @@
 # Deep expert re-review of CrowPanelTelemetry @ 90e811b (main)
 
+> Editorial note (2026-10-25): At the user's request, the wording below was edited for a defensive engineering focus. This is an edited presentation of Claude's review, not a new Claude assessment or independent verification. Findings, source references and unresolved risks remain review claims. The original response is available in Git at `c6fe271124666c82f92733a8c0f161697761367d`; its SHA-256 is `0385e0d7cc56b4bfb63705a739382e5b132b0f045dc2fc27837c2c9a440e7e34`. Wording changes do not establish whether a service will accept a request.
+
 This was a read-only review. I used only Read/Glob/Grep: no files changed, no commands run, no RF, no TTN access. I traced the current production sources first, then the pinned dependencies (patched RadioLib 7.8.1, INA226 0.6.6, TinyGPSPlus 1.0.3a, JPEGDEC 1.8.4, Arduino_GFX 1.6.9, IDF v5.5.5, Hosted v2.12.13), the installed core 3.3.12 P4 SDK configs, and the pinned `panel.sch`. I read your dispositions and the prior review only after that.
 
 Classes follow your convention: **A** = source-proven failure; **B** = confirmed mechanism, device consequence uncertain; **C** = physical prerequisite.
@@ -14,7 +16,7 @@ Classes follow your convention: **A** = source-proven failure; **B** = confirmed
 
 **Correctly retained, with one change:** F4, F6, F7, F11, F12 and F14 are honestly retained. However, **F4's consequence is no longer just uncertain.** The installed P4 SDK builds Hosted with restart-on-failure, so an SDIO transport failure reboots the whole P4 (N2).
 
-**New source-proven defect (most important):** JPEGDEC 1.8.4 has an out-of-bounds write in its SOF parser (N1). It runs inside `openRAM`, before your baseline/type guard. One malformed JPEG sorted first in `/images` can crash the device on every boot. Each boot joins immediately, because the airtime deadline is volatile. That links N1 and N2 to the accepted reset limitation (N3) in a way the current docs don't describe.
+**Highest-priority input-validation finding:** JPEGDEC 1.8.4 does not bound the SOF component count before writing decoder state (N1). This occurs inside `openRAM`, before the application's baseline/type guard. An invalid image loaded automatically at startup may cause recurring decoder failures or resets. Since the airtime deadline is volatile, repeated resets can also cause repeated join attempts (N3). This interaction needs documentation and validation.
 
 **Also new:**
 - RadioLib accepts a replayed downlink while its counter is still 0 (N4).
@@ -32,19 +34,19 @@ Classes follow your convention: **A** = source-proven failure; **B** = confirmed
 
 ## Actionable findings
 
-### N1 — JPEGDEC SOF parser writes past `JPCI[4]`, can corrupt decoder pointers (Medium; High if SD contents are untrusted). Class A mechanism / B consequence
+### N1 — JPEGDEC needs a component-count bounds check before decoder-state writes (Medium; High if SD contents are untrusted). Class A mechanism / B consequence
 
 **Where (dependency):**
 - `JPEGDEC.h:63` sets `MAX_COMPS_IN_SCAN 4`; `:225` declares `JPCI[4]`.
 - `jpeg.inl:1678–1708` (`JPEGParseInfo`, SOF0/SOF2) loops `for (i=0; i<ucNumComponents; i++)` with `ucNumComponents = s[iOffset+7]` (0–255, taken from the file). Only `quant_tbl_no ≤ 3` is checked.
-- On RV32 the overrun covers, in order, `JPEGFile` (iPos/iSize/pData), `bb`, `pUser`, `pDitherBuffer` and `usPixels`. Component index 10 overwrites bytes 1–3 of `usPixels`.
-- The next DHT segment writes Huffman tables through that pointer (`jpeg.inl:843, 857, 867`). DHT normally follows SOF in a file.
+- The reviewer identifies adjacent decoder file, buffer and pointer state as potentially affected on RV32. Exact effects depend on the target object layout and have not been established by an on-device test.
+- Later DHT processing uses decoder pointers (`jpeg.inl:843, 857, 867`), so the component-count check must occur before these state writes and subsequent parsing.
 
 **Where (project):**
 - `Workers.cpp:310–312`: the JPEGDEC object lives on the media stack, and `openRAM` runs before the guard at `:320`.
 - `Workers.cpp:372–406`: the first remount at boot calls `loadImage(images[0])`.
 
-**Trigger:** a corrupt or crafted JPEG with Nf ≥ 5. With Nf ≥ 11 the DHT write goes to an invalid address, which is a store fault and panic.
+**Input-validation requirement:** reject component counts outside the supported array capacity before writing component metadata. The reviewer predicts a target fault for some invalid inputs; the physical outcome remains untested.
 
 **Invariant broken:** SD content must only produce "JPG failed", never memory corruption.
 
@@ -58,7 +60,7 @@ Classes follow your convention: **A** = source-proven failure; **B** = confirmed
 
 **Alternative:** an app-side pre-scan of the SOF Nf byte before `openRAM`. This is a second mini-parser, which you have disfavoured, and it is easy to get wrong.
 
-**Regression test:** add `tests/fixtures/sof-nf11.jpg` (Nf=11 followed by DHT) and Nf=5..10 variants. Run `tests/jpeg.cpp` under `-fsanitize=address` and expect `openRAM()==0` with no sanitizer report.
+**Regression test:** use local invalid-input fixtures covering component counts above the supported capacity. Check safe rejection by `openRAM()` and run bounds/memory diagnostics. A sanitizer run alone is not proof that all adjacent-field writes are detected.
 
 ### N2 — Hosted restart-on-failure turns F4 (and any C6 fault) into a full P4 reboot (Medium). Class B; the escalation path is source-proven
 
@@ -106,11 +108,11 @@ An app mutex does not help, because Hosted's bus lock is private (`sdio_drv.c:14
 
 **Test:** a bench build that reboots every N s, under RF shielding or on a private network with an SDR monitor. Count JoinRequests per hour.
 
-### N4 — RadioLib accepts a replayed downlink while FCntDown is still 0 (Low–Medium). Class A, upstream 7.8.1
+### N4 — RadioLib needs distinct initial and accepted-zero downlink-counter states (Low–Medium). Class A, upstream 7.8.1
 
 **Where:** `LoRaWAN.cpp:2022` only treats the frame as a rollover when `devFCnt32 > 0`. After a legitimate FCnt 0 frame the stored counter stays 0 (`:2093/:2096`), so the identical frame passes the MIC again (`:2076`).
 
-**Trigger:** each new session (every boot). The first NFCntDown=0 MAC frame (typically TTN's post-join MAC frame) and the first AFCntDown=0 application frame stay replayable in later receive windows until a newer frame of the same family arrives.
+**Affected state:** a newly established session may not distinguish an initial counter from an already accepted counter value of zero. Duplicate handling for both network and application downlink counters needs verification against LoRaWAN 1.1, including permitted retransmission semantics.
 
 **Impact:**
 - MAC commands are re-executed; DevStatusReq, for example, forces replies and airtime.
@@ -119,7 +121,7 @@ An app mutex does not help, because Hosted's bus lock is private (`sdio_drv.c:14
 
 **Remedy:** an upstream fix or a small patch expansion that tracks "no frame accepted yet" distinctly from counter value 0. Needs approval. The alternative is to document it as accepted for a display-only application port.
 
-**Test:** in `tests/radio.cpp`, deliver `gatewayFrame(0,"x",0)` twice. The second delivery must be rejected; today it is accepted.
+**Test:** use the existing local real-library test interface to verify duplicate handling at counter zero, separately for application and network downlinks. Assert the protocol-required result and verify that application data and MAC commands are not processed again where prohibited. No over-the-air test is needed for this regression.
 
 ### N5 — `isMACPayload` stays set after a nested MAC reply (Low). Class A, upstream
 

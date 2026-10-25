@@ -94,18 +94,21 @@ CLK18/CMD19/D0=17/D1=16/D2=15/D3=14/reset32. WiFi uses SDMMC host slot1; the car
 uses slot0. The media worker mounts through ESP-IDF, with the default slot-specific
 deinit flag, one-bit IO_MUX pins and a fixed shared 3.3V VO4 reference. No SD power
 GPIO or adjustable SD power driver is used. Cleanup checks that slot0 was counted
-before deinitializing it, including failed mounts. It starts after WiFi.mode completes
+before deinitializing it, including failed mounts. This snapshot guard requires
+quiescent slot lifecycles; it does not serialize Hosted recovery. It starts after WiFi.mode completes
 to order application init calls; this does not exclude concurrent Hosted traffic. Generic SD_MMC.begin would drive GPIO45
 and break I2C; that wrapper and unused audio board catalog have been removed
 from the application. The ES8311 codec uses its driver directly. A failed SD
 unmount latches storage unavailable until restart; ordinary no-card mount
 failures remain retryable. Failed C6 startup requires a restart; entering WiFi
 credentials does not implicitly reinitialize the shared controller in that state.
-Real SD/C6 coexistence still needs hardware testing.
+Hosted transport failures can restart the entire P4 in the installed core.
+Real SD/C6 coexistence still needs hardware testing; see the open re-review findings.
 
 Tap **WiFi setup**, type SSID and password, then Connect. The keyboard supports
 lowercase, uppercase, digits, printable ASCII punctuation and Space/Delete.
-Passwords are masked and saved in NVS only after a successful connection. The
+Passwords are masked. The current worker saves on connected status; stale status
+and empty-password write confirmation remain open correctness issues (N7). The
 password edit buffer is cleared on Connect/Close. NVS and firmware credentials
 are not encrypted by this template. Open networks and Personal authentication are
 supported; Enterprise authentication/captive-portal login is outside scope.
@@ -166,8 +169,10 @@ Use a FAT32 card (for initial bring-up, a known-good8–32GB card). Create:
 ```
 
 Up to128 JPG/JPEG files in `/images` are sorted by filename. Use numbered ASCII
-filenames for predictable order. Baseline JPEGs up to4MiB are accepted; progressive
-or unsupported JPEGs show an error. The decoder selects1,1/2,1/4 or1/8 scaling to
+filenames for predictable order. Baseline JPEGs up to4MiB are accepted. The
+required JPEGDEC patch rejects invalid SOF component counts/lengths during parsing;
+progressive images are rejected by the application after parsing. These checks
+are not a comprehensive audit of every possible decoder input. The decoder selects1,1/2,1/4 or1/8 scaling to
 fit600×270 pixels; larger images that still do not fit at1/8 are rejected. A600×270
 baseline JPG is the most predictable template resource. Images are decoded to
 PSRAM outside the UI task, then ownership transfers to the renderer.
@@ -193,27 +198,30 @@ is a module logic ground. Retry SD remounts manually without formatting the card
 ## Build and tests
 
 Use an isolated dependency collection with the six pinned libraries, each in
-its own subfolder. The RadioLib folder must be named `RadioLib`. Apply the
-project patch once (Python 3 and the standard `patch` command are required):
+its own subfolder. Use folder names `RadioLib` and `JPEGDEC`. Apply the
+project patches once (Python 3 and the standard `patch` command are required):
 
 ```
-python3 tools/patch_radiolib.py /absolute/path/to/dependencies/RadioLib
+python3 tools/patch_dependency.py radiolib-7.8.1 /absolute/path/to/dependencies/RadioLib
+python3 tools/patch_dependency.py jpegdec-1.8.4 /absolute/path/to/dependencies/JPEGDEC
 RADIOLIB_DIR=/absolute/path/to/dependencies/RadioLib make -k format-check test
 make compile ARDUINO_CLI=/path/to/arduino-cli LIBRARIES=/absolute/path/to/dependencies
 ```
 
-`make patch-radio LIBRARIES=/absolute/path/to/dependencies` is an equivalent
-explicit patch command. The patcher checks both original 7.8.1 source hashes,
+`make patch-radio patch-jpeg LIBRARIES=/absolute/path/to/dependencies` applies
+both explicitly. The single patcher checks the exact original source hashes,
 verifies the result, accepts an already-patched copy, and refuses unknown/mixed
 sources. No global dependency or SDK is modified automatically. If using Arduino
-IDE, patch the exact RadioLib folder selected by its verbose build output before
+IDE, patch the exact RadioLib and JPEGDEC folders selected by verbose build output before
 Verify, or use an isolated CLI dependency folder. A dependency change requires
 reviewing/rebasing the patch and repeating validation; do not bypass the checked
 patch or apply it blindly to another release.
 
 The patch forwards authenticated application downlinks, including nested and empty
 messages, corrects reachable Class-A time comparisons and airtime aggregation,
-and commits JoinAccept state only after authentication.
+and commits JoinAccept state only after authentication. It also consumes the
+MAC-payload flag after payload selection. The JPEGDEC patch rejects invalid SOF
+component counts and lengths before writing component metadata.
 It adds no project marker macro or before/after-transmission hooks. PersistentNode
 spaces completed join/uplink operations using their aggregate predicted airtime,
 including repetitions and nested replies. RadioLib's ordinary duty-cycle gate is
