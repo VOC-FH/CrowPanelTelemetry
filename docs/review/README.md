@@ -49,3 +49,25 @@ sets the correctness-only scope, identifies approved changes and retained risks,
 and asks Claude to verify current source independently. Earlier statements about
 uncommitted status/no push describe the implementation checkpoint, not this later
 publication authorization. The historical delivery ZIP remains unchanged.
+
+
+The corrections and review brief were committed/pushed on main as
+[90e811bc38c448bc1f23d1f76d80cce7155c417b](https://github.com/VOC-FH/CrowPanelTelemetry/commit/90e811bc38c448bc1f23d1f76d80cce7155c417b).
+Claude completed the [full independent re-review](claude-deep-rereview.md), using
+Read/Glob/Grep only, with exact-tag sources provided in a temporary dependency
+collection. [Run provenance](deep-rereview-run.json) records the reviewed commit,
+model, duration, tool calls, report hash, read limitations and caller spot checks.
+The raw response is saved without editorial changes. The reviewer explicitly
+lists files/evidence it did not inspect in detail; this is not a claim that every
+source or assertion was exhaustively verified.
+
+The report confirms several corrections, but records N1–N9 and residual F8/F9
+issues, including an unchecked JPEG component count, Hosted reset escalation,
+downlink replay/state concerns and error-visibility gaps. Findings and proposed
+remedies are review claims to verify, not approval to implement. No new patch,
+boot-delay policy, WiFi/SD lifecycle reduction or electrical default was adopted.
+No UI visual changes were requested or made. Hardware/RF checks remain unexecuted;
+unattended TTN operation remains NO-GO. This follow-up changes review documents
+and the manifest only; the application remains exactly the reviewed90e811b source.
+The historical delivery ZIP is unchanged. Temporary review sources are removed
+after evidence is saved and published.
