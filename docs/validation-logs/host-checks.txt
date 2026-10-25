@@ -9,5 +9,5 @@ DR | SF | packet ms | 144 batches/day seconds | pacing interval seconds
 4 | 8 | 205.312 | 29.565 | 592
 5 | 7 | 112.896 | 16.257 | 326
 PASS: reference 10-byte SF7 airtime; normal packet; low-rate policy conflict.
-PASS: real RadioLib + production node: joins, wrap, per-frame pacing, nested MAC/downlinks, nonce TX-error/reset recovery, fairness/fragments and NVS fail-stop
+PASS: real RadioLib + production node: joins, wrap, aggregate pacing, immediate nested MAC/downlinks, nonce TX-error/reset recovery, fairness/fragments and NVS fail-stop
 PASS: all independent checks

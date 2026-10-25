@@ -208,17 +208,19 @@ verifies the result, accepts an already-patched copy, and refuses unknown/mixed
 sources. No global dependency or SDK is modified automatically. If using Arduino
 IDE, patch the exact RadioLib folder selected by its verbose build output before
 Verify, or use an isolated CLI dependency folder. A dependency change requires
-reviewing/rebasing the patch and repeating validation; do not suppress the build
-guard or apply it blindly to another release.
+reviewing/rebasing the patch and repeating validation; do not bypass the checked
+patch or apply it blindly to another release.
 
-The patch adds three protected per-frame/downlink hooks and corrects reachable
-Class-A time comparisons and diagnostic airtime aggregation. PersistentNode is
-the sole airtime/persistence owner. Every actual join, repeated data frame and
-nested MAC frame reserves its PHY-predicted airtime in NVS before launch, then
-establishes a wrap-safe deadline. Delays run only on the radio worker. Ordinary
-RadioLib duty-cycle gating is disabled to avoid a second timer; the frame hook
-uses the strictest public, regional and current network allowance. The patch
-is required for this application, not a claim that every RadioLib mode is fixed.
+The patch forwards authenticated application downlinks, including nested and empty
+messages, and corrects reachable Class-A time comparisons and airtime aggregation.
+It adds no project marker macro or before/after-transmission hooks. PersistentNode
+spaces completed join/uplink operations using their aggregate predicted airtime,
+including repetitions and nested replies. RadioLib's ordinary duty-cycle gate is
+disabled to keep one application deadline. There are no airtime NVS writes or
+pre-transmission airtime reservations; automatic MAC replies proceed normally.
+DevNonce persistence before joining remains required to prevent nonce reuse.
+Reset clears the volatile airtime deadline; repeated resets can exceed network
+allowances. See [airtime policy and limitations](docs/airtime.md).
 
 `make test` runs independent encoder/decoder, sensor-range, join-DR, SD lifecycle,
 airtime and real patched RadioLib integration checks. Set RADIOLIB_DIR explicitly;

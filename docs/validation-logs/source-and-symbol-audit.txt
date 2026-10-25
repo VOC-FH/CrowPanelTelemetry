@@ -1,15 +1,14 @@
-blank: final C++/headers match canonical sources; no SDMMCFS begin/end symbols
-4000fe30 W PersistentNode::afterUplink(unsigned long)
-400109bc W PersistentNode::activateOTAA(LoRaWANJoinEvent_t*)
-4000fe5a W PersistentNode::beforeUplink(unsigned long)
+default-prev3: canonical C++/headers match; no SDMMCFS begin/end or reservation hooks
+40010928 W PersistentNode::activateOTAA(LoRaWANJoinEvent_t*)
+4000fda6 W PersistentNode::accountAirtime()
 4000fbb2 W PersistentNode::applicationDownlink(unsigned char const*, unsigned int, unsigned char)
-enabled: final C++/headers match canonical sources; no SDMMCFS begin/end symbols
-4000feac W PersistentNode::afterUplink(unsigned long)
-40010a28 W PersistentNode::activateOTAA(LoRaWANJoinEvent_t*)
-4000fed6 W PersistentNode::beforeUplink(unsigned long)
+enabled-prev3: canonical C++/headers match; no SDMMCFS begin/end or reservation hooks
+400109a2 W PersistentNode::activateOTAA(LoRaWANJoinEvent_t*)
+4000fe36 W PersistentNode::accountAirtime()
 4000fcf2 W PersistentNode::applicationDownlink(unsigned char const*, unsigned int, unsigned char)
-postv3: final C++/headers match canonical sources; no SDMMCFS begin/end symbols
-4000feac W PersistentNode::afterUplink(unsigned long)
-40010a28 W PersistentNode::activateOTAA(LoRaWANJoinEvent_t*)
-4000fed6 W PersistentNode::beforeUplink(unsigned long)
+4000fe02 W PersistentNode::defer(unsigned long)
+enabled-postv3: canonical C++/headers match; no SDMMCFS begin/end or reservation hooks
+400109a2 W PersistentNode::activateOTAA(LoRaWANJoinEvent_t*)
+4000fe36 W PersistentNode::accountAirtime()
 4000fcf2 W PersistentNode::applicationDownlink(unsigned char const*, unsigned int, unsigned char)
+4000fe02 W PersistentNode::defer(unsigned long)

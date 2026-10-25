@@ -10,10 +10,14 @@ The canonical project is this folder; do not modify sibling Basic/S3 sketches.
 owns the UI model, scheduler, GPS parsing and shared I2C bus. Codec setup runs
 before tasks start. UI alone owns the display and live touch/sensor I2C traffic.
 Workers exclusively own radio/SPI/NVS, WiFi, SD/JPEG, and audio/I2S respectively.
-The approved RadioLib 7.8.1 patch in patches/ supplies per-physical-frame hooks.
-PersistentNode is the sole RF deadline/NVS owner; preserve pre-RF airtime and
-DevNonce reservation, including ambiguous TX errors. Apply the hash-checked patch
-only to the selected isolated dependency. Do not edit installed SDK sources.
+The hash-checked RadioLib 7.8.1 patch in patches/ fixes Class-A timing and airtime
+accounting and forwards nested application downlinks. It has no project marker or
+transmission-reservation hooks. PersistentNode owns the sole volatile RF deadline
+and NVS nonces; completed operations extend that deadline using total airtime.
+Preserve pre-RF DevNonce reservation, including ambiguous TX errors. Airtime is
+not persisted or reserved before transmissions; internal MAC replies are not
+held by the application deadline. Apply the patch only to the selected isolated
+dependency. Do not edit installed SDK sources.
 The media worker uses SdStorage (IDF slot 0, default deinit flags, fixed shared
 3.3 V VO4 reference) and POSIX files. It starts after WiFi.mode completes so
 application shared-controller startup is serialized. Its cleanup callback must

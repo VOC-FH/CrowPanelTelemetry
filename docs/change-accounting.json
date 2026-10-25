@@ -44,5 +44,27 @@
     "tools/patch_radiolib.py",
     "tools/test.py",
     "tools/test_radio.py"
-  ]
+  ],
+  "reservation_removal": {
+    "baseline_commit": "1e3cb016c8180f681635c0d69b45329ef8e01dd5",
+    "lines": {
+      "production": {
+        "added": 12,
+        "removed": 31
+      },
+      "tests": {
+        "added": 27,
+        "removed": 43
+      },
+      "tooling": {
+        "added": 0,
+        "removed": 0
+      },
+      "dependency_source": {
+        "added": 2,
+        "removed": 11
+      }
+    },
+    "scope": "Remove pre-physical-frame airtime hooks/NVS/marker; retain nested downlinks and timing/airtime corrections. Patch changes counted separately from application production."
+  }
 }

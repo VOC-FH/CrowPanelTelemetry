@@ -14,28 +14,14 @@ static uint64_t clockMs = 0;
 static uint32_t millis() {
     return static_cast<uint32_t>(clockMs);
 }
-static void vTaskDelay(uint32_t ms) {
-    clockMs += ms;
-}
-#define pdMS_TO_TICKS(ms) (ms)
 struct Preferences {
-    bool failBytes = false, failUInt = false;
+    bool failBytes = false;
     std::vector<uint8_t> nonces;
-    uint32_t hold = 0;
     size_t putBytes(const char*, const uint8_t* bytes, size_t length) {
         if (!failBytes) {
             nonces.assign(bytes, bytes + length);
         }
         return failBytes ? 0 : length;
-    }
-    size_t putUInt(const char*, uint32_t value) {
-        if (!failUInt) {
-            hold = value;
-        }
-        return failUInt ? 0 : sizeof(value);
-    }
-    uint32_t getUInt(const char*, uint32_t) {
-        return hold;
     }
 };
 enum class EventKind { Radio, Downlink };
@@ -97,7 +83,6 @@ class TestPhy : public PhysicalLayer {
 public:
     TestHal hal;
     Module module{&hal, 1, 2, 3, 4};
-    Preferences* store = nullptr;
     bool failLaunch = false;
     RadioModeType_t mode{};
     void (*callback)() = nullptr;
@@ -156,7 +141,6 @@ public:
     }
     int16_t launchMode() override {
         if (mode == RADIOLIB_RADIO_MODE_TX) {
-            assert(store && store->hold >= airtimeDelay(112, 1250));
             starts.push_back(clockMs);
             sent.push_back(staged);
         } else {
@@ -240,7 +224,7 @@ static void initialize(ProbeNode& node) {
     uint8_t key[16] = {1};
     assert(node.beginOTAA(1, 2, key, key) == 0);
     node.setDutyCycle(false);
-    node.restorePacing();
+    node.defer(0);
 }
 struct TestQueue {
     std::deque<Batch> records;
@@ -273,47 +257,51 @@ static void serviceIteration(ProbeNode& node, bool& ready, Batch& batch, uint8_t
 int main() {
     Preferences store;
     TestPhy phy;
-    phy.store = &store;
     ProbeNode node(&phy, store);
     initialize(node);
     clockMs = UINT32_MAX - 200ULL;
-    node.restorePacing();
+    node.defer(0);
     node.defer(1000);
     clockMs += 999;
     assert(!node.canTransmit());
     ++clockMs;
     assert(node.canTransmit());
     clockMs = UINT32_MAX - 111ULL; // 112 ms TX ends at millis()==0: valid RX reference.
-    node.restorePacing();
+    node.defer(0);
     for (int n = 0; n < 6; ++n) {
-        clockMs += store.hold;
         assert(node.setDatarate(joinDatarate(60000UL << n)) == 0);
         LoRaWANJoinEvent_t event{};
         int16_t rc = node.activateOTAA(&event);
         assert(rc == RADIOLIB_ERR_NO_JOIN_ACCEPT);
         assert(node.getLastToA() == 112); // resets per attempt, never cumulative
-        assert(store.hold == airtimeDelay(112, 1250) + 112);
+        assert(!node.canTransmit());
+        clockMs += airtimeDelay(112, 1250) + 111;
+        assert(!node.canTransmit());
+        ++clockMs;
+        assert(node.canTransmit());
         assert(node.healthy);
         node.clearSession();
     }
     assert(phy.sent.size() == 6);
+    assert(phy.starts.front() == UINT32_MAX - 111ULL);
     for (size_t n = 1; n < phy.sent.size(); ++n) {
         assert(phy.starts[n] - phy.starts[n - 1] >= airtimeDelay(112, 1250));
         assert(phy.sent[n][17] == n); // unique DevNonce on each attempted join
     }
-    clockMs += store.hold;
+    clockMs += 3600000;
     phy.failLaunch = true;
     assert(node.setDatarate(5) == 0);
     LoRaWANJoinEvent_t event{};
     assert(node.activateOTAA(&event) == RADIOLIB_ERR_TX_TIMEOUT);
+    assert(node.getLastToA() == 112 && !node.canTransmit());
     node.clearSession();
-    clockMs += store.hold;
+    clockMs += 3600000;
     phy.failLaunch = false;
     assert(node.setDatarate(5) == 0);
     assert(node.activateOTAA(&event) == RADIOLIB_ERR_NO_JOIN_ACCEPT);
     assert(phy.sent[6][17] == 6 && phy.sent[7][17] == 7); // failed RF must not reuse nonce
     node.activeSession();
-    clockMs += store.hold;
+    clockMs += 3600000;
     phy.replies.push_back(node.gatewayFrame(1, "outer", 6)); // 18 response bytes force nested MAC uplink
     phy.replies.push_back(node.gatewayFrame(2, "inner", 0));
     node.scheduleTransmission(millis());
@@ -321,14 +309,20 @@ int main() {
     assert(node.sendReceive(payload, sizeof(payload), 1) > 0);
     assert(node.getLastToA() == 224);
     assert(messages == (std::vector<std::string>{"Port 10: outer", "Port 10: inner"}));
-    assert(phy.starts.back() - phy.starts[phy.starts.size() - 2] >= airtimeDelay(112, 1250));
-    clockMs += store.hold;
+    assert(phy.starts.back() - phy.starts[phy.starts.size() - 2] < airtimeDelay(112, 1250));
+    node.accountAirtime();
+    assert(!node.canTransmit());
+    clockMs += airtimeDelay(224, 1250) + 223;
+    assert(!node.canTransmit());
+    ++clockMs;
+    assert(node.canTransmit());
+    clockMs += 3600000;
     phy.replies.push_back(node.gatewayFrame(3, "", 0));
     node.scheduleTransmission(millis());
     assert(node.sendReceive(payload, sizeof(payload), 1) > 0);
     assert(messages.back() == "Port 10: (empty)");
     assert(node.setDatarate(5) == 0);
-    clockMs += store.hold;
+    clockMs += 3600000;
     size_t maximum = node.getMaxPayloadLen();
     std::string binary(maximum, '\x01');
     binary[1] = '\0';
@@ -338,22 +332,12 @@ int main() {
     assert(node.sendReceive(payload, sizeof(payload), 1) > 0);
     assert(messages.back().size() == 9 + maximum * 4);
     assert(messages.back().substr(0, 21) == "Port 10: \\x01\\x00\\xFF");
-    size_t sentBefore = phy.sent.size();
-    store.failUInt = true;
-    clockMs += store.hold;
-    node.scheduleTransmission(millis());
-    assert(node.sendReceive(payload, sizeof(payload), 1) < 0);
-    assert(!node.healthy && phy.sent.size() == sentBefore);
-    store.failUInt = false;
     clockMs = 0; // reboot: monotonic clock restarts; only NVS survives
     TestPhy rebootPhy;
-    rebootPhy.store = &store;
     ProbeNode reboot(&rebootPhy, store);
     initialize(reboot);
     assert(reboot.setBufferNonces(store.nonces.data()) == 0);
-    assert(!reboot.canTransmit());
-    clockMs = store.hold;
-    assert(reboot.canTransmit());
+    assert(reboot.canTransmit()); // No persisted airtime debt after restart.
     assert(reboot.setDatarate(5) == 0);
     assert(reboot.activateOTAA(&event) == RADIOLIB_ERR_NO_JOIN_ACCEPT);
     assert(rebootPhy.sent.front()[17] == 8);
@@ -375,7 +359,7 @@ int main() {
         if (step % 3 == 1) {
             requests.requests.push_back(1);
         }
-        clockMs += store.hold;
+        clockMs += 3600000;
         serviceIteration(reboot, ready, working, offset, demoTurn);
         assert(ready);
         auto payloadBytes = reboot.decryptUplink(rebootPhy.sent.back());
@@ -390,13 +374,13 @@ int main() {
     Preferences failedStore;
     failedStore.failBytes = true;
     TestPhy failedPhy;
-    failedPhy.store = &failedStore;
     ProbeNode failedNode(&failedPhy, failedStore);
     initialize(failedNode);
     assert(failedNode.setDatarate(5) == 0);
     assert(failedNode.activateOTAA(&event) < 0);
     assert(!failedNode.healthy && failedPhy.sent.empty());
-    std::puts("PASS: real RadioLib + production node: joins, wrap, per-frame pacing, nested MAC/downlinks, nonce TX-error/reset recovery, "
+    std::puts("PASS: real RadioLib + production node: joins, wrap, aggregate pacing, immediate nested MAC/downlinks, nonce TX-error/reset "
+              "recovery, "
               "fairness/fragments and NVS "
               "fail-stop");
     return 0;

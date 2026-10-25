@@ -6,9 +6,6 @@
 #include <JPEGDEC.h>
 #include <Preferences.h>
 #include <RadioLib.h>
-#ifndef CROWPANEL_RADIOLIB_PATCH
-#error "Apply tools/patch_radiolib.py to the pinned RadioLib 7.8.1 dependency first"
-#endif
 #include <SPI.h>
 #include <WiFi.h>
 #include <algorithm>
@@ -41,9 +38,6 @@ public:
         , store(storage) {
     }
     bool healthy = true;
-    void restorePacing() {
-        allowedAt = millis() + std::min<uint32_t>(store.getUInt("hold", 0), INT32_MAX);
-    }
     bool canTransmit() const {
         return static_cast<int32_t>(millis() - allowedAt) >= 0;
     }
@@ -62,6 +56,7 @@ public:
             if (healthy) {
                 scheduleTransmission(millis());
                 rc = LoRaWANNode::activateOTAA(event);
+                accountAirtime();
                 // A TX error may follow actual RF: never undo the durable reservation.
                 devNonce = std::max(devNonce, next);
                 hton<uint16_t>(&bufferNonces[RADIOLIB_LORAWAN_NONCES_DEV_NONCE], devNonce);
@@ -75,20 +70,16 @@ public:
         return rc;
     }
 
+    void accountAirtime() {
+        uint32_t toa = getLastToA();
+        uint32_t allowance = std::min<uint32_t>(band->dutyCycle, dutyCycle ? dutyCycle : band->dutyCycle);
+        if (TTN_AIRTIME_MS_PER_HOUR > 0) {
+            allowance = std::min<uint32_t>(allowance, TTN_AIRTIME_MS_PER_HOUR);
+        }
+        defer(std::min<uint64_t>(INT32_MAX, static_cast<uint64_t>(airtimeDelay(toa, allowance)) + toa));
+    }
+
 protected:
-    int16_t beforeUplink(RadioLibTime_t toa) override {
-        if (!canTransmit()) {
-            post(EventKind::Radio, "RF pacing / waiting before next physical frame");
-        }
-        while (healthy && !canTransmit()) {
-            vTaskDelay(pdMS_TO_TICKS(100));
-        }
-        healthy = healthy && store.putUInt("hold", frameDelay(toa)) == sizeof(uint32_t);
-        return healthy ? RADIOLIB_ERR_NONE : RADIOLIB_ERR_UNKNOWN;
-    }
-    void afterUplink(RadioLibTime_t toa) override {
-        allowedAt = millis() + frameDelay(toa);
-    }
     void applicationDownlink(const uint8_t* down, size_t length, uint8_t port) override {
         char text[1056];
         size_t used = snprintf(text, sizeof(text), "Port %u: %s", port, length == 0 ? "(empty)" : "");
@@ -106,13 +97,6 @@ protected:
 private:
     Preferences& store;
     uint32_t allowedAt = 0;
-    uint32_t frameDelay(uint32_t toa) const {
-        uint32_t allowance = std::min<uint32_t>(band->dutyCycle, dutyCycle ? dutyCycle : band->dutyCycle);
-        if (TTN_AIRTIME_MS_PER_HOUR > 0) {
-            allowance = std::min<uint32_t>(allowance, TTN_AIRTIME_MS_PER_HOUR);
-        }
-        return std::min<uint64_t>(INT32_MAX, static_cast<uint64_t>(airtimeDelay(toa, allowance)) + toa);
-    }
 };
 
 static void radioTask(void*) {
@@ -155,12 +139,8 @@ static void radioTask(void*) {
         if (!ready) {
             post(EventKind::Radio, "Invalid saved nonces/config; see recovery guide");
         }
-        node.setDutyCycle(false); // The frame hook is the sole pacing authority.
+        node.setDutyCycle(false); // The application spaces completed operations by aggregate airtime.
         node.setADR(true);
-        node.restorePacing();
-        if (!node.canTransmit()) {
-            post(EventKind::Radio, "RF pacing after reset / waiting before join");
-        }
     }
     uint16_t boot = ready ? store.getUShort("boot", 0) + 1 : 0;
     ready = ready && store.putUShort("boot", boot) == sizeof(boot);
@@ -216,6 +196,7 @@ static void radioTask(void*) {
                     post(EventKind::Radio, "Sending / opening Class A receive windows...");
                     node.scheduleTransmission(millis());
                     int16_t rc = node.sendReceive(payload, length, demo ? 2 : 1, down, &downLen, false, &upEvent, &downEvent);
+                    node.accountAirtime();
                     ready = node.healthy;
                     if (rc < 0) {
                         node.defer(60000);

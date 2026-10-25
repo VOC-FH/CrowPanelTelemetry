@@ -65,37 +65,40 @@ worker once joined. On overflow, the new batch is dropped and a cumulative dropp
 batch count is visible. Power loss clears queued measurements. This is a bounded
 teaching template, not a durable data logger or a lossless outage store.
 
-PersistentNode is the sole pacing owner through the included RadioLib patch's
-per-physical-frame hooks. RadioLib's ordinary duty-cycle gate is disabled. Before
-each join, repeated uplink or nested MAC-only transmission, the hook waits for the
-previous deadline, derives airtime from RadioLib's selected PHY/frame length, and
-persists the next delay debt before launch. NVS failure prevents that launch and
-all later RF. This is predicted PHY airtime, not an RF measurement. Failed or
-ambiguous launches retain the full reservation conservatively.
+PersistentNode owns one volatile, wrap-safe application deadline. After a completed
+join or application sendReceive operation, it uses RadioLib's corrected aggregate
+`getLastToA()` to defer the next operation. The total includes repeated frames and
+nested MAC replies. The patch resets join totals per attempt, preserves the outer
+total around nested calls, and counts a launch attempt even when its result is
+ambiguous. These are predicted PHY durations, not measured RF airtime.
 
 The allowance is the smallest of EU868's regional allowance, the current network
-duty-cycle allowance, and TTN_AIRTIME_MS_PER_HOUR when nonzero. The full interval
-is ceil((floor(PHY_airtime_ms)+1)*3600000/allowance). One extra frame duration is
-added as a conservative margin, and the deadline starts after the launch call.
-The same single deadline applies to internal repetitions and nested MAC replies;
-there is no unpaced hidden RF path within these Class-A operations. A nested
-reply can therefore wait minutes or hours; the UI/GPS/sampling continue on other
-tasks. Network behavior under such delays still requires integration testing.
+duty-cycle allowance, and TTN_AIRTIME_MS_PER_HOUR when nonzero. The interval is
+ceil((aggregate_airtime_ms+1)*3600000/allowance), plus the aggregate airtime as a
+conservative margin for integer truncation. It starts after the operation returns.
+Join retry backoff and error backoff extend the same deadline rather than creating
+another gate. Ordinary RadioLib duty-cycle gating remains disabled.
 
-On reset, the full saved debt is observed again without assuming a wall clock.
-The old arbitrary 60-second airtime reservation has been replaced by the known
-individual frame's reservation. At a predicted112ms and the public allowance,
-the saved debt is325552ms (325.552s), not48hours. Existing older debt is respected
-conservatively rather than erased. The corrected diagnostic counter resets for
-each join and includes outer+nested frames, but it is not the pacing authority.
-The table above gives airtime-based lower bounds; actual conservative hook delays
-can be slightly longer because of integer rounding and the extra frame margin.
+The user rejected reservations before every physical transmission. Consequently,
+there are no airtime reservation hooks, airtime NVS writes, or restored airtime
+debts. RadioLib's internal MAC replies and repetitions proceed within the call;
+the application does not delay individual frames. Their summed airtime defers the
+next application operation. This provides aggregate spacing, not enforcement of
+every individual frame's regional or network transmission interval.
+
+A reset clears the deadline, including any older saved `hold` value (which is no
+longer read or written). Repeated resets or a power cut before post-call accounting
+can exceed airtime allowances. DevNonce remains reserved durably before a join;
+nonce-write failures still prevent RF. The former airtime-debt reset lockout no
+longer applies. At112ms for one completed frame, the running deadline is325552ms;
+for two112ms frames it is648224ms. No delay is inserted between those two frames
+by the removed hooks. The table above remains an airtime-based lower bound.
 
 Setting the public macro to0 removes only that allowance for an appropriate
-private/paid network. The same hook still enforces regional/network pacing.
-This is a software policy, not certification of antenna EIRP, regional legal
-compliance or exact daily rolling-window usage. Verify actual RF parameters,
-frequency error and airtime against TTN during separately authorized hardware tests.
+private/paid network. This software policy does not certify per-frame duty cycle,
+antenna EIRP or exact daily rolling-window usage. Verify actual RF parameters,
+frequency error, repetitions, MAC traffic and reset behavior during separately
+authorized hardware tests. Unattended TTN operation remains unverified.
 
 ## Class A downlinks
 

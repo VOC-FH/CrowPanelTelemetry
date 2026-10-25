@@ -23,7 +23,7 @@ traced, including J7 pad placement/rotation, level shifters and optional NC part
 
 - [Espressif Arduino core 3.3.12](https://github.com/espressif/arduino-esp32/releases/tag/3.3.12), ESP-IDF5.5.5. Local `boards.txt`, P4 variant, hosted HAL, LDO management, SD_MMC, WiFi and ESP_I2S sources inspected. Subsequent correctness tracing found the GPIO45 SD power macro and loss of the slot-deinit flag: the earlier inspection did not establish safe peripheral coexistence. The corrected application uses IDF directly; see correctness-status.md.
 - [Arduino_GFX v1.6.9](https://github.com/moononournation/Arduino_GFX/releases/tag/v1.6.9). Its EK79007 DSI implementation and CrowPanel Advanced P4 profile establish the library timing/initialization interface; physical 10.1-inch panel timing still needs testing.
-- [RadioLib 7.8.1](https://github.com/jgromes/RadioLib/releases/tag/7.8.1). The exact source is used with the project patch; original/patched hashes and the diff are included. Per-frame pacing, nested replies, nonce failure paths and wrap behavior are integration-tested with simulated hardware.
+- [RadioLib 7.8.1](https://github.com/jgromes/RadioLib/releases/tag/7.8.1). The exact source is used with the project patch; original/patched hashes and the diff are included. Aggregate operation pacing, immediate nested replies, nonce failure paths and wrap behavior are integration-tested with simulated hardware.
 - [INA226 0.6.6](https://github.com/RobTillaart/INA226/releases/tag/0.6.6). Calibration return code, individual read errors, overflow and completed conversions inspected.
 - [TinyGPSPlus v1.0.3a](https://github.com/mikalhart/TinyGPSPlus/releases/tag/v1.0.3a).
 - [JPEGDEC 1.8.4](https://github.com/bitbank2/JPEGDEC/releases/tag/1.8.4).

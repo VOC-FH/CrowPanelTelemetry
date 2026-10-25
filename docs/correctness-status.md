@@ -27,12 +27,14 @@ An ambiguous unmount error latches storage unavailable until restart, preventing
 reuse/double cleanup. This is tested at the API boundary; actual SD/C6 operation
 and abnormal firmware resets still need physical tests.
 
-PersistentNode owns NVS and the sole RF deadline. The approved, hash-checked
-RadioLib7.8.1 patch invokes that owner before/after every physical frame, including
-joins, repetitions and nested MAC replies. Each predicted airtime debt is durable
-before RF; failures stop further RF. There is no post-call aggregate counter used
-for pacing. Version1.0 sessions remain rejected. DevNonce is reserved before the
-join and cannot move backwards after an ambiguous TX error.
+The user subsequently rejected per-physical-transmission airtime reservations,
+while accepting nested downlink delivery and timing/airtime fixes. The patch now
+has only the downlink callback plus those corrections; project marker macros and
+reservation hooks are removed. PersistentNode owns NVS nonces and one volatile RF
+deadline. Completed operations extend it from total airtime; internal MAC replies
+proceed normally. Reset clears the deadline. Version1.0 sessions remain rejected.
+DevNonce is reserved before joining and cannot move backwards after an ambiguous
+TX error. See airtime.md for the reduced enforcement scope and reset limitations.
 
 ## Findings: classification, correction and evidence
 
@@ -48,18 +50,18 @@ function and current implementation/test; see source URLs in sources.md.
 | C1 | A. Core pins_arduino.h:73 assigns GPIO45 to SD power; SD_MMC.cpp:284–292 drives it; GPIO/I2C periman detach removes Wire. | Removed SD_MMC and the unused audio board catalog. SdStorage.h uses fixed slot-0 IO_MUX; SDK-pin static_assert, lifecycle tests, three compiles and linked-symbol audit pass. No SDMMCFS begin/end in final ELF. Physical coexistence untested. |
 | H1 | B originally: SD_MMC.cpp:228,258 drops DEINIT_ARG; IDF vfs_fat_sdmmc.c call_host_deinit:418 invokes wrong union signature. IDF also calls cleanup after an uncounted early slot-init failure. | SdStorage.h preserves flags and supplies counted-slot-only cleanup. Tests model early-slot failure, counted no-card failure, insertion/removal, three retries and ambiguous unmount failure while C6 owns slot1. All pass. Actual C6 behavior remains hardware-only. |
 | H2 | A. RadioLib sendReceive/activateOTAA/receiveClassA/transmitUplink/timeUntilUplink use raw timestamp comparisons. | Patch makes reachable Class-A comparisons wrap-safe and accepts millis==0 as a valid receive reference. Production node has one uint32 deadline; scheduleTransmission is set per application operation. Real-library tests cover wrapped waits and TX ending exactly at zero, then both receive windows. |
-| M1 | A. activateOTAA calls transmitUplink, which adds lastToA; clearSession does not reset it. | Patch resets the diagnostic counter per join. Pacing moved to per-frame hooks. Six failed real-library joins retain112ms each instead of cumulative airtime; each persisted delay matches that attempt. |
-| M2 | B. parseDownlink recursively calls sendReceive, resetting lastToA. | Patch retains the outer counter; frame hooks pace each nested transmission independently. Six DevStatusReq commands force a nested reply in the real library: two frames,224ms diagnostic total and paced start times pass. |
+| M1 | A. activateOTAA calls transmitUplink, which adds lastToA; clearSession does not reset it. | Patch resets the airtime counter per join. Six failed real-library joins retain112ms each; the post-call volatile deadline matches each attempt. |
+| M2 | B. parseDownlink recursively calls sendReceive, resetting lastToA. | Patch retains the outer counter. Six DevStatusReq commands force an immediate nested reply: two frames,224ms total; that total defers the next application operation, without an individual-frame reservation. |
 | M3 | A. Old batch-first scheduling starved demoRequests. | Workers.cpp uses one demoTurn arbitration flag, giving demos an opportunity between batches and a batch after a demo. Actual production scheduling block is exercised with three backlogged batches, continuing demos and7+3 fragments. Neither stream starves; indices/order pass. |
 | M4 | A missing validation; B particular physical clipping. INA226 getShuntVoltage returns signed raw*2.5uV; math overflow alone does not prove ADC validity. | Application.cpp reads/checks shunt voltage, flags, current and power; sensorRangeValid rejects both raw ADC endpoints and >= calibrated/configured current limits. Host boundary tests pass. Positive rail32767 is81.9175mV, not81.92mV; the implemented threshold handles it. Bench tolerance tests remain. |
 | M5 | A. clearSession resets DR to unused; createSession defaults to midpoint DR3. | Explicit joinDatarate progresses DR5,4,3,2,1,0,0 from bounded retry backoff and resets backoff after join. Pure boundary tests plus real-library failed joins pass. |
 | L1 | A, protocol limitation retained. Version1 requires a complete valid U/I/P triplet. | No wire-format extension. Uncalibrated voltage is shown locally; all ten transmitted slots are invalid triplets until the shunt is configured. README/wiring/airtime document this. Encoder/decoder reference unchanged and tested. |
-| L2 | A, original arbitrary reservation. | Replaced60s reservation with each known physical frame's conservative pre-RF debt as part of the approved pacing replacement.112ms writes325552ms at public allowance. Reset test respects full debt; legacy saved debt is not erased. |
+| L2 | A, original arbitrary reservation. | Per-frame reservations and airtime NVS access removed at user request. Reset starts without airtime debt; legacy hold values are ignored. Repeated-reset allowance enforcement is no longer provided. |
 | L3 | A. Lifetime charsProcessed and unchecked satellite value gave stale status. | Application.cpp records latest UART reception and expires data/fix/satellite age after10s. Same fields/geometry. Source reviewed; physical GPS/UI test unexecuted. |
 | L4 | A. Modal was drawn only on opening; length check discarded empty application messages; nested wrapper discarded app data. | Open modal refreshes; patch forwards every authenticated application downlink before nested MAC handling, in reception order. Real-library outer/inner, empty and maximum-length binary downlink tests pass; physical touch/rendering remains untested. |
 | L5 | A. Runtime GT911 errors were ignored. | pollTouch checks status, coordinates and clear transaction; failure returns to existing dashboard with lost/restart status. No silent freeze/retry loop. Source reviewed; physical I2C fault test unexecuted. |
 | WiFi socket | A documentation error. Separate onboard IC1 provides WiFi. | Corrected wiring.md and authoritative drawing script; SVG/PNG regenerated. J7 stays selected; wire geometry unchanged. |
-| N1 (additional) | A. Old post-join save could overwrite the durable next nonce when transmit returned an error before RadioLib incremented its RAM counter. | activateOTAA preserves max(current,reserved-next) before saving. Real-library ambiguous-launch and reboot tests verify non-reuse; failed nonce/airtime NVS writes cause no RF. |
+| N1 (additional) | A. Old post-join save could overwrite the durable next nonce when transmit returned an error before RadioLib incremented its RAM counter. | activateOTAA preserves max(current,reserved-next) before saving. Real-library ambiguous-launch and reboot tests verify non-reuse; failed nonce NVS writes cause no RF. Launch attempts count toward post-call airtime even on ambiguous errors. |
 
 ## Physical prerequisites and disposition
 
@@ -75,6 +77,9 @@ authorized bench bring-up once those prerequisites are established; unattended
 TTN operation is NO-GO until the hardware acceptance checklist passes. No flash
 or RF permission is implied by this handover. No extra engineering extension is
 pending approval, but target static analysis and physical acceptance remain open.
+The current removal of airtime reservations and its push were explicitly requested
+by the user; this supersedes the historical per-frame pacing requirements in the
+unchanged review records.
 
 Full commands, build sizes, test limits, LOC accounting, retained warnings and
 cleanup are in validation.md. No claim of an entirely verified system is made.

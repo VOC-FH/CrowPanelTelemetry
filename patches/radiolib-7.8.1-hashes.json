@@ -1,10 +1,10 @@
 {
   "src/protocols/LoRaWAN/LoRaWAN.cpp": {
     "before": "bfd64fe3707795fcf54e75fc80e0b21036c0fa5d80850927f5ed7961873c0415",
-    "after": "acb7849e8cec861ed9af59529838f6dbfbe54750213b6cb4d8b60646f4b825d2"
+    "after": "db4884dd18fd108166ea3cd2cf1384227a92a3c634ca88976fe0f6b302b0644a"
   },
   "src/protocols/LoRaWAN/LoRaWAN.h": {
     "before": "d359477577b97d0c2024624e3036b9aab3f06fd24db79d8fe4daa2c8b56d846b",
-    "after": "28c5db64e05cd7663afd6186d977d90989ebcb89d582e66ffb641777ba6b221a"
+    "after": "26463ca942f369d847d2567f0584864a2151c187c18b7e1c478c673d07d0b388"
   }
 }

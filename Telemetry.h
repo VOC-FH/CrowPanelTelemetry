@@ -41,7 +41,7 @@ inline size_t encodeFragment(const Batch& b, uint16_t boot, uint8_t offset, uint
     return HeaderSize + count * 4;
 }
 
-// Frame pacing uses the stricter of public-network, regional and network limits.
+// Operation pacing uses the stricter of public-network, regional and network limits.
 // Add 1 ms for the stack's integer airtime truncation; bound wrap-safe deadlines.
 inline uint32_t airtimeDelay(uint32_t airtimeMs, uint32_t allowanceMsPerHour) {
     uint32_t delay = 0;

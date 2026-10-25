@@ -77,10 +77,12 @@ shunt value and supply/load/antenna configuration with each test run.
     batch backlog and check both demos and batch fragments make progress.
 15. Test resets and controlled power cuts before join, during join, during uplink
     and after downlink. Verify the next DevNonce is greater and no old session frame
-    counters are reused. Verify NVS-write failure handling and conservative pacing
-    debt. Ambiguous TX errors must not reuse the old DevNonce. Reset debt now
-    follows the individual predicted frame airtime; no arbitrary48h reservation
-    is newly written. Legacy saved debt is still respected.
+    counters are reused. Verify nonce NVS-write failure handling. Ambiguous TX
+    errors must not reuse the old DevNonce. Airtime deadlines now exist only in
+    RAM and reset on reboot; no airtime debt is persisted or restored. Verify
+    aggregate accounting includes automatic MAC replies and repetitions without
+    delaying those individual frames. Measure actual duty-cycle/network behavior,
+    including repeated resets; software spacing does not prove per-frame compliance.
 16. Run for at least24hours. Compare TTN airtime, downlinks, sampling timing, queue
     depth, dropped counts, WiFi stability, SD behavior, PSRAM usage and touch/audio
     responsiveness. These are hardware acceptance/performance tests; none were
