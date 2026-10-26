@@ -1,0 +1,10 @@
+{
+  "result": "PASS",
+  "course_documents": 2,
+  "markdown_files_checked": 3,
+  "local_links_and_anchors": 62,
+  "bash_blocks_syntax_checked": 12,
+  "protected_non_documentation_files": 295,
+  "firmware_configuration_assets_tests_tools": "unchanged",
+  "errors": []
+}

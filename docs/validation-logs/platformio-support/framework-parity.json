@@ -1,0 +1,12 @@
+{
+  "cores/esp32/main.cpp": "3a80fad62e9a4243aeb67ed1215fac81f47ba4ddc707db57850ec8cab68f1291",
+  "cores/esp32/esp32-hal-gpio.c": "4d8ae8d5d0f88389179b2bd8a74dd1293f9bfe0b9b9c0138125a107cd6c0ff9c",
+  "cores/esp32/esp32-hal-hosted.c": "6080dfa8c243a9fccee9fc57c47fe6f8cf668b5c4471821c349a844440c1703a",
+  "variants/esp32p4/pins_arduino.h": "5dca1dbec4e8f1b9bb8643495f969659f692e36cf1ce8774d61078e88baa3cc5",
+  "tools/partitions/app3M_fat9M_16MB.csv": "7e9c47a69c32d377ea06ce01c26293aa92b1b244d3e16cce3b5bc4da9e28cbe7",
+  "libraries/WiFi/src/STA.cpp": "8e0033dc89aa1ee9c18e4032939eb0c8d774495fc3468988022185b4b1eb9f0c",
+  "esp32p4/sdkconfig": "9c776200408fa46d17d8b3e18d89328059d2d6ebcc52d4a0e296bcf9f15205f0",
+  "esp32p4/include/soc/esp32p4/include/soc/clk_tree_defs.h": "52a61e318c60ca1da52d34371a83562b061aa03c61f67492047a95829da7d47f",
+  "esp32p4_es/sdkconfig": "b437179cb53c998af3e1c5e1565b2dd115c31396173120460fb843cde7de1e20",
+  "esp32p4_es/include/soc/esp32p4/include/soc/clk_tree_defs.h": "52a61e318c60ca1da52d34371a83562b061aa03c61f67492047a95829da7d47f"
+}

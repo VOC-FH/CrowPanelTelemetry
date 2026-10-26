@@ -1,0 +1,36 @@
+{
+  "platform_release": "55.03.312",
+  "platform_commit": {
+    "sha": "b58b4492b841f3518768753443f7d2e9bd1df794",
+    "type": "commit",
+    "url": "https://api.github.com/repos/pioarduino/platform-espressif32/git/commits/b58b4492b841f3518768753443f7d2e9bd1df794"
+  },
+  "platform_url": "https://github.com/pioarduino/platform-espressif32/releases/tag/55.03.312",
+  "asset_digest": "sha256:a87867b9c83cda963679da588cd2d02a73d4d5aea7cde099f7492495d3226f15",
+  "engine_requirement": {
+    "platformio": ">=6.2.0"
+  },
+  "platform_json_sha256": "35f4aef4bed0e739bc49dc55c7a43df4f4e4ffda463e1ad5ca3ef541369c3107",
+  "board_manifest_sha256": "3ea208ff313739a724e032cdccc0a9be44ec760e19f301b3fa319079f9ca6575",
+  "core": "6.2.0",
+  "scons": "4.41101.0",
+  "arduino_core": "3.3.12",
+  "arduino_sdk": "5.5.5+sha.b774170ff46",
+  "diagnostics": [
+    {
+      "runner": "Core6.2/SCons4.11.1",
+      "mode": "verbose",
+      "result": "failed at framework binary-generation logging: _Null + str; ELF sizes alone were not a passing build"
+    },
+    {
+      "runner": "Core6.1.19 (declares SCons4.8.1; rejected before compilation)",
+      "mode": "attempted isolated compatibility probe",
+      "result": "rejected before compilation by pinned platform engine requirement >=6.2.0"
+    },
+    {
+      "runner": "Core6.2/SCons4.11.1",
+      "mode": "ordinary pio run",
+      "result": "all three final configurations successful"
+    }
+  ]
+}

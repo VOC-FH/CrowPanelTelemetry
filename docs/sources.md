@@ -177,3 +177,28 @@ constructor, controller initialization sequence or UI visual was changed here.
   unused metadata. This is the approved reduction, not an added app-side parser
   or a general-purpose EXIF fix for other JPEGDEC applications. SOF bounds and
   progressive admission tests remain; exact hashes/diffs are authoritative in patches/.
+
+## PlatformIO alongside Arduino — 2026-10-26
+
+The build configuration pins [pioarduino55.03.312](https://github.com/pioarduino/platform-espressif32/releases/tag/55.03.312),
+which packages Arduino3.3.12 and IDF5.5.5 and provides the
+[P4 EV-board build manifest](https://github.com/pioarduino/platform-espressif32/blob/55.03.312/boards/esp32-p4-evboard.json).
+Its engine constraint requires PlatformIO Core>=6.2.0; Core6.2.0 is pinned in
+requirements-platformio.txt. The earlier6.1.19 probe was rejected. Core6.2's
+SCons4.11.1 exposes a logging error in this pinned framework's verbose binary action;
+normal-mode builds pass. This is documented, not fixed by a third dependency patch.
+
+[PlatformIO package references](https://docs.platformio.org/en/latest/core/userguide/pkg/cmd_install.html#local-folder),
+[source filtering](https://docs.platformio.org/en/latest/projectconf/sections/env/options/build/build_src_filter.html)
+and [core directory configuration](https://docs.platformio.org/en/latest/projectconf/sections/platformio/options/directory/core_dir.html)
+establish the shared local-library and isolated-build setup. The
+[IDE settings documentation](https://docs.platformio.org/en/latest/integration/ide/vscode.html#settings)
+describes selecting a custom Core. The existing tools/patch_dependency.py remains
+the only patch implementation; both workflows select the same prepared libraries.
+
+Exact platform tag/asset metadata, package versions, relevant framework parity,
+SDK/compiler byte comparisons and build records are in
+validation-logs/platformio-support/. Both SDK targets match3155 shared header,
+archive-library, linker and flags/configuration files against the read-only
+Arduino installation; the C++ compiler executable also matches. These comparisons
+establish build inputs, not actual hardware or byte-identical firmware behavior.

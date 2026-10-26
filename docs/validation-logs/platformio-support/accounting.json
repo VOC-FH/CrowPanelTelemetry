@@ -1,0 +1,26 @@
+{
+  "baseline_commit": "f59fd3f0d6c63dee3ce3026a5ddca5e775136c43",
+  "lines": {
+    "application": {
+      "added": 0,
+      "removed": 0
+    },
+    "tests": {
+      "added": 0,
+      "removed": 0
+    },
+    "dependency_source": {
+      "added": 0,
+      "removed": 0
+    },
+    "build_configuration": {
+      "added": 52,
+      "removed": 0
+    },
+    "build_test_scripts": {
+      "added": 0,
+      "removed": 0
+    }
+  },
+  "scope": "PlatformIO alongside Arduino using shared source/DEPS and existing patcher; no new helper, custom board/partition or firmware copy. Existing student material retained and linked."
+}

@@ -1,0 +1,45 @@
+[
+  {
+    "workflow": "arduino",
+    "configuration": "blank-prev3",
+    "flash": 1201828,
+    "ram": 39364,
+    "elf_sha256": "af8d848bf74e93d16c68443c06a678a7e18253fa9d138e07123ebac4d0a81ecf"
+  },
+  {
+    "workflow": "arduino",
+    "configuration": "enabled-prev3",
+    "flash": 1208824,
+    "ram": 39436,
+    "elf_sha256": "63a1951dba8b9d52c1643ec791afe28497628759c4bfa79d8b7b15c1dd18a120"
+  },
+  {
+    "workflow": "arduino",
+    "configuration": "enabled-postv3",
+    "flash": 1210394,
+    "ram": 39436,
+    "elf_sha256": "f3e175ce1ca0f051d870a5d23f2e458346f1a8ffce042b8e79db269f71f0bd83"
+  },
+  {
+    "workflow": "pio",
+    "configuration": "blank-prev3",
+    "flash": 1188942,
+    "ram": 39636,
+    "elf_sha256": "418a0cc199567e24f05aa3ea6ca3a51b0f1c618bb36a096b427519d907f9fa49"
+  },
+  {
+    "workflow": "pio",
+    "configuration": "enabled-prev3",
+    "flash": 1195090,
+    "ram": 39716,
+    "elf_sha256": "0ccb80225afcfc040fd0adfa82ce071f6a6475c23a27d3cade2a97189a87616e"
+  },
+  {
+    "workflow": "pio",
+    "configuration": "enabled-postv3",
+    "flash": 1196652,
+    "ram": 39716,
+    "elf_sha256": "1aec48ba55f03e2fa35d0d3180fd5cd68fe1ea0d3a2d8bfc925f7edb93bcf629"
+  }
+]
+PASS: source/pin/assets/review/library/patch/symbol/partition/metadata checks

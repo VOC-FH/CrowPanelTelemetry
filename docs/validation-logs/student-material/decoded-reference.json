@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "boot_id": 4660,
+  "first_sample_minute": 66051,
+  "fragment_offset": 0,
+  "sample_count": 10,
+  "batch_size": 10,
+  "readings": [
+    {
+      "index": 0,
+      "uptime_minutes": 66051,
+      "valid": true,
+      "voltage_V": 12.34,
+      "current_A": -0.37,
+      "power_W": 4.6
+    },
+    {
+      "index": 1,
+      "uptime_minutes": 66052,
+      "valid": true,
+      "voltage_V": 36,
+      "current_A": 10.23,
+      "power_W": 102.2
+    },
+    {
+      "index": 2,
+      "uptime_minutes": 66053,
+      "valid": true,
+      "voltage_V": 0,
+      "current_A": -10.23,
+      "power_W": 0
+    },
+    {
+      "index": 3,
+      "uptime_minutes": 66054,
+      "valid": false
+    },
+    {
+      "index": 4,
+      "uptime_minutes": 66055,
+      "valid": false
+    },
+    {
+      "index": 5,
+      "uptime_minutes": 66056,
+      "valid": false
+    },
+    {
+      "index": 6,
+      "uptime_minutes": 66057,
+      "valid": false
+    },
+    {
+      "index": 7,
+      "uptime_minutes": 66058,
+      "valid": false
+    },
+    {
+      "index": 8,
+      "uptime_minutes": 66059,
+      "valid": true,
+      "voltage_V": 0,
+      "current_A": 0,
+      "power_W": 0
+    },
+    {
+      "index": 9,
+      "uptime_minutes": 66060,
+      "valid": true,
+      "voltage_V": 3.3,
+      "current_A": 0.22,
+      "power_W": 0.7
+    }
+  ]
+}

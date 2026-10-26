@@ -1,0 +1,44 @@
+[
+  {
+    "configuration": "pio-final-blank-prev3",
+    "environment": "crowpanel-prev3",
+    "command": [
+      "pio",
+      "run",
+      "-e",
+      "crowpanel-prev3",
+      "-j",
+      "3"
+    ],
+    "build_flags": "",
+    "exit": 0
+  },
+  {
+    "configuration": "pio-final-enabled-prev3",
+    "environment": "crowpanel-prev3",
+    "command": [
+      "pio",
+      "run",
+      "-e",
+      "crowpanel-prev3",
+      "-j",
+      "3"
+    ],
+    "build_flags": "-DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f",
+    "exit": 0
+  },
+  {
+    "configuration": "pio-final-enabled-postv3",
+    "environment": "crowpanel-postv3",
+    "command": [
+      "pio",
+      "run",
+      "-e",
+      "crowpanel-postv3",
+      "-j",
+      "3"
+    ],
+    "build_flags": "-DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f",
+    "exit": 0
+  }
+]

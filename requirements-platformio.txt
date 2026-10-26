@@ -1,0 +1,2 @@
+# Required by the pinned pioarduino platform; ordinary build mode is supported.
+platformio==6.2.0

@@ -1,0 +1,23 @@
+{
+  "result": "PASS",
+  "local_links": 74,
+  "bash_syntax_blocks": 12,
+  "matching_wiring_table_rows": 56,
+  "protected_files_unchanged": 17,
+  "pdfs": {
+    "documentation": {
+      "pages": 35,
+      "named_destinations": 239,
+      "link_annotations": 43,
+      "sha256": "1b789d3a1a8ca1994e6a1e8bacfb0bc4fcbd3c7caeeb8ec8bc96d53aeecfe676"
+    },
+    "learning-material": {
+      "pages": 18,
+      "named_destinations": 195,
+      "link_annotations": 36,
+      "sha256": "a593a9c9ee7ddf8d14d953a771834ec04327d55a58ce5ecff24cb1f3b4f20654"
+    }
+  },
+  "visual_review": "All 53 final pages inspected in contact sheets; no clipping or overlapping content observed. Wiring photograph is an overview; exact contacts are provided in text tables.",
+  "errors": []
+}

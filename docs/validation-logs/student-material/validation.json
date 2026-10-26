@@ -1,0 +1,51 @@
+{
+  "baseline_commit": "f59fd3f0d6c63dee3ce3026a5ddca5e775136c43",
+  "scope": "Separate reference documentation and student learning material; no firmware changes",
+  "files": [
+    "docs/manual/01-setup.md",
+    "docs/manual/02-architecture.md",
+    "docs/manual/03-customization.md",
+    "docs/manual/04-data-and-connectivity.md",
+    "docs/manual/05-testing-and-troubleshooting.md",
+    "docs/manual/README.md",
+    "docs/manual/glossary.md",
+    "learning/README.md",
+    "learning/instructor-guide.md",
+    "learning/lessons/01-baseline.md",
+    "learning/lessons/02-interface.md",
+    "learning/lessons/03-application-logic.md",
+    "learning/lessons/04-asynchronous-work.md",
+    "learning/lessons/05-telemetry.md",
+    "learning/lessons/06-project.md",
+    "learning/project-worksheet.md"
+  ],
+  "checks": {
+    "markdown_files_including_root_readme": 17,
+    "local_links_and_anchors": 92,
+    "code_fences": "balanced",
+    "caption_example": "two verbatim C++ blocks compiled using real Reading, five boundary cases passed; not a UI/hardware test",
+    "encoder_decoder": "real reference/codec and JavaScript decoder checks passed; teaching answer key verified",
+    "airtime": "existing reference calculator passed; values agree with teaching notes",
+    "format_check": "passed, settings unchanged",
+    "protected_files": "firmware/tests/tools/patches/pins/assets/archive/committed review byte-identical"
+  },
+  "not_run": [
+    "Arduino recompilation: documentation-only change",
+    "physical hardware/RF tests",
+    "new full-system Claude review"
+  ],
+  "physical_lines": {
+    "application": {
+      "added": 0,
+      "removed": 0
+    },
+    "tests": {
+      "added": 0,
+      "removed": 0
+    },
+    "tooling": {
+      "added": 0,
+      "removed": 0
+    }
+  }
+}

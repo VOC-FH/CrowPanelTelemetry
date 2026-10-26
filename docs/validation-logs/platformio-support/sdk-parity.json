@@ -1,0 +1,13 @@
+{
+  "headers_libraries_flags": {
+    "esp32p4": {
+      "identical_files": 3155,
+      "not_present_in_other_distribution": []
+    },
+    "esp32p4_es": {
+      "identical_files": 3155,
+      "not_present_in_other_distribution": []
+    }
+  },
+  "compiler_sha256": "13976d952160abd3f9a711b0d92733bc182753766cf905c94f2c36c5f40d6554"
+}

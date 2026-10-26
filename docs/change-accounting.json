@@ -254,5 +254,123 @@
       }
     },
     "scope": "Only session-restart join-budget correction; prior review records preserved."
+  },
+  "student_documentation": {
+    "baseline_commit": "f59fd3f0d6c63dee3ce3026a5ddca5e775136c43",
+    "lines": {
+      "application": {
+        "added": 0,
+        "removed": 0
+      },
+      "tests": {
+        "added": 0,
+        "removed": 0
+      },
+      "tooling": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    "scope": "Reference manual and separate six-lesson learning path, worksheet and instructor guide; no source/test/tooling changes."
+  },
+  "platformio_support": {
+    "baseline_commit": "f59fd3f0d6c63dee3ce3026a5ddca5e775136c43",
+    "lines": {
+      "application": {
+        "added": 0,
+        "removed": 0
+      },
+      "tests": {
+        "added": 0,
+        "removed": 0
+      },
+      "dependency_source": {
+        "added": 0,
+        "removed": 0
+      },
+      "build_configuration": {
+        "added": 52,
+        "removed": 0
+      },
+      "build_test_scripts": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    "scope": "PlatformIO alongside Arduino using shared source/DEPS and existing patcher; no new helper, custom board/partition or firmware copy. Existing student material retained and linked."
+  },
+  "student_compilation_walkthrough": {
+    "baseline_commit": "f59fd3f0d6c63dee3ce3026a5ddca5e775136c43",
+    "lines": {
+      "application": {
+        "added": 0,
+        "removed": 0
+      },
+      "tests": {
+        "added": 0,
+        "removed": 0
+      },
+      "dependency_source": {
+        "added": 0,
+        "removed": 0
+      },
+      "build_configuration": {
+        "added": 0,
+        "removed": 0
+      },
+      "build_test_scripts": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    "scope": "Documentation only: detailed student compilation walkthrough for Arduino IDE/CLI and PlatformIO, integrated with lesson 1, worksheet, instructor guide and reference navigation. Existing uncommitted documentation/PlatformIO work preserved."
+  },
+  "student_document_consolidation": {
+    "baseline_commit": "f59fd3f0d6c63dee3ce3026a5ddca5e775136c43",
+    "lines": {
+      "application": {
+        "added": 0,
+        "removed": 0
+      },
+      "tests": {
+        "added": 0,
+        "removed": 0
+      },
+      "dependency_source": {
+        "added": 0,
+        "removed": 0
+      },
+      "build_configuration": {
+        "added": 0,
+        "removed": 0
+      },
+      "build_test_scripts": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    "scope": "Consolidates the previously uncommitted split student material into exactly two course documents: docs/documentation.md and learning/learning-material.md. Build instructions exist in the documentation; lessons, worksheet and teacher notes in learning material. Simplifies prose and removes duplicated setup instructions. No firmware/configuration changes."
+  },
+  "student_wiring_and_pdfs": {
+    "baseline_commit": "f59fd3f0d6c63dee3ce3026a5ddca5e775136c43",
+    "lines": {
+      "application": {
+        "added": 0,
+        "removed": 0
+      },
+      "tests": {
+        "added": 0,
+        "removed": 0
+      },
+      "dependency_source": {
+        "added": 0,
+        "removed": 0
+      },
+      "build_test_scripts": {
+        "added": 144,
+        "removed": 0
+      }
+    },
+    "scope": "Integrates the existing exact wiring tables, annotated photo and a wiring exercise into the two course documents. Adds a reproducible Pandoc/XeLaTeX/Graphviz PDF renderer and two sans-serif PDFs; no firmware, pins, protocol or source-image changes. Prior PlatformIO configuration accounted separately."
   }
 }

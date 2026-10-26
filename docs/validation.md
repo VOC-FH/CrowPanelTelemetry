@@ -581,7 +581,7 @@ remains `c86439247b2840ed94099a34bc8c72b722f0976f`; changes are uncommitted.
 Remote/default/current: VOC-FH/CrowPanelTelemetry, main/main; locally recorded
 origin/main is at HEAD (0 ahead/0 behind). No fetch, branch, commit or push.
 
-Final evidence: [validation-logs/protocol-parser-fixes](validation-logs/protocol-parser-fixes/).
+Final evidence: [validation-logs/protocol-parser-fixes](validation-logs/protocol-parser-fixes).
 Baseline suite and format passed. New WiFi, join-ceiling and RekeyInd regressions
 failed against baseline implementations; the old EXIF reader also produced a host
 ASan fault. All final independent checks pass without weakened assertions. Real
@@ -731,3 +731,272 @@ following Claude's focused read-only follow-up. No persistent build was created.
 The existing review history remains separate from the implementation disposition.
 All assembly, supervised flashing and unattended-operation conditions remain as
 previously documented; no hardware/RF operation was executed or authorized.
+
+## Student documentation and separate learning material — 2026-10-26
+
+Baseline main@f59fd3f, the local commit recording Claude's focused review. The user
+requested that commit and then detailed documentation plus separate learning
+material. The reference manual is in docs/manual/; the six-lesson learning path,
+worksheet and instructor guide are in learning/. README links both and clarifies
+that both patches are required and replacement-session uplinks initially use DR0.
+No application, test, build/test-tooling, dependency patch or visual changes.
+
+Evidence is in validation-logs/student-material/. A task-local Python check verified
+17 Markdown files (including the root README),92 local links/anchors and balanced
+code fences. The two caption/threshold C++ blocks were extracted verbatim and
+compiled with the real Reading type; NaN, zero, below/exact/above threshold cases
+pass. This checks the documented expression, not touchscreen rendering. Existing
+codec/reference and Node decoder tests pass; teacher answer values/indices and
+packet metadata were checked against the actual decoder output. The existing
+airtime calculator passes and agrees with the teaching calculations. make
+format-check passes without modifying source or style settings.
+
+Exact source-derived checks used c++ -std=c++17 -Wall -Wextra -Werror -I. on the
+extracted caption harness, c++ -std=c++17 -I. tests/codec.cpp, node tests/decoder.js
+tests/reference-packet.json, the documented Node decode invocation, and python3
+tools/airtime.py. Compilations and generated checks lived only under
+/tmp/codex/build/CrowPanelTelemetry/student-material. After evidence was copied,
+that task directory was removed. No new global package, archive, checkout or
+persistent build was created. Prior source/evidence collections remain untouched.
+
+Firmware, tests/tools, patches, Config/pins, UI/wiring assets/source photo,
+formatting settings, historical ZIP and committed raw review records match baseline
+hashes. Application/test/tooling physical delta0added/0removed. No Arduino rebuild
+was needed for prose changes; no new firmware-build or physical-operation result
+is claimed. SHA256SUMS.json was regenerated in its existing scope. Documentation
+changes remain local/uncommitted; review commit f59fd3f has not been pushed by this
+task. All prior physical/RF/unattended-operation limitations remain in force.
+
+## PlatformIO alongside Arduino IDE/CLI — 2026-10-26
+
+The user requested both build workflows. Canonical main remains at f59fd3f;
+pre-existing uncommitted student documentation was preserved and linked to the
+new PlatformIO chapter. No firmware, tests, library patch, pin or UI asset changed.
+The new platformio.ini uses the root sketch/C++ sources and symlink package
+references to the same DEPS collection supplied to Arduino CLI. No alternate
+firmware tree, build hook, custom board variant or partition copy was added.
+
+Versions: PlatformIO Core6.2.0 (requirements-platformio.txt), pioarduino55.03.312,
+Arduino3.3.12/IDF5.5.5, original six external release tags and both existing patches.
+Both workflows use16MB, PSRAM, QIO/80MHz, the packaged app3M_fat9M_16MB partition,
+USB CDC disabled and the corresponding prev3 360MHz or postv3 400MHz SDK.
+Core6.2/toolchain packages were isolated under the task directory; the user's
+installed Arduino sources were read-only. No global install/upgrade/downgrade.
+
+Final build results (flash maximum3,145,728 bytes; reported static-RAM maximum327,680):
+
+| Workflow | Configuration | Result | Flash bytes | Static RAM bytes |
+| --- | --- | --- | ---: | ---: |
+| Arduino CLI1.5.1 | blank prev3 | PASS | 1,201,828 | 39,364 |
+| Arduino CLI1.5.1 | dummy enabled prev3 | PASS | 1,208,824 | 39,436 |
+| Arduino CLI1.5.1 | dummy enabled postv3 | PASS | 1,210,394 | 39,436 |
+| PlatformIO Core6.2.0 | blank prev3 | PASS | 1,188,942 | 39,636 |
+| PlatformIO Core6.2.0 | dummy enabled prev3 | PASS | 1,195,090 | 39,716 |
+| PlatformIO Core6.2.0 | dummy enabled postv3 | PASS | 1,196,652 | 39,716 |
+
+Evidence is in validation-logs/platformio-support/. The JSON/scripts record exact
+commands and dummy overrides; only delivered blank configuration or
+`-DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f` were used.
+No real credentials, upload or RF. Final PlatformIO commands are ordinary pio run;
+ELF generation followed by a failed binary step was not counted as a pass.
+
+Diagnostics retained: Core6.2/SCons4.11.1 with pio run -v failed in the framework's
+binary-generation print action (`_Null` + str). A task-local Core6.1.19 probe was
+rejected by the platform's >=6.2.0 engine constraint. The supported normal-mode
+Core6.2 commands finish binary generation in all three configurations. No framework
+or patch-scope change was made. The docs identify this verbose-mode limitation.
+The default platform manager's IDE extension UI was not exercised; its documented
+Core/path/environment setup is supplied. Arduino IDE GUI operation was not rerun;
+its equivalent pinned CLI configurations above were compiled.
+
+Commands used, with T=/tmp/codex/build/CrowPanelTelemetry/platformio-support:
+
+```sh
+python3 "$T/arduino-builds.py"
+python3 "$T/final-pio-builds.py"
+RADIOLIB_DIR="$T/deps/RadioLib" make test BUILD="$T/host-tests"
+make format-check
+DEPS="$T/deps" PLATFORMIO_CORE_DIR="$T/core" PLATFORMIO_WORKSPACE_DIR="$T/workspace" \
+  pio project config --json-output
+DEPS="$T/deps" PLATFORMIO_CORE_DIR="$T/core" PLATFORMIO_WORKSPACE_DIR="$T/workspace" \
+  pio project metadata -e crowpanel-prev3 --json-output
+python3 "$T/audit.py"
+```
+
+PIO metadata was also captured for postv3, with the same dummy environment flags
+as its enabled build. Production-SDK/CPU/PSRAM/USB flags and both environments'
+.pio-link sources were checked. PlatformIO compiled only the four shared application
+translation units; tests/tools/docs/learning/build/checkouts were excluded.
+All canonical C++/headers match Arduino build copies after the initial #line.
+Partition binaries match across corresponding workflows. Enabled callbacks are
+linked; no beforeUplink/afterUplink or SDMMCFS begin/end symbols. Both patches'
+after hashes remain exact. The host suite and format check pass. Documentation
+checks cover18 Markdown files,101 local links/anchors and balanced code fences.
+
+Framework/core/variant/WiFi/partition sources, both SDK configurations and clock
+headers were compared. Additionally3155 shared SDK header/archive/linker/flag files
+per target and the C++ compiler executable match the installed Arduino baseline.
+No binary identity is claimed; build-system board/version macros differ and sizes
+are reported separately. Actual hardware, radio timing, SDK concurrency and stack
+limits are unchanged/unverified. Existing target LLVM limitations remain; no C++
+source changed to require a new target-analysis claim.
+
+PlatformIO creates a transient .ino.cpp beside the sketch, then deletes it on exit.
+The docs require one active builder at a time in this working directory; this
+support means alternative workflows alongside each other, not a guarantee of
+simultaneous source scans. No generated .ino.cpp remains or is committed.
+
+Physical line accounting for this task: application0added/0removed, tests0/0,
+dependency source0/0, build/test scripts0/0; new build configuration52added/0removed.
+AGENTS.md records the build layout and common patch authority. Existing student
+material, Config/pins/J7, wire protocol, firmware, tests/tools, patches, formatting,
+raw reviews, UI/wiring images/source photo and historical ZIP remain preserved.
+Only relevant documentation links/setup additions were made to the student material.
+
+After evidence was copied, this task's temporary builds, platform/tool packages,
+experimental Core virtual environment and caches were removed. No persistent build,
+project copy, branch change or global installation remains from validation. The
+pre-existing rereview/self-review source collections were left untouched. No commit
+or push was performed for PlatformIO or the uncommitted learning material;
+SHA256SUMS.json was regenerated. All changes remain in the canonical checkout.
+
+
+## Student compilation walkthrough (2026-10-26)
+
+Added learning/compiling-the-template.md as the student-facing first-build
+procedure. Shared source/library/patch preparation precedes three alternative
+routes: Arduino IDE, Arduino CLI (Makefile or direct command), and PlatformIO
+(terminal or VS Code). Lesson 1, worksheet, instructor guide, manual navigation
+and the root README now link the procedure. Reference documentation and learning
+material remain separate.
+
+Validation used a task-local Python check under
+/tmp/codex/build/CrowPanelTelemetry/student-build-guide, invoked from the canonical
+repository with `python3 "$T/check.py"` (T is that temporary directory). It checked
+19 Markdown files, 122 local links/anchors, balanced fences and ten new Bash
+blocks using `bash -n`. Result: PASS. It also compared the guide's FQBN, environment
+names, partition and platform/Core pins with Makefile, platformio.ini and
+requirements-platformio.txt. Installed core3.3.12 boards.txt confirms the actual
+USB-OTG menu label, both silicon/CPU selections and partition menu text.
+Results are saved in docs/validation-logs/student-build-guide/checks.json.
+
+The new commands were syntax/static checked, not executed as package installation,
+GUI operation or another firmware build. Existing six-configuration build evidence
+in the preceding section remains the compile evidence; no production/configuration
+change warrants rebuilding it for this prose-only task. No physical operation,
+flashing or RF was performed. The IDE/CLI setup links were checked against the
+linked official Arduino installation and Boards Manager documentation.
+
+Application, dependency source, tests, build configuration and build/test tooling:
+0 physical lines added, 0 removed in each category. Baseline byte comparisons
+confirm all pre-existing non-documentation files, Config/pins/J7, patches, wire
+protocol, source photo, UI/wiring assets, historical archive and raw reviews remain
+unchanged. Pre-existing uncommitted documentation/PlatformIO work is preserved.
+SHA256SUMS.json was regenerated over the existing manifest scope. Work remains
+uncommitted on main at f59fd3f; no commit, push or installation was performed.
+The task's temporary checks were removed after copying their result; no build,
+checkout or globally installed package was created for this task.
+
+
+## Two-document student edition (2026-10-26)
+
+Supersedes the split document layout described in the preceding student-material
+entries. There are now exactly two course documents: docs/documentation.md and
+learning/learning-material.md. The first contains the shared preparation and
+complete Arduino IDE/CLI and PlatformIO compile routes, hardware/configuration
+reference, code guide, customization examples, data formats, troubleshooting and
+glossary. The second contains the six lessons, project worksheet and teacher
+notes/answer guidance. The former docs/manual directory and split learning files
+were removed after merging; they were uncommitted additions from this task.
+Historical review records and validation evidence were left intact.
+
+The prose now introduces background jobs as jobs with specific responsibilities,
+queues as waiting lists, and the Model as the readings/status used by the screen.
+It explains specialist terms before their detailed reference tables and marks the
+binary-packing lesson as optional. Technical identifiers, commands, worked C++
+examples, electrical requirements and known verification limits are retained.
+Duplicate build procedures were consolidated rather than repeated in lessons.
+README exposes only the two course-document entry points.
+
+Ran `python3 "$T/check.py"` with
+T=/tmp/codex/build/CrowPanelTelemetry/consolidate-student-docs from the canonical
+repository. PASS: two course files, root README plus both documents checked,
+62 local links/anchors, balanced fences and 12 Bash blocks checked with `bash -n`.
+All 295 pre-existing non-documentation files compared byte-identical against the
+start-of-task hashes, including production, tests/tools, dependency patches,
+PlatformIO configuration, pins/protocol and image/archive assets. An initial
+checker expectation incorrectly counted four C++ examples; inspection confirmed
+three (threshold, caption and queue command), and the checker was corrected.
+The three examples remain present. Final result is saved in
+docs/validation-logs/student-document-consolidation/checks.json.
+
+No firmware build or hardware test was repeated for this prose-only change.
+Application, tests, dependency source, build configuration and build/test tooling:
+0 physical lines added and 0 removed in every category. Pre-existing working-tree
+changes are preserved except for the explicitly requested consolidation of the
+uncommitted course documents. SHA256SUMS.json was regenerated using its existing
+scope. The temporary checker and scratch files were removed after saving evidence.
+No package installation, source copy, branch change, commit or push was performed;
+canonical main remains at f59fd3f with documentation/PlatformIO work uncommitted.
+
+
+## Student wiring integration and sans-serif PDFs (2026-10-26)
+
+The two course documents now include panel/module wiring: documentation contains
+the connection tables, complete J7 orientation, existing annotated photo and the
+conditional GPS/sensor/radio prerequisites. Learning material includes a paired,
+power-off wiring activity and a worksheet check. All 56 rows from the existing
+wiring-reference tables are present unchanged. docs/wiring.md remains the detailed
+engineering reference. No pin assignment or physical verification status changed.
+
+Rendered output/pdf/documentation.pdf (35 pages) and
+output/pdf/learning-material.pdf (18 pages) using Pandoc3.11, XeTeX from TeX Live
+2026/Debian and Graphviz14.1.2. Body/headings use DejaVu Sans at11pt; command/code
+text uses DejaVu Sans Mono. A symbol-only AMS font appears in the documentation,
+but there is no serif body/heading font. Both PDFs contain clickable contents,
+named destinations and links to the companion PDF. Keep them together.
+The existing annotated wiring PNG is embedded without editing its bytes. The
+Mermaid data-flow source is rendered through Graphviz for the LaTeX edition.
+
+Reproduction from the canonical repository root:
+
+```sh
+python3 tools/render_documents.py
+python3 tools/check_wiring.py /tmp/codex/build/CrowPanelTelemetry/rereview-fix/panel.sch /tmp/codex/build/CrowPanelTelemetry/rereview-fix/panel.brd
+make format-check
+```
+
+The second command uses the pre-existing pinned schematic/board source collection;
+source hashes and the unchanged nine-radio-GPIO result are saved with the evidence.
+The renderer runs Pandoc to generate LaTeX and XeLaTeX three times for contents and
+references, using scratch under /tmp/codex/build/CrowPanelTelemetry/student-pdfs.
+Dependencies were already installed; no install/upgrade, firmware compile, upload,
+RF operation or physical check occurred in this task.
+
+Quality checks: all53 final pages rendered with pdftoppm and visually inspected in
+contact sheets. The final anchor-only correction was rendered again; all53 page
+images were pixel-identical to those inspected. Final XeLaTeX logs contain no
+Overfull boxes, missing characters or undefined references. The initial passes
+found a heading/HTML spacing issue, an image path issue, unwrapped code and PDF
+cross-document destinations; all were corrected before delivery. Current PDF
+links were checked against actual named destinations in both PDF files.
+
+A task-local checker, invoked as `python3 "$T/check_final.py"`, passed74 local
+Markdown links,12 Bash syntax blocks,56 exact wiring-table rows, page text bounds,
+PDF fonts and destinations.17 protected source/assets/patch files remain
+byte-identical to HEAD, including Config/pins/J7, protocol and original photo.
+Existing firmware/tests/dependency patches and historical ZIP were preserved.
+make format-check and git diff --check passed. The two documents' Markdown needed
+blank lines around explicit HTML anchors for correct Pandoc heading recognition;
+those formatting corrections are in the editable source too.
+
+Application production0added/0removed; tests0/0; dependency source0/0.
+New rendering tooling144added/0removed physical lines. It generates rendering-only
+LaTeX/filter files under the temporary task directory and does not change firmware
+or library installation. PlatformIO's52 configuration lines and earlier six-build
+evidence are accounted for in the preceding entry; they were not rebuilt for prose.
+Evidence is in docs/validation-logs/student-pdfs. The temporary rendering files and
+page images were removed after copying final evidence. The two PDFs and renderer
+are retained. No additional project checkout or branch was created. Publication
+of the pending student documentation/PlatformIO work on main is authorized by the
+user's push request; the final handover reports the resulting commit/push state.

@@ -1,0 +1,60 @@
+[
+  {
+    "configuration": "arduino-blank-prev3",
+    "command": [
+      "/tmp/codex/build/CrowPanelTelemetry/rereview-fix/cli/arduino-cli",
+      "compile",
+      "--verbose",
+      "--jobs",
+      "2",
+      "--fqbn",
+      "esp32:esp32:esp32p4:FlashSize=16M,PSRAM=enabled,PartitionScheme=app3M_fat9M_16MB,ChipVariant=prev3",
+      "--libraries",
+      "/tmp/codex/build/CrowPanelTelemetry/platformio-support/deps",
+      "--build-path",
+      "/tmp/codex/build/CrowPanelTelemetry/platformio-support/arduino-blank-prev3",
+      "."
+    ],
+    "exit": 0
+  },
+  {
+    "configuration": "arduino-enabled-prev3",
+    "command": [
+      "/tmp/codex/build/CrowPanelTelemetry/rereview-fix/cli/arduino-cli",
+      "compile",
+      "--verbose",
+      "--jobs",
+      "2",
+      "--fqbn",
+      "esp32:esp32:esp32p4:FlashSize=16M,PSRAM=enabled,PartitionScheme=app3M_fat9M_16MB,ChipVariant=prev3",
+      "--libraries",
+      "/tmp/codex/build/CrowPanelTelemetry/platformio-support/deps",
+      "--build-path",
+      "/tmp/codex/build/CrowPanelTelemetry/platformio-support/arduino-enabled-prev3",
+      "--build-property",
+      "compiler.cpp.extra_flags=-DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f",
+      "."
+    ],
+    "exit": 0
+  },
+  {
+    "configuration": "arduino-enabled-postv3",
+    "command": [
+      "/tmp/codex/build/CrowPanelTelemetry/rereview-fix/cli/arduino-cli",
+      "compile",
+      "--verbose",
+      "--jobs",
+      "2",
+      "--fqbn",
+      "esp32:esp32:esp32p4:FlashSize=16M,PSRAM=enabled,PartitionScheme=app3M_fat9M_16MB,ChipVariant=postv3",
+      "--libraries",
+      "/tmp/codex/build/CrowPanelTelemetry/platformio-support/deps",
+      "--build-path",
+      "/tmp/codex/build/CrowPanelTelemetry/platformio-support/arduino-enabled-postv3",
+      "--build-property",
+      "compiler.cpp.extra_flags=-DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f",
+      "."
+    ],
+    "exit": 0
+  }
+]

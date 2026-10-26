@@ -15,6 +15,8 @@ mapping is traced against the supplied Eagle files. The exact GT-U7 breakout's
 power/UART ratings, the INA226 shunt and radio TCXO population remain unconfirmed.
 The code compiles; physical hardware operation has not been tested.
 
+- [Documentation: setup, wiring, Arduino/PlatformIO compilation and code reference](docs/documentation.md) · [PDF](output/pdf/documentation.pdf)
+- [Learning material: exercises, project worksheet and teacher notes](learning/learning-material.md) · [PDF](output/pdf/learning-material.pdf)
 - [Annotated original photo](docs/wiring.png), [editable/self-contained SVG](docs/wiring.svg)
 - [UI layout preview](docs/ui-preview.png), [UI behavior](docs/ui.md)
 - [Wiring table and electrical conditions](docs/wiring.md)
@@ -50,8 +52,10 @@ wrappers. Review dependency licenses before redistributing an application binary
 
 1. Add `https://espressif.github.io/arduino-esp32/package_esp32_index.json` to Boards
    Manager URLs; install esp32 **3.3.12**.
-2. Install the six pinned libraries above. Apply the RadioLib patch described below
-   to the chosen dependency folder before Verify; unpatched RadioLib is rejected.
+2. Install the six pinned libraries above. Apply both the RadioLib and JPEGDEC
+   patches described below to the chosen dependency folders before Verify.
+   Unpatched RadioLib is rejected at compile time; unpatched JPEGDEC can still
+   compile, so verify its patch explicitly.
    Keep all project headers beside the sketch, including SdStorage.h.
 3. Open `CrowPanelTelemetry.ino`; keep every `.h` and `.cpp` in this folder beside it.
 4. Select **ESP32P4 Dev Module**. Use **16MB flash**, **PSRAM Enabled**,
@@ -153,7 +157,9 @@ the existing exponential backoff, now capped at24hours, with0–60seconds of jit
 added after the stricter retry/airtime hold. A prolonged outage can therefore
 lead to daily retries. Cold boot starts with a one-minute retry base; after a
 successful join, any later in-run session restart uses a64-minute base and DR0,
-then doubles toward the same24-hour cap. Normal joined operation is unchanged.
+then doubles toward the same24-hour cap. An already-active session is unaffected.
+The replacement session initially uses DR0 for uplinks too, until network ADR
+changes its rate, so data delivery can be slower after a restart.
 Reset still clears this volatile policy.
 
 NVS keys live in `crow-lora` (nonce buffer and boot ID; no airtime debt)
@@ -294,3 +300,18 @@ output, before workers start, rather than returning a graceful UI error.
 Media stack is24576 bytes following a measured compiler frame of19120 bytes;
 radio/media stack margins and runtime responsiveness still need bench measurements.
 No hardware or RF operation is claimed. Unattended TTN operation remains NO-GO.
+
+
+## Render the two course PDFs
+
+Run `python3 tools/render_documents.py` from the repository root. It reads the two
+Markdown documents and writes `output/pdf/documentation.pdf` and
+`output/pdf/learning-material.pdf`. The render needs Pandoc, XeLaTeX with the
+`fvextra`, `needspace`, `fancyhdr` and standard Pandoc LaTeX packages, Graphviz
+(`dot`), and the DejaVu Sans / DejaVu Sans Mono fonts. It installs nothing.
+Body text and headings are sans-serif; commands use a monospace font. The wiring
+image is embedded, the data-flow diagram is rendered from its Markdown source,
+and both PDFs have contents links. Keep the two PDFs together for links between
+them. `BUILD` can select the scratch directory; its default is
+`/tmp/codex/build/CrowPanelTelemetry/student-pdfs`. The Markdown remains the
+editable source. Generated LaTeX and page-preview files are temporary.

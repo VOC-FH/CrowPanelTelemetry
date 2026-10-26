@@ -48,6 +48,20 @@ build path and pass it to clang-tidy; analysis is not a formatting operation.
 
 Persistent builds use `build/codex/<configuration>`; temporary checks and dependencies
 use `/tmp/codex/build/CrowPanelTelemetry/<task>`. Both build/ and checkouts/ are ignored.
+PlatformIO is an alternative build of the same root sketch/C++ and prepared DEPS
+library collection. platformio.ini pins pioarduino55.03.312/core3.3.12, the existing
+partition and both P4 silicon targets. Its workspace/core packages default to
+build/codex/platformio and build/codex/platformio-core; validation overrides both
+under the task temporary root. Reuse tools/patch_dependency.py, never add a second
+patch authority. No firmware mirror/custom board/partition or PlatformIO test
+framework. Use one builder at a time in this working directory because PlatformIO
+creates a transient .ino.cpp beside the sketch. Never commit that intermediate.
 No extra checkout was created. Do not write credentials into published artifacts.
 See docs/wiring.md before changing any pin: generic P4 defaults differ from this board.
 Hardware verification is required before claiming panel, audio, WiFi or RF operation.
+
+The two course sources are docs/documentation.md and learning/learning-material.md.
+Render their sans-serif PDFs with tools/render_documents.py (Pandoc/XeLaTeX and
+Graphviz); output/pdf holds the deliverables. Renderer scratch uses BUILD or the
+student-pdfs task temporary directory. docs/wiring.md remains the detailed pin
+reference; keep the course connection tables identical when it changes.

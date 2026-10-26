@@ -1,0 +1,28 @@
+Selected traceback from the failed Core6.2/SCons4.11.1 verbose-mode attempt.
+Original full log SHA256: 9738bb8cc5f60617f006dcc344c0044b7caec6216219790833883261d88cba7e
+
+Traceback (most recent call last):
+  File "/tmp/codex/build/CrowPanelTelemetry/platformio-support/core/packages/tool-scons/scons-local-4.11.1/SCons/Taskmaster/__init__.py", line 246, in execute
+    self.targets[0].build()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/tmp/codex/build/CrowPanelTelemetry/platformio-support/core/packages/tool-scons/scons-local-4.11.1/SCons/Node/__init__.py", line 774, in build
+    self.get_executor()(self, **kw)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/tmp/codex/build/CrowPanelTelemetry/platformio-support/core/packages/tool-scons/scons-local-4.11.1/SCons/Executor.py", line 387, in __call__
+    return _do_execute_map[self._do_execute](self, target, kw)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/tmp/codex/build/CrowPanelTelemetry/platformio-support/core/packages/tool-scons/scons-local-4.11.1/SCons/Executor.py", line 120, in execute_action_list
+    status = act(*args, **kw)
+  File "/tmp/codex/build/CrowPanelTelemetry/platformio-support/core/packages/tool-scons/scons-local-4.11.1/SCons/Action.py", line 1343, in __call__
+    return c.__call__(self, target, source, env, *args, **kw)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/codex/build/CrowPanelTelemetry/platformio-support/core/packages/tool-scons/scons-local-4.11.1/SCons/Action.py", line 718, in __call__
+    print_func(cmd, target, source, env)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/codex/build/CrowPanelTelemetry/platformio-support/core/packages/tool-scons/scons-local-4.11.1/SCons/Action.py", line 653, in print_cmd_line
+    sys.stdout.write(s + "\n")
+                     ~~^~~~~~
+TypeError: unsupported operand type(s) for +: '_Null' and 'str'
+.flash_rodata_dummy     851968   1073741856
+.flash.appdesc             256   1074593824
+.flash.rodata           301532   1074594080

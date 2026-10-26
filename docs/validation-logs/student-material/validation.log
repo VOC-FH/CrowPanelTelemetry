@@ -1,0 +1,15 @@
+C++ encoder -> TTN decoder: values, limits, invalid slots, fragments and malformed packets passed
+47 application bytes + 13 overhead; 125kHz, CR4/5, explicit header, CRC, preamble8
+DR | SF | packet ms | 144 batches/day seconds | pacing interval seconds
+0 | 12 | 2629.632 | 378.667 | 7574
+1 | 11 | 1478.656 | 212.926 | 4259
+2 | 10 | 698.368 | 100.565 | 2012
+3 | 9 | 369.664 | 53.232 | 1065
+4 | 8 | 205.312 | 29.565 | 592
+5 | 7 | 112.896 | 16.257 | 326
+PASS: reference 10-byte SF7 airtime; normal packet; low-rate policy conflict.
+PASS: 17 Markdown files, 92 local links/anchors and all code fences
+PASS: verbatim documented caption/threshold snippets compile and all five boundary cases pass with real Reading type; this is not a UI/hardware test
+PASS: packet answer key, real encoder reference bytes and decoder agreement
+PASS: firmware, tests, tools, patches, pins/assets/archive/formatting and committed review unchanged
+Words: 14608
