@@ -1000,3 +1000,14 @@ page images were removed after copying final evidence. The two PDFs and renderer
 are retained. No additional project checkout or branch was created. Publication
 of the pending student documentation/PlatformIO work on main is authorized by the
 user's push request; the final handover reports the resulting commit/push state.
+
+
+Publication validation note: the final staged diff includes raw compiler and
+XeLaTeX logs with trailing spaces emitted by those tools. Full staged
+`git diff --cached --check` therefore reported whitespace warnings in logs;
+the earlier unstaged check had not included new log files. The initial commit
+proceeded because the shell command did not stop at that failed check. The raw
+logs remain unchanged as evidence. `git diff HEAD^ HEAD --check -- .
+':!docs/validation-logs/**'` passed for all authored files. This is a recorded
+raw-log whitespace exception, not a clean full-diff result. PDF rendering,
+font/link/bounds checks, wiring checks and format-check remain passing.
