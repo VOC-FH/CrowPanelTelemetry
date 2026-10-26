@@ -666,3 +666,68 @@ All changes remain local on main; no commit or push performed.
 Assembly is conditional on physical prerequisite checks. Bench flashing needs
 separate authorization. Unattended TTN stays NO-GO until the retained risks and
 full hardware checklist (including 24 h run) pass. No physical/RF tests were run.
+
+## Focused session-restart join-budget fix — 2026-10-26
+
+Baseline main@b80bf07c028729f12089f1b27d4c5d032107150c. The user authorized only
+this finding's correction, push and a scoped Claude follow-up. Existing uncommitted
+b80bf07 review files and their provenance were preserved. See
+[trace and regression](review/join-restart-fix.md). All other findings are unchanged.
+
+Production delta is one constant replacement in Workers.cpp: after successful
+OTAA, joinRetry becomes3840000ms instead of60000ms. Cold boot still uses60000.
+The next in-run session revert consequently rejoins at DR0, then doubles failure
+backoff toward the existing24h cap. No new state, timer, patch or ownership change.
+Test delta46added/16removed physical lines; application1/1; dependency/tooling0/0.
+
+Evidence: validation-logs/join-restart-fix/. Baseline real-library radio tests pass.
+The new regression fails before correction at the11h-window8.7s assertion; final
+real-library and full independent host suites pass. Tests perform an authenticated
+successful join,64 service uplinks and actual ADR-limit deactivation before each
+failed-rejoin series, at10h and30h, for two RNG streams and60days. Existing cold-boot
+windows, signed-wrap/jitter/nonce/fragment/other dependency checks remain passing.
+No RF, hardware, entropy or target-width RadioLib timing claim follows.
+
+Commands (T=/tmp/codex/build/CrowPanelTelemetry/join-restart-fix):
+
+```sh
+BUILD="$T/baseline" python3 tools/test_radio.py "$T/deps/RadioLib"
+BUILD="$T/before" python3 tools/test_radio.py "$T/deps/RadioLib" # expected failure, new regression/old worker
+BUILD="$T/after" python3 tools/test_radio.py "$T/deps/RadioLib"
+make format
+make format-check
+RADIOLIB_DIR="$T/deps/RadioLib" make test BUILD="$T/tests"
+python3 "$T/builds.py"
+clang-tidy -p "$T/enabled-prev3" "$T/enabled-prev3/sketch/Workers.cpp"
+python3 "$T/audit.py"
+```
+
+Six exact pinned dependency archives matched saved provenance; both current
+patches applied and hashes verified. CLI1.5.1, core3.3.12/IDF5.5.5 and all library
+versions are unchanged; installed sources are read-only. The official1.1 PDF
+matched the previous published hash; spec-source.json records its URL/hash.
+Build scripts/results include every exact CLI command, --libraries "$T/deps",
+separate TMPDIR/cache/build paths, common16M/PSRAM/app3M_fat9M_16MB options and
+only the established dummy credentials/shunt overrides on enabled builds.
+
+| Configuration | Result | Flash / 3,145,728 bytes | Static RAM / 327,680 bytes |
+| --- | --- | ---: | ---: |
+| blank prev3 | PASS | 1,201,796 | 39,364 |
+| dummy enabled prev3 | PASS | 1,208,800 | 39,436 |
+| dummy enabled postv3 | PASS | 1,210,362 | 39,436 |
+
+Full host suite, format and source/symbol/library/protected-file audits exit0.
+Target clang-tidy was attempted on the same build compilation database; exit1
+again reports unsupported ESP xesppie/GCC flags and missing target cmath. Analysis
+settings were not weakened. C++/headers match all three build inputs after Arduino's
+#line insertion. External dependencies resolve under task deps; enabled callback
+is linked; no reservation hooks or SDMMCFS begin/end symbols. Pins/Config, J7,
+Application/Ui, visual/source-photo assets, protocol/reference, both patch profiles,
+formatting files, historical ZIP and pre-existing raw review records match baseline
+hashes. No unrelated source changes or global installation; no new archive/checkouts.
+
+Evidence is saved before removing this task's temporary dependencies/builds/caches
+following Claude's focused read-only follow-up. No persistent build was created.
+The existing review history remains separate from the implementation disposition.
+All assembly, supervised flashing and unattended-operation conditions remain as
+previously documented; no hardware/RF operation was executed or authorized.

@@ -171,3 +171,36 @@ lifetime correction (including reset and erase/prune defects found by regression
 Final host/patch/three-build evidence is recorded separately from the initial
 checkpoint. No new application rekey state, pacing authority, UI redesign,
 publication, archive or physical/RF operation was introduced.
+
+
+On 2026-10-26 the user authorized pushing the five selected corrections and then
+requested another fresh expert review. The implementation was pushed directly on
+main as [b80bf07c028729f12089f1b27d4c5d032107150c](https://github.com/VOC-FH/CrowPanelTelemetry/commit/b80bf07c028729f12089f1b27d4c5d032107150c).
+Earlier uncommitted/no-publication statements describe their historical stage.
+
+- [Exact fresh expert-review request](claude-review-b80bf07-request.md)
+- [Claude's complete, unedited response](claude-review-b80bf07.md)
+- [Run, model, request/report hashes and read-only tool provenance](claude-review-b80bf07-run.json)
+- [Exact pinned dependency, patch and document provenance](claude-review-b80bf07-sources.json)
+
+Claude completed 95 Read/Glob/Grep calls in about 998 seconds using read-only
+capabilities. It ran no tests or builds, changed no files, and performed no
+hardware/RF/network operation. It confirms the JPEG, WiFi, RekeyInd queue/wire and display-documentation
+corrections, while classifying join retry as partial because of an
+in-run session-restart path. It also flags retained-answer capacity, patch setup
+instructions, RNG qualification, ADR-limit equality and further JPEG header
+bounds concerns. These remain reviewer claims, not newly authorized fixes or
+independent caller reproductions. Its explicit coverage limits matter: several
+libraries, schematics, electrical PDFs, tests and logs were not inspected.
+UI redesign was excluded. No implementation change, new commit or push accompanies
+this review request. The request, response and provenance are saved locally;
+the historical delivery archive is untouched.
+
+
+The user then authorized fixing only the session-restart join-budget finding,
+pushing it and requesting a Claude follow-up restricted to that correction.
+[Focused fix trace](join-restart-fix.md) records the one-constant policy correction
+and before/after real-library regression through both worker blocks. The previous
+b80bf07 report is unchanged; the other findings are not implemented. New source/
+test/build evidence is in ../validation-logs/join-restart-fix/. The forthcoming
+Claude follow-up is explicitly not an overall review or system approval.

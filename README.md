@@ -151,7 +151,10 @@ are needed for1.1; a negotiated1.0 session is rejected. Joining and transmission
 run on the radio worker while the UI remains operational. Failed joins retain
 the existing exponential backoff, now capped at24hours, with0–60seconds of jitter
 added after the stricter retry/airtime hold. A prolonged outage can therefore
-lead to daily retries. Reset still clears this volatile policy.
+lead to daily retries. Cold boot starts with a one-minute retry base; after a
+successful join, any later in-run session restart uses a64-minute base and DR0,
+then doubles toward the same24-hour cap. Normal joined operation is unchanged.
+Reset still clears this volatile policy.
 
 NVS keys live in `crow-lora` (nonce buffer and boot ID; no airtime debt)
 and `crow-wifi` (`credentials`: one SSID/password blob). A nonce write failure stops radio operations.

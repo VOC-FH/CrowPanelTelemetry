@@ -179,3 +179,16 @@ RF/TCXO/voltage/shunt/connector prerequisites and all physical acceptance remain
 retained/unexecuted. Assembly/bench work remains conditional; flashing/RF needs
 separate authorization. Unattended TTN remains NO-GO until those limits have fixes
 or measured accepted bounds and the full checklist, including24h, passes.
+
+
+### Session-restart follow-up to the join-budget row
+
+The b80bf07 expert review established that the preceding cold-boot-only evidence
+did not cover an in-run ADR-limit session revert. This is A, FIXED-SOURCE for that
+path: Workers.cpp's successful-join assignment now preserves a64-minute restart
+base instead of60s. Existing state, deadline and failure doubling absorb the fix;
+no dependency patch changes. A regression uses real RadioLib and both extracted
+worker blocks at10h/30h, then checks60day failed-rejoin traces for two RNG streams.
+It fails on the old source and passes after the one-line replacement. See
+[session-restart correction](review/join-restart-fix.md). This adds host coverage,
+not hardware validation or resolution of the other retained/new review findings.

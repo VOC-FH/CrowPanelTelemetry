@@ -1,0 +1,58 @@
+{
+  "TinyGPSPlus": {
+    "repository": "mikalhart/TinyGPSPlus",
+    "tag": "v1.0.3a",
+    "commit": "ca29434514a5c5172bd807af0608df7f296582a2",
+    "archive_sha256": "9f5c93a201490f610a7508cb67b0a1ea4ad80a100fefd54eaf400ba3324addcd",
+    "archive_url": "https://codeload.github.com/mikalhart/TinyGPSPlus/tar.gz/refs/tags/v1.0.3a"
+  },
+  "INA226": {
+    "repository": "RobTillaart/INA226",
+    "tag": "0.6.6",
+    "commit": "9c441d5cddaff6dffb9f1ba76bb00f14303c0f0f",
+    "archive_sha256": "d2bab490c34499994959bf0ca5429aa1d1506443b05634906e034d4c2048001b",
+    "archive_url": "https://codeload.github.com/RobTillaart/INA226/tar.gz/refs/tags/0.6.6"
+  },
+  "RadioLib": {
+    "repository": "jgromes/RadioLib",
+    "tag": "7.8.1",
+    "commit": "2325a38a89dd0f0e402c19f67fe910111da1e246",
+    "archive_sha256": "d1ace7b75f6a4e56fd1338485a08348dc48cec9f2dcae9c0cbbeadfeb4b91fd1",
+    "archive_url": "https://codeload.github.com/jgromes/RadioLib/tar.gz/refs/tags/7.8.1"
+  },
+  "audio-driver": {
+    "repository": "pschatzmann/arduino-audio-driver",
+    "tag": "v0.3.1",
+    "commit": "6875efa4bf1322890a6d484d8b3196681506ac62",
+    "archive_sha256": "fc3db7d1ca8d0ca248af0ad7304540368a3297dcb6e9eff9e8ed62123560aa47",
+    "archive_url": "https://codeload.github.com/pschatzmann/arduino-audio-driver/tar.gz/refs/tags/v0.3.1"
+  },
+  "JPEGDEC": {
+    "repository": "bitbank2/JPEGDEC",
+    "tag": "1.8.4",
+    "commit": "ae9705abeeebd057c3d0a50c1e58bdec532c76c6",
+    "archive_sha256": "bca29ec7026530a50c60b3a2b7e389ba9e631f9a50e01b9558735b284365307a",
+    "archive_url": "https://codeload.github.com/bitbank2/JPEGDEC/tar.gz/refs/tags/1.8.4"
+  },
+  "Arduino_GFX": {
+    "repository": "moononournation/Arduino_GFX",
+    "tag": "v1.6.9",
+    "commit": "c2e39350ff09c3720702bd3f050cb581fa45a8e9",
+    "archive_sha256": "c0b24c0fcb52eaca955aea711e5e15a7fb435e575f949e09a7bd4520c0555e70",
+    "archive_url": "https://codeload.github.com/moononournation/Arduino_GFX/tar.gz/refs/tags/v1.6.9"
+  },
+  "esp-hosted-mcu": {
+    "repository": "espressif/esp-hosted-mcu",
+    "tag": "v2.12.13",
+    "commit": "dd0176e5fc959d79b306f6677a2f878123c58e9a",
+    "archive_sha256": "0a1265b09ad729183708c1eecf3832815b278e534ffab8e3928a9f78d5ae7158",
+    "archive_url": "https://codeload.github.com/espressif/esp-hosted-mcu/tar.gz/refs/tags/v2.12.13"
+  },
+  "esp-idf": {
+    "repository": "espressif/esp-idf",
+    "tag": "v5.5.5",
+    "commit": "b774170ff46c393eeb5e495ea37936038d3f4f4f",
+    "archive_sha256": "c5d0e1352f5055f55efbccca179c2fd02ad3ad1754419bbac1b80adcdcf5ef80",
+    "archive_url": "https://codeload.github.com/espressif/esp-idf/tar.gz/refs/tags/v5.5.5"
+  }
+}

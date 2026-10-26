@@ -646,7 +646,7 @@ static void testJoinLoop() {
     joinIteration(node, ready, retry);
     assert(!ready && phy.sent.size() == 6);
 }
-static std::vector<uint64_t> joinRetryTrace(uint32_t seed) {
+static std::vector<uint64_t> joinRetryTrace(uint32_t seed, uint64_t restartAt = 0) {
     clockMs = 0;
     randomState = seed;
     randomCalls = 0;
@@ -657,14 +657,40 @@ static std::vector<uint64_t> joinRetryTrace(uint32_t seed) {
     initialize(node);
     bool ready = true;
     uint32_t retry = 60000;
-    constexpr uint64_t Hour = 3600000, Day = 24 * Hour, Horizon = 60 * Day;
-    std::vector<uint64_t> airtimes, waits;
-    while (clockMs < Horizon) {
-        uint32_t previousRetry = retry;
+    constexpr uint64_t Hour = 3600000, Day = 24 * Hour;
+    const uint64_t horizon = restartAt + 60 * Day;
+    std::vector<uint64_t> airtimes, waits, starts;
+    if (restartAt != 0) {
+        phy.replies.push_back(node.gatewayAccept(1, true));
         joinIteration(node, ready, retry);
-        assert(ready && phy.sent.size() == airtimes.size() + 1);
+        assert(ready && node.isActivated() && phy.sent.size() == 1);
+        starts.push_back(phy.starts.back());
+        airtimes.push_back(referenceToA[phy.txSpreadingFactors.back() - 7][23]);
+        Batch batch{};
+        uint8_t offset = 10;
+        bool demoTurn = true;
+        measurements.records.clear();
+        requests.requests.clear();
+        for (unsigned n = 1; n <= 65; ++n) {
+            clockMs = restartAt * n / 65;
+            requests.requests.push_back(1);
+            serviceIteration(node, ready, batch, offset, demoTurn);
+            assert(ready && node.isActivated() == (n <= 64));
+            assert(phy.sent.size() == 1 + std::min(n, 64U));
+        }
+        assert(requests.requests.empty());
+        while (!node.canTransmit()) {
+            clockMs += 1000;
+        }
+    }
+    while (clockMs < horizon) {
+        uint32_t previousRetry = retry;
+        size_t previousSent = phy.sent.size();
+        joinIteration(node, ready, retry);
+        assert(ready && phy.sent.size() == previousSent + 1);
         uint64_t toaUs = referenceToA[phy.txSpreadingFactors.back() - 7][23];
         airtimes.push_back(toaUs);
+        starts.push_back(phy.starts.back());
         uint64_t end = clockMs, low = 0, high = Day + 60000;
         while (low < high) {
             uint64_t middle = (low + high) / 2;
@@ -684,7 +710,7 @@ static std::vector<uint64_t> joinRetryTrace(uint32_t seed) {
     auto transmitted = [&](uint64_t begin, uint64_t length) {
         uint64_t total = 0, end = begin + length;
         for (size_t n = 0; n < airtimes.size(); ++n) {
-            uint64_t start = phy.starts[n] * 1000;
+            uint64_t start = starts[n] * 1000;
             if (start < end && start + airtimes[n] > begin) {
                 total += std::min(start + airtimes[n], end) - std::max(start, begin);
             }
@@ -695,16 +721,16 @@ static std::vector<uint64_t> joinRetryTrace(uint32_t seed) {
     assert(transmitted(0, HourUs) < 36000000);
     assert(transmitted(HourUs, 10 * HourUs) < 36000000);
     assert(transmitted(11 * HourUs, DayUs) < 8700000);
-    for (size_t n = 0; n < phy.starts.size(); ++n) {
-        uint64_t start = phy.starts[n] * 1000, end = start + airtimes[n];
+    for (size_t n = 0; n < starts.size(); ++n) {
+        uint64_t start = starts[n] * 1000, end = start + airtimes[n];
         for (uint64_t candidate : {start, end, start >= DayUs ? start - DayUs : UINT64_C(0), end >= DayUs ? end - DayUs : UINT64_C(0)}) {
-            if (candidate >= 11 * HourUs && candidate + DayUs <= Horizon * 1000) {
+            if (candidate >= 11 * HourUs && candidate + DayUs <= horizon * 1000) {
                 assert(transmitted(candidate, DayUs) < 8700000);
             }
         }
     }
-    assert(randomCalls == phy.sent.size() && retry == Day);
-    assert(phy.starts.back() > UINT32_MAX); // Actual retry decisions crossed the target millis wrap.
+    assert(randomCalls == waits.size() && retry == Day);
+    assert(starts.back() > UINT32_MAX); // Actual retry decisions crossed the target millis wrap.
     return waits;
 }
 static void testRekeyQueueOperations() {
@@ -900,6 +926,10 @@ static void testRekeyRestoreAndLimit() {
 static void testJoinRetryWindows() {
     auto first = joinRetryTrace(1), second = joinRetryTrace(2);
     assert(first != second);
+    for (uint64_t restartAt : {UINT64_C(10) * 3600000, UINT64_C(30) * 3600000}) {
+        auto restartedFirst = joinRetryTrace(1, restartAt), restartedSecond = joinRetryTrace(2, restartAt);
+        assert(restartedFirst != restartedSecond);
+    }
     Preferences store;
     TestPhy phy;
     clockMs = 0;
@@ -1149,10 +1179,10 @@ int main() {
     testMacAnswerRetention();
     testRekeyRestoreAndLimit();
     testElapsedLoops();
-    std::puts(
-        "PASS: real RadioLib + production node: 60-day randomized join windows/wrap, RekeyInd wire/queue/reset/restore, aggregate pacing, "
-        "recovery, "
-        "fairness/fragments and NVS "
-        "fail-stop");
+    std::puts("PASS: real RadioLib + production node: 60-day randomized boot/restart join windows/wrap, RekeyInd wire/queue/reset/restore, "
+              "aggregate pacing, "
+              "recovery, "
+              "fairness/fragments and NVS "
+              "fail-stop");
     return 0;
 }

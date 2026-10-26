@@ -191,3 +191,30 @@ or general recursion bound. At the existing ADR limit, a missing confirmation
 again causes the prescribed session restart. Telemetry encoding/offsets and demo
 fairness are unchanged; the existing dynamic payload allowance still governs
 fragment sizes. Real network/stack/power acceptance remains unexecuted.
+
+
+## Session-restart join budget correction
+
+A successful OTAA no longer resets the existing joinRetry to the cold-boot60s
+base. It sets3840000ms (64minutes), leaving normal joined traffic and the current
+deadline unchanged. If RadioLib later clears the session at the pending-RekeyInd
+ADR limit, the next join therefore selects DR0 and uses this slower progression
+on failure. Existing airtime accounting may make the first gap longer; jitter
+still follows the maximum hold. Failure backoff doubles to the same24h ceiling.
+The first restart join is not delayed by a new timer. Reboot still starts with
+60s, as before; no persistent debt, uptime state or per-frame gate is introduced.
+
+LoRaWAN1.1 section7/Table17 measures its later8.7s/day budget from power-up/reset,
+not from an in-run MAC restart. The earlier60day test covered only cold boot.
+The added real-library/extracted-worker regression first joins successfully,
+sends64 unacknowledged RekeyInd-bearing demo uplinks through the service block,
+observes the actual no-RF ADR-limit session transition, and then runs failed joins
+for60days. It tests restarts at10h and30h for two RNG streams, integrates only
+JoinRequest airtime (including the successful boot join), and checks the initial
+and later sliding24h extrema including partial-frame overlap and application
+millis wrap. The old reset fails the11h-window assertion; the correction passes.
+For a single sustained failed-rejoin series, at most five1.482s DR0 requests fit
+in24h (7.41s), versus six or more in the reproduced old series. These are predicted
+airtimes under the pinned/default EU868 settings, not an RF compliance claim.
+The trade-off is slower session-restart recovery and SF12 joins. Existing reset,
+internal-MAC, RNG entropy, PHY timing and network-interoperability limits remain.

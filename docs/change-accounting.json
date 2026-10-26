@@ -232,5 +232,27 @@
       }
     },
     "scope": "Cumulative final five-fix task; supersedes, does not add to, protocol_parser_checkpoint. Actual dependency source lines, excluding patch context."
+  },
+  "join_restart_fix": {
+    "baseline_commit": "b80bf07c028729f12089f1b27d4c5d032107150c",
+    "lines": {
+      "application": {
+        "added": 1,
+        "removed": 1
+      },
+      "tests": {
+        "added": 46,
+        "removed": 16
+      },
+      "tooling": {
+        "added": 0,
+        "removed": 0
+      },
+      "dependency_source": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    "scope": "Only session-restart join-budget correction; prior review records preserved."
   }
 }

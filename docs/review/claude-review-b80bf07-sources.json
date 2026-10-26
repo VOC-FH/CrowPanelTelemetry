@@ -1,0 +1,145 @@
+{
+  "dependencies": {
+    "TinyGPSPlus": {
+      "repository": "mikalhart/TinyGPSPlus",
+      "tag": "v1.0.3a",
+      "commit": "ca29434514a5c5172bd807af0608df7f296582a2",
+      "archive_sha256": "9f5c93a201490f610a7508cb67b0a1ea4ad80a100fefd54eaf400ba3324addcd",
+      "archive_url": "https://codeload.github.com/mikalhart/TinyGPSPlus/tar.gz/refs/tags/v1.0.3a"
+    },
+    "INA226": {
+      "repository": "RobTillaart/INA226",
+      "tag": "0.6.6",
+      "commit": "9c441d5cddaff6dffb9f1ba76bb00f14303c0f0f",
+      "archive_sha256": "d2bab490c34499994959bf0ca5429aa1d1506443b05634906e034d4c2048001b",
+      "archive_url": "https://codeload.github.com/RobTillaart/INA226/tar.gz/refs/tags/0.6.6"
+    },
+    "RadioLib": {
+      "repository": "jgromes/RadioLib",
+      "tag": "7.8.1",
+      "commit": "2325a38a89dd0f0e402c19f67fe910111da1e246",
+      "archive_sha256": "d1ace7b75f6a4e56fd1338485a08348dc48cec9f2dcae9c0cbbeadfeb4b91fd1",
+      "archive_url": "https://codeload.github.com/jgromes/RadioLib/tar.gz/refs/tags/7.8.1"
+    },
+    "audio-driver": {
+      "repository": "pschatzmann/arduino-audio-driver",
+      "tag": "v0.3.1",
+      "commit": "6875efa4bf1322890a6d484d8b3196681506ac62",
+      "archive_sha256": "fc3db7d1ca8d0ca248af0ad7304540368a3297dcb6e9eff9e8ed62123560aa47",
+      "archive_url": "https://codeload.github.com/pschatzmann/arduino-audio-driver/tar.gz/refs/tags/v0.3.1"
+    },
+    "JPEGDEC": {
+      "repository": "bitbank2/JPEGDEC",
+      "tag": "1.8.4",
+      "commit": "ae9705abeeebd057c3d0a50c1e58bdec532c76c6",
+      "archive_sha256": "bca29ec7026530a50c60b3a2b7e389ba9e631f9a50e01b9558735b284365307a",
+      "archive_url": "https://codeload.github.com/bitbank2/JPEGDEC/tar.gz/refs/tags/1.8.4"
+    },
+    "Arduino_GFX": {
+      "repository": "moononournation/Arduino_GFX",
+      "tag": "v1.6.9",
+      "commit": "c2e39350ff09c3720702bd3f050cb581fa45a8e9",
+      "archive_sha256": "c0b24c0fcb52eaca955aea711e5e15a7fb435e575f949e09a7bd4520c0555e70",
+      "archive_url": "https://codeload.github.com/moononournation/Arduino_GFX/tar.gz/refs/tags/v1.6.9"
+    },
+    "esp-hosted-mcu": {
+      "repository": "espressif/esp-hosted-mcu",
+      "tag": "v2.12.13",
+      "commit": "dd0176e5fc959d79b306f6677a2f878123c58e9a",
+      "archive_sha256": "0a1265b09ad729183708c1eecf3832815b278e534ffab8e3928a9f78d5ae7158",
+      "archive_url": "https://codeload.github.com/espressif/esp-hosted-mcu/tar.gz/refs/tags/v2.12.13"
+    },
+    "esp-idf": {
+      "repository": "espressif/esp-idf",
+      "tag": "v5.5.5",
+      "commit": "b774170ff46c393eeb5e495ea37936038d3f4f4f",
+      "archive_sha256": "c5d0e1352f5055f55efbccca179c2fd02ad3ad1754419bbac1b80adcdcf5ef80",
+      "archive_url": "https://codeload.github.com/espressif/esp-idf/tar.gz/refs/tags/v5.5.5"
+    }
+  },
+  "official_documents": [
+    {
+      "file": "esp32-p4-datasheet.pdf",
+      "url": "https://www.espressif.com/sites/default/files/documentation/esp32-p4_datasheet_en.pdf",
+      "sha256": "fb4f3e91cc2ac519ec08cdec3dac9cb62b546cf5402ead1c5b83595a21bb6bc6",
+      "text_exit": 0
+    },
+    {
+      "file": "RTC6603SP.pdf",
+      "url": "https://files.waveshare.com/upload/c/c6/Datasheet-RTC6603SP-RichWave.pdf",
+      "sha256": "30db18af61144c9d7d8e2398a63ab32ab00e185b0c1e6579f3d852cb1bda5143",
+      "text_exit": 0
+    },
+    {
+      "file": "INA226.pdf",
+      "url": "https://www.ti.com/lit/ds/symlink/ina226.pdf",
+      "sha256": "c9b67f886d4a5241a5e070723f7b61867409eeb27eed768b9cdd9cb17e03ca2d",
+      "text_exit": 0
+    },
+    {
+      "file": "GT911-programming.pdf",
+      "url": "https://community.renesas.com/cfs-file/__key/communityserver-discussions-components-files/256/GT911-Programming-Guide_5F00_v0.1-_2800_4_2900_.pdf",
+      "error": "HTTP Error 403: Forbidden",
+      "retrieval_error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "file": "ES8311.pdf",
+      "url": "https://dl.espressif.com/dl/schematics/Audio_ES8311.pdf",
+      "sha256": "533e1a2ef7bb37ada87926633e602e57c6d0a0a6d93e2e242435544cf2564b68",
+      "text_exit": 0
+    },
+    {
+      "file": "NS4263B.pdf",
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20240723/A4C23324CBEADB3DCF9750E7545A6E89.pdf",
+      "sha256": "776585313d645d7daee30d7c95a9947a3b4d2c4938850dfa5cd2a3aedbb27736",
+      "source": "prior independently retrieved manufacturer-authored document; reused unchanged",
+      "text_exit": 0
+    },
+    {
+      "file": "CoreSX1262.pdf",
+      "url": "https://files.waveshare.com/upload/c/c1/CoreSX1262_Sch.pdf",
+      "sha256": "5906f904330a405c75bc858181ccf6b247a2f29247afda7d57a108eff9d2f866",
+      "source": "prior independently retrieved manufacturer-authored document; reused unchanged",
+      "text_exit": 0
+    },
+    {
+      "file": "GT911-GOODIX.pdf",
+      "url": "https://files.waveshare.com/upload/4/49/GT911-GOODIX.pdf",
+      "sha256": "7d1a2ee62aebdb2a31c668e5a08e708e1a0211b9db18d6435ba780964f346863",
+      "source": "Manufacturer-authored datasheet mirrored by integrator; alternate to inaccessible Renesas programming guide",
+      "text_exit": 0
+    },
+    {
+      "file": "LoRaWAN-1.1.pdf",
+      "url": "https://content.cdntwrk.com/files/aT0xNDI4MzY1JnY9MSZpc3N1ZU5hbWU9bG9yYXdhbi1zcGVjaWZpY2F0aW9uLXYxLTEmY21kPWQmc2lnPTFjOGNkM2M2YWI4OWMxZDhjZTU0NjUyMGEzZmQzN2Vk",
+      "publication_page": "https://resources.lora-alliance.org/technical-specifications/lorawan-specification-v1-1",
+      "sha256": "c202b49feca0f5d2b81161078f6f5508c5374cededa3be3c51960b69208887c6",
+      "source": "Official Download PDF link on LoRa Alliance publication page",
+      "text_exit": 0
+    }
+  ],
+  "patch_after_hashes": {
+    "radiolib-7.8.1": {
+      "src/protocols/LoRaWAN/LoRaWAN.cpp": {
+        "before": "bfd64fe3707795fcf54e75fc80e0b21036c0fa5d80850927f5ed7961873c0415",
+        "after": "7d2510019c2c706e3a3cdca6eceb20370ba4631b856afd03ec6a30edb35004e7"
+      },
+      "src/protocols/LoRaWAN/LoRaWAN.h": {
+        "before": "d359477577b97d0c2024624e3036b9aab3f06fd24db79d8fe4daa2c8b56d846b",
+        "after": "628aea5e6817a70c1e617b425823085fe07c908792b88a537daa241e73744358"
+      }
+    },
+    "jpegdec-1.8.4": {
+      "src/jpeg.inl": {
+        "before": "ab6dd18350a8d1ab73ad8b296d7da7274684fa4571f9abdd46d5630709a0c7bc",
+        "after": "70dde5ec4cabb22a6a3fb0b595c69f8d04b959660c0fee58bf01d4595e0c248f"
+      }
+    }
+  },
+  "hardware_inputs": {
+    "panel.sch": "7f9ac57dab96110467e4a9728cfb71b46024ea57f28a2d9d8b545b3ff0d0c172",
+    "panel.brd": "29cd4115b1d16de5b1c5f99582b83e8fb3ef5616acd920dfa609b7d7424f9430",
+    "board_config.h": "32e23a64500cb1ae6bce2efcaa2fd2669367bb335879dd864bfc84e8c3eb7b76",
+    "esp_panel_board_custom_conf.h": "5638c0ad02d73fca0ff1fee76a962f49ae9bf604565119fabee1137df5fe38e2"
+  }
+}

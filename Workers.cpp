@@ -164,7 +164,7 @@ static void radioTask(void*) {
                 bool joined = rc == RADIOLIB_LORAWAN_NEW_SESSION && (node.getVersionMajor() == 1);
                 ready = node.healthy && !(rc == RADIOLIB_LORAWAN_NEW_SESSION && node.getVersionMajor() != 1);
                 if (joined) {
-                    joinRetry = 60000;
+                    joinRetry = 3840000;
                     post(EventKind::Radio, "Joined / Class A / EU868 / ADR enabled");
                 } else {
                     node.defer(joinRetry, esp_random() % 60001U);
