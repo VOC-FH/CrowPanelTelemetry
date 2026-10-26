@@ -1,5 +1,12 @@
 # Wiring: CrowPanel Advanced 10.1-inch V1.2
 
+![Annotated wiring photo of the CrowPanel and its GPS, INA226 and LoRa modules](wiring.png)
+
+[Open the full-size image](wiring.png) · [Open the zoomable SVG](wiring.svg)
+
+The image gives you an overview. Use the connection tables below for exact
+contacts, and check the marked GPS power requirements before connecting it.
+
 This assignment is derived from the supplied V1.2 Eagle schematic **and board**,
 not generic ESP32 pin defaults or the older Elecrow demo. The schematic title
 inside the PDF still says V1.0 / 7.0-inch; the actual linked V1.2 netlist/PCB are
