@@ -239,5 +239,40 @@
     "url": "https://atta.szlcsc.com/upload/public/pdf/source/20240723/A4C23324CBEADB3DCF9750E7545A6E89.pdf",
     "sha256": "776585313d645d7daee30d7c95a9947a3b4d2c4938850dfa5cd2a3aedbb27736",
     "provenance": "Manufacturer-authored datasheet hosted by distributor; Nsiway product-page family images corroborate SD truth table."
+  },
+  "protocol-parser/components/hal/mipi_dsi_hal.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-idf/v5.5.5/components/hal/mipi_dsi_hal.c",
+    "tag": "v5.5.5",
+    "sha256": "c37f250e76090460831ee6ca6eac67b7439acda2fc010d84502c89d2e9daabbe"
+  },
+  "protocol-parser/components/esp_lcd/dsi/esp_lcd_panel_dpi.c": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-idf/v5.5.5/components/esp_lcd/dsi/esp_lcd_panel_dpi.c",
+    "tag": "v5.5.5",
+    "sha256": "a0b13536fec34d3cc4a6324ab64bc9bb62fee4db39dec24133681bc3c17b8373"
+  },
+  "protocol-parser/components/esp_hw_support/include/esp_random.h": {
+    "url": "https://raw.githubusercontent.com/espressif/esp-idf/v5.5.5/components/esp_hw_support/include/esp_random.h",
+    "tag": "v5.5.5",
+    "sha256": "ed9b73e4c6a74e2de0e4c2807d6172b8bfbbb9060efbf3a89228859c02fb34c9"
+  },
+  "protocol-parser/esp32p4-libs/include/soc/esp32p4/include/soc/clk_tree_defs.h": {
+    "installed_path": "/home/voc/.arduino15/packages/esp32/tools/esp32p4-libs/3.3.12/include/soc/esp32p4/include/soc/clk_tree_defs.h",
+    "core": "3.3.12",
+    "sha256": "52a61e318c60ca1da52d34371a83562b061aa03c61f67492047a95829da7d47f"
+  },
+  "protocol-parser/esp32p4-libs/include/esp_hw_support/include/esp_random.h": {
+    "installed_path": "/home/voc/.arduino15/packages/esp32/tools/esp32p4-libs/3.3.12/include/esp_hw_support/include/esp_random.h",
+    "core": "3.3.12",
+    "sha256": "ed9b73e4c6a74e2de0e4c2807d6172b8bfbbb9060efbf3a89228859c02fb34c9"
+  },
+  "protocol-parser/esp32p4_es-libs/include/soc/esp32p4/include/soc/clk_tree_defs.h": {
+    "installed_path": "/home/voc/.arduino15/packages/esp32/tools/esp32p4_es-libs/3.3.12/include/soc/esp32p4/include/soc/clk_tree_defs.h",
+    "core": "3.3.12",
+    "sha256": "52a61e318c60ca1da52d34371a83562b061aa03c61f67492047a95829da7d47f"
+  },
+  "protocol-parser/esp32p4_es-libs/include/esp_hw_support/include/esp_random.h": {
+    "installed_path": "/home/voc/.arduino15/packages/esp32/tools/esp32p4_es-libs/3.3.12/include/esp_hw_support/include/esp_random.h",
+    "core": "3.3.12",
+    "sha256": "ed9b73e4c6a74e2de0e4c2807d6172b8bfbbb9060efbf3a89228859c02fb34c9"
   }
 }

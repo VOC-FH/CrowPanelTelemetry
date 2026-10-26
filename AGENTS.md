@@ -14,13 +14,18 @@ WiFi alone stores one atomic credentials blob after its accepted request reaches
 live association/IP state with the requested SSID.
 The hash-checked RadioLib 7.8.1 patch in patches/ fixes Class-A timing and airtime
 accounting, authenticated join/counter state and ACK counter selection, and forwards
-nested application downlinks. It has no project marker or
+nested application downlinks. Its MAC queue alone owns pending RekeyInd; MAC-only
+packet construction must not clear it or duplicate it in FOpts and FRMPayload.
+It has no project marker or
 transmission-reservation hooks. PersistentNode owns the sole volatile RF deadline
 and NVS nonces; completed operations extend that deadline using total airtime.
+That deadline applies join jitter after the stricter backoff/airtime hold and
+clamps the result to the signed wrap-safe span; no second retry timer or RF gate.
 Preserve pre-RF DevNonce reservation, including ambiguous TX errors. Airtime is
 not persisted or reserved before transmissions; internal MAC replies are not
 held by the application deadline. Apply the patch only to the selected isolated
-dependency. The hash-checked JPEGDEC 1.8.4 patch bounds SOF metadata before writes.
+dependency. The hash-checked JPEGDEC 1.8.4 patch bounds SOF metadata before writes
+and removes unused EXIF interpretation; orientation/thumbnail metadata is ignored.
 Use tools/patch_dependency.py as the sole patch-application implementation for both
 libraries; the former RadioLib-only tool is replaced. The approved seven-line
 JPEGParseInfo guard retains the vendor error-return idiom as a narrow style

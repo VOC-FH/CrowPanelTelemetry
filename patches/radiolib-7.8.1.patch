@@ -6,89 +6,130 @@
 @@ -124 +124 @@
 -    if(this->tUplinkEnd + (RadioLibTime_t)dutyCycleInterval(this->dutyCycle, this->lastToA) > this->tUplink) {
 +    if(static_cast<int32_t>(this->tUplinkEnd + dutyCycleInterval(this->dutyCycle, this->lastToA) - this->tUplink) > 0) {
-@@ -161 +160,0 @@
+@@ -153,2 +153,2 @@
+-  // if the payload consists of piggybacked MAC only, move this to the FRMPayload
+-  if(this->isMACPayload && lenUp == 0) {
++  // Port 0 carries queued and supplied MAC commands in FRMPayload.
++  if(fPort == RADIOLIB_LORAWAN_FPORT_MAC_COMMAND) {
+@@ -156,6 +156,5 @@
+-    frmLen = this->fOptsUpLen;
+-
+-    memset(this->fOptsUp, 0, RADIOLIB_LORAWAN_FHDR_FOPTS_MAX_LEN);
+-    this->fOptsUpLen = 0;
+-
 -    this->isMACPayload = false; // reset for next uplink
++    if(lenUp > 0) {
++      memcpy(frmPayload + this->fOptsUpLen, dataUp, lenUp);
++    }
++    frmLen = this->fOptsUpLen + lenUp;
++
 @@ -168,0 +168 @@
 +  this->isMACPayload = false; // reset for next uplink
-@@ -362,0 +363 @@
+@@ -357,0 +358 @@
++  this->fOptsUpLen = this->fOptsDownLen = 0;
+@@ -362,0 +364 @@
 +  this->downlinkSeen = 0;
-@@ -527 +528 @@
+@@ -527 +529 @@
 -  LoRaWANNode::hton<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS], this->sessionStatus);
 +  LoRaWANNode::hton<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS], this->sessionStatus | 0x80 | (this->downlinkSeen << 4));
-@@ -542,0 +544,3 @@
+@@ -542,0 +545,3 @@
 +  if(state == RADIOLIB_ERR_NONE && !(persistentBuffer[RADIOLIB_LORAWAN_SESSION_STATUS] & 0x80)) {
 +    state = RADIOLIB_ERR_SESSION_DISCARDED;
 +  }
-@@ -612 +616,2 @@
+@@ -612 +617,2 @@
 -  this->sessionStatus = LoRaWANNode::ntoh<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS]);
 +  this->sessionStatus = LoRaWANNode::ntoh<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS]) & 0x0F;
 +  this->downlinkSeen = (this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS] >> 4) & 0x03;
-@@ -804 +808,0 @@
+@@ -804 +809,0 @@
 -  this->joinNonce = joinNonceNew;
-@@ -807 +810,0 @@
+@@ -807 +811,0 @@
 -  this->devAddr = LoRaWANNode::ntoh<uint32_t>(&joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_DEV_ADDR_POS]);
-@@ -811,2 +814,2 @@
+@@ -811,2 +815,2 @@
 -  this->rev = (dlSettings & RADIOLIB_LORAWAN_JOIN_ACCEPT_R_1_1) >> 7;
 -  RADIOLIB_DEBUG_PROTOCOL_PRINTLN("LoRaWAN revision: 1.%d", this->rev);
 +  uint8_t revNew = (dlSettings & RADIOLIB_LORAWAN_JOIN_ACCEPT_R_1_1) >> 7;
 +  RADIOLIB_DEBUG_PROTOCOL_PRINTLN("LoRaWAN revision: 1.%d", revNew);
-@@ -815 +818 @@
+@@ -815 +819 @@
 -  if(this->rev == 1) {
 +  if(revNew == 1) {
-@@ -817,0 +821 @@
+@@ -817,0 +822 @@
 +    uint8_t jSIntKey[RADIOLIB_AES128_KEY_SIZE];
-@@ -821 +825 @@
+@@ -821 +826 @@
 -    mod->hal->aes128->encryptECB(keyDerivationBuff, RADIOLIB_AES128_BLOCK_SIZE, this->jSIntKey);
 +    mod->hal->aes128->encryptECB(keyDerivationBuff, RADIOLIB_AES128_BLOCK_SIZE, jSIntKey);
-@@ -830 +834 @@
+@@ -830 +835 @@
 -    if(!verifyMIC(micBuff, lenRx + 11, this->jSIntKey)) {
 +    if(!verifyMIC(micBuff, lenRx + 11, jSIntKey)) {
-@@ -832,0 +837 @@
+@@ -832,0 +838 @@
 +    memcpy(this->jSIntKey, jSIntKey, RADIOLIB_AES128_KEY_SIZE);
-@@ -840,0 +846,4 @@
+@@ -840,0 +847,4 @@
 +
 +  this->joinNonce = joinNonceNew;
 +  this->rev = revNew;
 +  this->devAddr = LoRaWANNode::ntoh<uint32_t>(&joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_DEV_ADDR_POS]);
-@@ -960 +969 @@
+@@ -960 +970 @@
 -  if(this->tUplink < tNow) {
 +  if(static_cast<int32_t>(this->tUplink - tNow) < 0) {
-@@ -966 +975 @@
+@@ -966 +976 @@
 -    if(this->tUplinkEnd + (RadioLibTime_t)dutyCycleInterval(this->dutyCycle, this->lastToA) > this->tUplink) {
 +    if(static_cast<int32_t>(this->tUplinkEnd + dutyCycleInterval(this->dutyCycle, this->lastToA) - this->tUplink) > 0) {
-@@ -988,0 +998 @@
+@@ -988,0 +999 @@
 +  this->lastToA = 0;
-@@ -1507 +1517 @@
+@@ -1371,0 +1383 @@
++  const uint8_t fOptsLen = fPort == RADIOLIB_LORAWAN_FPORT_MAC_COMMAND ? 0 : this->fOptsUpLen;
+@@ -1403 +1415 @@
+-  out[RADIOLIB_LORAWAN_FHDR_FCTRL_POS] |= this->fOptsUpLen;
++  out[RADIOLIB_LORAWAN_FHDR_FCTRL_POS] |= fOptsLen;
+@@ -1412,3 +1424,3 @@
+-  out[RADIOLIB_LORAWAN_FHDR_FPORT_POS(this->fOptsUpLen)] = fPort;
+-
+-  if(this->fOptsUpLen > 0) {
++  out[RADIOLIB_LORAWAN_FHDR_FPORT_POS(fOptsLen)] = fPort;
++
++  if(fOptsLen > 0) {
+@@ -1416 +1428 @@
+-    RADIOLIB_DEBUG_PROTOCOL_HEXDUMP(this->fOptsUp, this->fOptsUpLen);
++    RADIOLIB_DEBUG_PROTOCOL_HEXDUMP(this->fOptsUp, fOptsLen);
+@@ -1420 +1432 @@
+-      processAES(this->fOptsUp, this->fOptsUpLen, this->nwkSEncKey, &out[RADIOLIB_LORAWAN_FHDR_FOPTS_POS], this->devAddr, this->fCntUp, RADIOLIB_LORAWAN_UPLINK, 0x01, true);
++      processAES(this->fOptsUp, fOptsLen, this->nwkSEncKey, &out[RADIOLIB_LORAWAN_FHDR_FOPTS_POS], this->devAddr, this->fCntUp, RADIOLIB_LORAWAN_UPLINK, 0x01, true);
+@@ -1423 +1435 @@
+-      memcpy(&out[RADIOLIB_LORAWAN_FHDR_FOPTS_POS], this->fOptsUp, this->fOptsUpLen);
++      memcpy(&out[RADIOLIB_LORAWAN_FHDR_FOPTS_POS], this->fOptsUp, fOptsLen);
+@@ -1437 +1449 @@
+-  processAES(in, lenIn, encKey, &out[RADIOLIB_LORAWAN_FRAME_PAYLOAD_POS(this->fOptsUpLen)], this->devAddr, this->fCntUp, RADIOLIB_LORAWAN_UPLINK, 0x00, true);
++  processAES(in, lenIn, encKey, &out[RADIOLIB_LORAWAN_FRAME_PAYLOAD_POS(fOptsLen)], this->devAddr, this->fCntUp, RADIOLIB_LORAWAN_UPLINK, 0x00, true);
+@@ -1507 +1519 @@
 -  if(this->tUplink > tNow + this->launchDuration) {
 +  if(static_cast<int32_t>(this->tUplink - tNow - this->launchDuration) > 0) {
-@@ -1510 +1520 @@
+@@ -1510 +1522 @@
 -    if(this->tUplink > tNow + this->launchDuration) {
 +    if(static_cast<int32_t>(this->tUplink - tNow - this->launchDuration) > 0) {
-@@ -1520,0 +1531 @@
+@@ -1520,0 +1533 @@
 +  this->lastToA += toa;
-@@ -1535 +1546 @@
+@@ -1535 +1548 @@
 -    if(mod->hal->millis() > txEnd + this->scanGuard) {
 +    if(static_cast<RadioLibTime_t>(mod->hal->millis() - txEnd) > this->scanGuard) {
-@@ -1549,3 +1559,0 @@
+@@ -1549,3 +1561,0 @@
 -
 -  // increase Time on Air of the uplink sequence
 -  this->lastToA += toa;
-@@ -1573 +1581 @@
+@@ -1573 +1583 @@
 -  if((dlDelay == 0 && tReference > 0) || (dlDelay > 0 && tReference == 0)) {
 +  if(dlDelay == 0 && tReference > 0) {
-@@ -1611 +1619 @@
+@@ -1611 +1621 @@
 -  if(dlDelay > 0 && tReference > 0) {
 +  if(dlDelay > 0) {
-@@ -1616 +1624 @@
+@@ -1616 +1626 @@
 -    if(tNow > tWindow) {
 +    if(static_cast<int32_t>(tNow - tWindow) > 0) {
-@@ -2003 +2011 @@
+@@ -2003 +2013 @@
 -  uint32_t devFCnt32 = 0;
 +  uint64_t devFCnt32 = 0;
-@@ -2019 +2027 @@
+@@ -2019 +2029 @@
 -  if(devFCnt32 > 0 && payFCnt16 <= (uint16_t)devFCnt32) {
 +  if((devFCnt32 > 0 || (!multicast && (this->downlinkSeen & (isAppDownlink ? 1 : 2)))) && payFCnt16 <= (uint16_t)devFCnt32) {
-@@ -2027,7 +2035,5 @@
+@@ -2027,7 +2037,5 @@
 -  if(multicast) {
 -    if(devFCnt32 > this->mcGroups[mcGroupId].mcFCntMax) {
 -      #if !RADIOLIB_STATIC_ONLY
@@ -101,20 +142,129 @@
 +      delete[] downlinkMsg;
 +    #endif
 +    return(multicast ? RADIOLIB_ERR_MULTICAST_FCNT_INVALID : RADIOLIB_ERR_DOWNLINK_MALFORMED);
-@@ -2094,0 +2101 @@
+@@ -2094,0 +2103 @@
 +    this->downlinkSeen |= isAppDownlink ? 1 : 2;
-@@ -2100 +2107 @@
+@@ -2100 +2109 @@
 -    this->confFCntDown = this->aFCntDown;
 +    this->confFCntDown = (uint16_t)devFCnt32;
-@@ -2145,0 +2153,3 @@
+@@ -2110,3 +2119,5 @@
+-    // a Class A downlink was received, so we can clear the MAC uplink buffer
+-    memset(this->fOptsUp, 0, RADIOLIB_LORAWAN_FHDR_FOPTS_MAX_LEN);
+-    this->fOptsUpLen = 0;
++    // RekeyInd persists until RekeyConf; other sticky answers end on a Class A downlink.
++    this->fOptsUpLen = this->getMacPayload(RADIOLIB_LORAWAN_MAC_REKEY, this->fOptsUp, this->fOptsUpLen, NULL, RADIOLIB_LORAWAN_UPLINK) == RADIOLIB_ERR_NONE ? 2 : 0;
++    this->fOptsUp[0] = RADIOLIB_LORAWAN_MAC_REKEY;
++    this->fOptsUp[1] = this->rev;
++    memset(this->fOptsUp + this->fOptsUpLen, 0, RADIOLIB_LORAWAN_FHDR_FOPTS_MAX_LEN - this->fOptsUpLen);
+@@ -2145,0 +2157,3 @@
 +  if(fPort > 0) {
 +    this->applicationDownlink(data, payLen, fPort);
 +  }
-@@ -2279,0 +2290 @@
+@@ -2245 +2259 @@
+-    if(fOptsReLen > RADIOLIB_LORAWAN_FHDR_FOPTS_MAX_LEN) {
++    if(fOptsReLen + this->fOptsUpLen > RADIOLIB_LORAWAN_FHDR_FOPTS_MAX_LEN) {
+@@ -2279,0 +2294 @@
 +      RadioLibTime_t outerToA = this->lastToA;
-@@ -2280,0 +2292 @@
+@@ -2280,0 +2296 @@
 +      this->lastToA += outerToA;
-@@ -3779 +3791 @@
+@@ -2284,2 +2300,2 @@
+-      memcpy(this->fOptsUp, fOptsRe, fOptsReLen);
+-      this->fOptsUpLen = fOptsReLen;
++      memcpy(this->fOptsUp + this->fOptsUpLen, fOptsRe, fOptsReLen);
++      this->fOptsUpLen += fOptsReLen;
+@@ -2755,4 +2771,3 @@
+-      // If the server's version is invalid the device SHALL discard the RekeyConf command and retransmit the RekeyInd in the next uplink frame
+-      if(srvVersion != this->rev) {
+-        RADIOLIB_DEBUG_PROTOCOL_PRINTLN("ERROR! Please disable your device and consult supported LoRaWAN versions");
+-        (void)LoRaWANNode::pushMacCommand(cid, &this->rev, this->fOptsUp, &this->fOptsUpLen, RADIOLIB_LORAWAN_UPLINK);
++      // Only a valid RekeyConf removes the pending indication.
++      if(srvVersion == this->rev) {
++        (void)LoRaWANNode::deleteMacCommand(cid, this->fOptsUp, &this->fOptsUpLen, RADIOLIB_LORAWAN_UPLINK);
+@@ -3105,0 +3121,24 @@
++  int16_t state = RADIOLIB_ERR_COMMAND_QUEUE_ITEM_NOT_FOUND;
++  while(i < *lenInOut && state == RADIOLIB_ERR_COMMAND_QUEUE_ITEM_NOT_FOUND) {
++    uint8_t id = inOut[i];
++    uint8_t fLen = 0;
++    int16_t status = this->getMacLen(id, &fLen, dir, true);
++    if(status != RADIOLIB_ERR_NONE) {
++      state = status;
++      i = *lenInOut;
++    } else if(*lenInOut < i + fLen) {
++      state = RADIOLIB_ERR_INVALID_CID;
++    } else if(id == cid) {
++      memmove(&inOut[i], &inOut[i + fLen], *lenInOut - i - fLen);
++      *lenInOut -= fLen;
++      memset(inOut + *lenInOut, 0, fLen);
++      state = RADIOLIB_ERR_NONE;
++    } else {
++      i += fLen;
++    }
++  }
++  return(state);
++}
++
++void LoRaWANNode::clearMacCommands(uint8_t* inOut, uint8_t* lenInOut, uint8_t dir) {
++  size_t i = 0;
+@@ -3109,49 +3148,9 @@
+-    int16_t state = this->getMacLen(id, &fLen, dir);
+-    RADIOLIB_ASSERT(state);
+-    if(*lenInOut < i + fLen) {
+-      return(RADIOLIB_ERR_INVALID_CID);
+-    }
+-
+-    // if this is the requested MAC id, 
+-    if(id == cid) {
+-      // remove it by moving the rest of the payload forward
+-      memmove(&inOut[i], &inOut[i + fLen], *lenInOut - i - fLen);
+-
+-      // set the remainder of the queue to 0
+-      memset(&inOut[i + fLen], 0, *lenInOut - i - fLen);
+-
+-      *lenInOut -= fLen;
+-      return(RADIOLIB_ERR_NONE);
+-    }
+-
+-    // move on to next MAC command
+-    i += fLen;
+-  }
+-
+-  return(RADIOLIB_ERR_COMMAND_QUEUE_ITEM_NOT_FOUND);
+-}
+-
+-void LoRaWANNode::clearMacCommands(uint8_t* inOut, uint8_t* lenInOut, uint8_t dir) {
+-  size_t i = 0;
+-  uint8_t numDeleted = 0;
+-  while(i < *lenInOut) {
+-    uint8_t id = inOut[i];
+-    uint8_t fLen = 0;
+-    // include CID byte, so if command fails, we still move one byte forward
+-    (void)this->getMacLen(id, &fLen, dir, true, &inOut[i+1]);
+-
+-    // only clear MAC command if it should not persist until a downlink is received
+-    if(!this->isPersistentMacCommand(id, dir)) {
+-      // remove it by moving the rest of the payload forward
+-      memmove(&inOut[i], &inOut[i + fLen], *lenInOut - i - fLen);
+-
+-      // set the remainder of the queue to 0
+-      memset(&inOut[i + fLen], 0, *lenInOut - i - fLen);
+-
+-      numDeleted += fLen;
+-    }
+-
+-    // move on to next MAC command
+-    i += fLen;
+-  }
+-  *lenInOut -= numDeleted;
++    if(this->getMacLen(id, &fLen, dir, true, &inOut[i+1]) != RADIOLIB_ERR_NONE || i + fLen > *lenInOut) {
++      i = *lenInOut;
++    } else if(!this->isPersistentMacCommand(id, dir)) {
++      (void)this->deleteMacCommand(id, inOut, lenInOut, dir);
++    } else {
++      i += fLen;
++    }
++  }
++  return;
+@@ -3779 +3778 @@
 -  if(mod->hal->millis() > nextUplink){
 +  if(static_cast<int32_t>(mod->hal->millis() - nextUplink) >= 0){
 --- a/src/protocols/LoRaWAN/LoRaWAN.h

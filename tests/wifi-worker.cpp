@@ -128,6 +128,17 @@ int main() {
     assert(messages.back() == "Connection request failed / retry setup");
     iteration(prefs, state);
     assert(prefs.writes == 0);
+    for (uint32_t start : {UINT32_C(0), UINT32_C(0xFFFFFC18)}) {
+        State rejected;
+        now = start;
+        WiFi.STA.linked = WiFi.STA.ip = false;
+        queue("Rejected", "password");
+        iteration(prefs, rejected);
+        assert(messages.back() == "Connection request failed / retry setup");
+        iteration(prefs, rejected);
+        assert(messages.back() == "Connection failed / tap WiFi setup");
+        assert(!rejected.saveOnConnect && prefs.writes == 0);
+    }
     WiFi.STA.accepted = true;
     queue("New", "");
     iteration(prefs, state);

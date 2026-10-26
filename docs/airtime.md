@@ -159,3 +159,35 @@ still performs fresh OTAA on reboot, with unchanged durable DevNonce handling.
 These are counter/MIC corrections, not a new pacing policy. Aggregate volatile
 pacing, unpaced internal replies and the retained reset/recursion limits above
 remain unchanged. No new airtime debt, reservation or boot delay was added.
+
+
+## Approved join retry and RekeyInd corrections — 2026-10-26
+
+The existing volatile joinRetry starts at60s, doubles after failures and now caps
+at86400000ms (24h). The single deadline takes the larger of that retry and the
+completed operation's airtime hold, then adds esp_random()%60001 (0–60s). Adding
+jitter after the maximum matters: otherwise the airtime hold could hide early
+randomness. The deadline owns the signed-span clamp, including jitter; no extra
+uptime tracker, persisted debt or pre-frame reservation was added.
+
+LoRaWAN1.1 section7/Table17 specifies the first-hour, following-ten-hour and later
+24h join budgets, plus randomized intervals. Real-library/extracted-worker tests
+simulate60days for two RNG streams using independent reference DR airtimes. They
+check both initial windows and all later24h sliding-window extrema, including
+partial-frame overlap, across millis wrap. This is simulated predicted airtime
+under the pinned EU868/default configuration, not RF measurement or entropy
+certification. Existing nonce reservation, failure stop and DR progression tests
+remain. A prolonged outage trades faster recovery for eventually daily retries.
+Reset still restarts the volatile backoff and deadline; accepted reboot-loop
+limitations remain. ClassA receive windows and immediate internal replies remain.
+
+RadioLib's MAC queue now retains its two-byte RekeyInd until valid RekeyConf.
+The indication takes FOpts capacity on application uplinks, or appears in
+FRMPayload with other commands on port0; the same frame never uses both locations
+for MAC commands. Combined responses that exceed the15-byte header allowance
+can still cause an immediate MAC-only reply (e.g.15 response bytes plus RekeyInd).
+Aggregate airtime covers that frame. There is still no per-frame application gate
+or general recursion bound. At the existing ADR limit, a missing confirmation
+again causes the prescribed session restart. Telemetry encoding/offsets and demo
+fairness are unchanged; the existing dynamic payload allowance still governs
+fragment sizes. Real network/stack/power acceptance remains unexecuted.

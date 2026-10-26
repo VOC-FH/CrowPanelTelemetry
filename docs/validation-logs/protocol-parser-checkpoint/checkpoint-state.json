@@ -1,0 +1,6 @@
+{
+  "status": "incomplete-pending-approval",
+  "retained": "deps and dependency-baseline needed to continue existing task; no extra project checkout",
+  "cleanup_condition": "remove task root after approved corrections and final evidence are saved",
+  "build_products_removed": true
+}

@@ -34,3 +34,8 @@ as fake measurements or real SD resources in the firmware.
 Saved WiFi settings from the earlier separate-key format must be entered once
 after this update. Rejected requests and credential-save failures use the existing
 status field; no screen geometry or visual styling changed.
+
+A rejected WiFi request keeps its specific error for the existing report interval.
+If the interface remains offline, later reports say Connection failed rather than
+Connecting. The existing connection timer represents a pending accepted request
+or an already-expired rejected attempt; no second pending/error state was added.

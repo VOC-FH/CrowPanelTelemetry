@@ -1,0 +1,1 @@
+PASS: real JPEGDEC: baseline pixels preserved with ignored EXIF; progressive/invalid SOF rejected under ASan/bounds

@@ -154,5 +154,83 @@
       }
     },
     "scope": "Approved counter-state/session metadata and one-blob credential storage; active-low amplifier/startup; Elecrow V1.2 bus timing. ES8311/SD-Hosted/recursive MAC retained. No UI/pin/protocol/pacing policy change."
+  },
+  "protocol_parser_checkpoint": {
+    "baseline_commit": "c86439247b2840ed94099a34bc8c72b722f0976f",
+    "lines": {
+      "application": {
+        "added": 2,
+        "removed": 2
+      },
+      "dependency_source": {
+        "added": 0,
+        "removed": 0
+      },
+      "tests": {
+        "added": 11,
+        "removed": 0
+      },
+      "tooling": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    "scope": "INCOMPLETE. WiFi rejection-status reshape and display-clock documentation only. Join/EXIF/Rekey proposals not applied; quantitative approvals pending."
+  },
+  "protocol_parser_final": {
+    "baseline_commit": "c86439247b2840ed94099a34bc8c72b722f0976f",
+    "lines": {
+      "application": {
+        "added": 8,
+        "removed": 7
+      },
+      "tests": {
+        "added": 387,
+        "removed": 30
+      },
+      "tooling": {
+        "added": 26,
+        "removed": 2
+      },
+      "dependency_source": {
+        "added": 60,
+        "removed": 199
+      }
+    },
+    "files": {
+      "Workers.cpp": {
+        "added": 8,
+        "removed": 7
+      },
+      "tests/jpeg.cpp": {
+        "added": 37,
+        "removed": 17
+      },
+      "tests/radio.cpp": {
+        "added": 339,
+        "removed": 13
+      },
+      "tests/wifi-worker.cpp": {
+        "added": 11,
+        "removed": 0
+      },
+      "tools/test_jpeg.py": {
+        "added": 26,
+        "removed": 2
+      },
+      "RadioLib/src/protocols/LoRaWAN/LoRaWAN.h": {
+        "added": 0,
+        "removed": 0
+      },
+      "RadioLib/src/protocols/LoRaWAN/LoRaWAN.cpp": {
+        "added": 60,
+        "removed": 73
+      },
+      "JPEGDEC/src/jpeg.inl": {
+        "added": 0,
+        "removed": 126
+      }
+    },
+    "scope": "Cumulative final five-fix task; supersedes, does not add to, protocol_parser_checkpoint. Actual dependency source lines, excluding patch context."
   }
 }

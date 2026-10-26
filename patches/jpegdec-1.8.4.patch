@@ -1,9 +1,134 @@
 --- a/src/jpeg.inl
 +++ b/src/jpeg.inl
-@@ -1677,6 +1677,13 @@
-                 break;
-             case 0xffc0: // SOFx - start of frame (baseline)
-             case 0xffc2: // (progressive)
+@@ -1276,101 +1275,0 @@
+-//
+-// TIFFSHORT
+-// read a 16-bit unsigned integer from the given pointer
+-// and interpret the data as big endian (Motorola) or little endian (Intel)
+-//
+-static uint16_t TIFFSHORT(unsigned char *p, int bMotorola)
+-{
+-    unsigned short s;
+-
+-    if (bMotorola)
+-        s = *p * 0x100 + *(p+1); // big endian (AKA Motorola byte order)
+-    else
+-        s = *p + *(p+1)*0x100; // little endian (AKA Intel byte order)
+-    return s;
+-} /* TIFFSHORT() */
+-//
+-// TIFFLONG
+-// read a 32-bit unsigned integer from the given pointer
+-// and interpret the data as big endian (Motorola) or little endian (Intel)
+-//
+-static uint32_t TIFFLONG(unsigned char *p, int bMotorola)
+-{
+-    uint32_t l;
+-
+-    if (bMotorola)
+-        l = *p * 0x1000000 + *(p+1) * 0x10000 + *(p+2) * 0x100 + *(p+3); // big endian
+-    else
+-        l = *p + *(p+1) * 0x100 + *(p+2) * 0x10000 + *(p+3) * 0x1000000; // little endian
+-    return l;
+-} /* TIFFLONG() */
+-//
+-// TIFFVALUE
+-// read an integer value encoded in a TIFF TAG (12-byte structure)
+-// and interpret the data as big endian (Motorola) or little endian (Intel)
+-//
+-static int TIFFVALUE(unsigned char *p, int bMotorola)
+-{
+-    int i, iType;
+-    
+-    iType = TIFFSHORT(p+2, bMotorola);
+-    /* If pointer to a list of items, must be a long */
+-    if (TIFFSHORT(p+4, bMotorola) > 1)
+-    {
+-        iType = 4;
+-    }
+-    switch (iType)
+-    {
+-        case 3: /* Short */
+-            i = TIFFSHORT(p+8, bMotorola);
+-            break;
+-        case 4: /* Long */
+-        case 7: // undefined (treat it as a long since it's usually a multibyte buffer)
+-            i = TIFFLONG(p+8, bMotorola);
+-            break;
+-        case 6: // signed byte
+-            i = (signed char)p[8];
+-            break;
+-        case 2: /* ASCII */
+-        case 5: /* Unsigned Rational */
+-        case 10: /* Signed Rational */
+-            i = TIFFLONG(p+8, bMotorola);
+-            break;
+-        default: /* to suppress compiler warning */
+-            i = 0;
+-            break;
+-    }
+-    return i;
+-    
+-} /* TIFFVALUE() */
+-static void GetTIFFInfo(JPEGIMAGE *pPage, int bMotorola, int iOffset)
+-{
+-    int iTag, iTagCount, i;
+-    uint8_t *cBuf = pPage->ucFileBuf;
+-    
+-    iTagCount = TIFFSHORT(&cBuf[iOffset], bMotorola);  /* Number of tags in this dir */
+-    if (iTagCount < 1 || iTagCount > 256) // invalid tag count
+-        return; /* Bad header info */
+-    /*--- Search the TIFF tags ---*/
+-    for (i=0; i<iTagCount; i++)
+-    {
+-        unsigned char *p = &cBuf[iOffset + (i*12) +2];
+-        iTag = TIFFSHORT(p, bMotorola);  /* current tag value */
+-        if (iTag == 274) // orientation tag
+-        {
+-            pPage->ucOrientation = TIFFVALUE(p, bMotorola);
+-        }
+-        else if (iTag == 256) // width of thumbnail
+-        {
+-            pPage->iThumbWidth = TIFFVALUE(p, bMotorola);
+-        }
+-        else if (iTag == 257) // height of thumbnail
+-        {
+-            pPage->iThumbHeight = TIFFVALUE(p, bMotorola);
+-        }
+-        else if (iTag == 513) // offset to JPEG data
+-        {
+-            pPage->iThumbData = TIFFVALUE(p, bMotorola);
+-        }
+-    }
+-} /* GetTIFFInfo() */
+-
+@@ -1653,25 +1551,0 @@
+-            case 0xffe1: // App1 (EXIF?)
+-                if (s[iOffset+2] == 'E' && s[iOffset+3] == 'x' && (s[iOffset+8] == 'M' || s[iOffset+8] == 'I')) // the EXIF data we want
+-                {
+-                    int bMotorola, IFD, iTagCount;
+-                    pPage->iEXIF = iFilePos - iBytesRead + iOffset + 8; // start of TIFF file
+-                    // Get the orientation value (if present)
+-                    bMotorola = (s[iOffset+8] == 'M');
+-                    IFD = TIFFLONG(&s[iOffset+12], bMotorola);
+-                    iTagCount = TIFFSHORT(&s[iOffset+16], bMotorola);
+-                    GetTIFFInfo(pPage, bMotorola, IFD+iOffset+8);
+-                    // The second IFD defines the thumbnail (if present)
+-                    if (iTagCount >= 1 && iTagCount < 32) // valid number of tags for EXIF data 'page'
+-                    {
+-                       // point to next IFD
+-                        IFD += (12 * iTagCount) + 2;
+-                        IFD = TIFFLONG(&s[IFD + iOffset + 8], bMotorola);
+-                        if (IFD != 0 && IFD + iOffset + 8 < JPEG_FILE_BUF_SIZE) // Thumbnail present?
+-                        {
+-                            pPage->ucHasThumb = 1;
+-                            GetTIFFInfo(pPage, bMotorola, IFD+iOffset+8); // info for second 'page' of TIFF
+-                            pPage->iThumbData += iOffset + 8; // absolute offset in the file
+-                        }
+-                    }
+-                }
+-                break;
+@@ -1679,0 +1554,7 @@
 +                if (usLen < 8 || iOffset + usLen > iBytesRead ||
 +                    s[iOffset+7] == 0 || s[iOffset+7] > MAX_COMPS_IN_SCAN ||
 +                    usLen != 8 + 3 * s[iOffset+7])
@@ -11,6 +136,3 @@
 +                    pPage->iError = JPEG_INVALID_FILE;
 +                    return 0;
 +                }
-                 pPage->ucMode = (uint8_t)usMarker;
-                 pPage->ucBpp = s[iOffset+2]; // bits per sample
-                 pPage->iCropX = pPage->iCropY = 0; // initialize crop rectangle to full image size

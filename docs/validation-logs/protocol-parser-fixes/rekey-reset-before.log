@@ -1,0 +1,10 @@
+fresh rc=0 commands=0,0,11,1,
+radio: /home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:865: void testRekeyRestoreAndLimit(): Assertion `fresh == 0 && commands == indication' failed.
+Traceback (most recent call last):
+  File "/home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tools/test_radio.py", line 48, in <module>
+    subprocess.run([str(build/'radio')], check=True, timeout=30, cwd=build)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/tmp/codex/build/CrowPanelTelemetry/protocol-parser-fixes/rekey-after/radio']' died with <Signals.SIGABRT: 6>.

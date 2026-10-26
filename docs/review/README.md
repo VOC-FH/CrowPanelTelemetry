@@ -153,3 +153,21 @@ status/timing and RekeyInd concerns. The caller's qualifications are separate fr
 its raw response, particularly the unproven same-SSID race and physical fault
 consequences. Findings are not approval to add fixes. UI redesign was excluded;
 retained policies were preserved. No flashing/RF/TTN operation or archive change.
+
+
+The user then requested the five selected corrections. The
+[protocol/parser checkpoint and quantified proposals](protocol-parser-fix-proposals.md)
+records the completed non-growing WiFi-status reshape and display documentation
+correction, with join/EXIF/Rekey changes still unapplied pending the user's required
+scope/growth decisions. This is an incomplete local checkpoint; the raw review
+and prior publication records are unchanged. No additional push is authorized.
+
+
+
+The user then explicitly approved all three quantified proposals. The
+[completed five-correction dispositions](protocol-parser-fix-dispositions.md)
+record the existing-deadline join reshape,126-line EXIF reduction and MAC-queue
+lifetime correction (including reset and erase/prune defects found by regression).
+Final host/patch/three-build evidence is recorded separately from the initial
+checkpoint. No new application rekey state, pacing authority, UI redesign,
+publication, archive or physical/RF operation was introduced.

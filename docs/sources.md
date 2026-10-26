@@ -120,7 +120,7 @@ and hardware prerequisites are distinguished in review/rereview-fix-status.md.
   The pinned panel schematic connects GPIO30 through R147 to U4.1; no inversion
   was found in that documented path. Physical population remains unverified.
 - [Elecrow V1.2 Lesson07 board configuration at cfcbfdbb](https://github.com/Elecrow-RD/CrowPanel-Advanced-10.1inch-ESP32-P4-HMI-AI-Display-1024x600-IPS-Touch-Screen/blob/cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e/example/V1.2/Arduino_Code/Lesson07-Turn_on_the_screen/board_config.h#L30)
-  gives51MHz and H70/160/160,V10/23/21 for1024×600. Arduino_GFX1.6.9
+  requests51MHz and H70/160/160,V10/23/21 for1024×600. Arduino_GFX1.6.9
   `Arduino_ESP32DSIPanel.cpp:7–12,65–78` maps these constructor arguments directly
   to DPI timing. Aligning those numbers does not verify display operation.
 - [LoRaWAN1.1 section4.4.2, ACK MIC input](https://read.uberflip.com/i/1428365-lorawan-specification-v1-1/26)
@@ -147,3 +147,33 @@ and hardware prerequisites are distinguished in review/rereview-fix-status.md.
 
 New source hashes are in correctness-source-hashes.json; final traces and test
 limits are in review/accepted-review-fixes.md. All dependency versions remain pinned.
+
+
+The requested pixel clock is distinct from the derived hardware setting. Exact
+IDFv5.5.5 `components/hal/mipi_dsi_hal.c:266–273` rounds the divider to the nearest
+integer; `components/esp_lcd/dsi/esp_lcd_panel_dpi.c:265–282` applies it. Both
+installed P4 SDK `soc/clk_tree_defs.h:433` select PLL_F240M by default, so the
+51MHz request yields nominal240/round(240/51)=48MHz. This is source-derived;
+physical frequency and image stability have not been measured. No display
+constructor, controller initialization sequence or UI visual was changed here.
+
+
+## Approved protocol/parser source corrections
+
+- [LoRaWAN1.1 specification](https://resources.lora-alliance.org/technical-specifications/lorawan-specification-v1-1),
+  section7/Table17 (printed page65): join-request aggregate budgets and random
+  retransmission intervals. Section5.10 (printed page42): RekeyInd persists until
+  valid RekeyConf, with ADR-limit fallback. The previous expert-review source
+  provenance records the official PDF hash; new tests exercise current source,
+  rather than relying on the review's conclusions.
+- RadioLib7.8.1's existing queue remains authoritative. The patch now covers
+  sendReceive/composeUplink port0 packaging, parseDownlink queue retention/append,
+  execMacCommand's valid confirmation, clearSession's paired buffer/length reset,
+  and shared queue deletion/pruning. No application-side handshake state or new
+  session metadata was added. See [protocol-parser-fix-dispositions.md](review/protocol-parser-fix-dispositions.md) for current
+  exact line references and before/after regressions.
+- JPEGDEC1.8.4's APP1 EXIF interpretation and its four private TIFF helpers are
+  deleted from this isolated profile. The marker walker skips APP1 like other
+  unused metadata. This is the approved reduction, not an added app-side parser
+  or a general-purpose EXIF fix for other JPEGDEC applications. SOF bounds and
+  progressive admission tests remain; exact hashes/diffs are authoritative in patches/.

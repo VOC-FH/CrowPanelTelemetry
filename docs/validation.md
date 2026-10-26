@@ -523,3 +523,146 @@ Work remains uncommitted on main@1961cfa; no push performed. Assembly is conditi
 on physical identification/voltage checks. Bench flashing requires separate
 authorization and those prerequisites. Unattended TTN remains NO-GO until retained
 risks have measured acceptable limits or fixes and the full checklist passes.
+
+
+## Protocol/parser correction checkpoint — 2026-10-26 (incomplete)
+
+Baseline/main HEAD: `c86439247b2840ed94099a34bc8c72b722f0976f`; initially clean.
+The user requested five fixes after the latest review. WiFi rejection feedback
+and requested-versus-derived display-clock documentation are corrected. Join,
+JPEG EXIF and RekeyInd changes are not applied pending the quantified growth/
+patch-scope choices in [protocol-parser-fix-proposals.md](review/protocol-parser-fix-proposals.md).
+This is not completion or a go-ahead for hardware/RF/unattended operation.
+
+Temporary task rootT: `/tmp/codex/build/CrowPanelTelemetry/protocol-parser-fixes`.
+Six isolated exact dependency archives matched the previous pinned archive hashes;
+current RadioLib/JPEG patches applied and hashes verified. Core3.3.12/IDF5.5.5,
+CLI1.5.1 and all library versions unchanged; installed sources are read-only.
+No project source copy/checkout, branch change, install, archive, commit or push.
+
+Baseline and current full host suites pass; baseline/current format checks pass.
+The new offline rejected-request test failed before and passes after the reshape,
+including uint32 rollover. No assertion weakened. Current enabled-prev3 compile
+passes: flash1,209,284/3,145,728; static RAM39,436/327,680. No blank-prev3/postv3
+build is claimed for this partial checkpoint. Target clang-tidy was attempted on
+Workers.cpp using that build's compilation database; it again exits1 for unsupported
+ESP xesppie/GCC flags and missing target cmath. No analysis settings weakened.
+
+Commands (logs in validation-logs/protocol-parser-checkpoint/):
+
+```sh
+RADIOLIB_DIR="$T/deps/RadioLib" make test BUILD="$T/baseline-tests"
+make format-check
+BUILD="$T/wifi-before" python3 tools/test_wifi_worker.py
+BUILD="$T/wifi-after" python3 tools/test_wifi_worker.py
+RADIOLIB_DIR="$T/deps/RadioLib" make test BUILD="$T/current-tests"
+TMPDIR="$T/compile-tmp" ARDUINO_BUILD_CACHE_PATH="$T/compile-cache" \
+  /tmp/codex/build/CrowPanelTelemetry/rereview-fix/cli/arduino-cli compile --verbose --jobs 3 \
+  --fqbn 'esp32:esp32:esp32p4:FlashSize=16M,PSRAM=enabled,PartitionScheme=app3M_fat9M_16MB,ChipVariant=prev3' \
+  --libraries "$T/deps" --build-path "$T/partial-enabled-prev3" \
+  --build-property 'compiler.cpp.extra_flags=-DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f' .
+clang-tidy -p "$T/partial-enabled-prev3" "$T/partial-enabled-prev3/sketch/Workers.cpp"
+```
+
+Application physical delta2 added/2 removed; tests11 added/0 removed. No dependency
+production change and no build/test-tooling change yet. Patch proposals are prose,
+not applied code. Protected hashes and canonical build copies match. Evidence is
+saved, whileT/deps is retained for continuing the pending approvals. Large temporary
+compile products/caches are removed after evidence is copied; there is no persistent
+build. No physical test or ESP32 emulation, flashing, RF or TTN operation occurred.
+
+## Protocol/parser corrections — final 2026-10-26
+
+This final revision supersedes the incomplete checkpoint above. All five selected
+corrections are implemented following explicit approval of P1–P3. See the
+[dispositions](review/protocol-parser-fix-dispositions.md) for source traces,
+invariants, scope, individual tests and approved trade-offs. Canonical main HEAD
+remains `c86439247b2840ed94099a34bc8c72b722f0976f`; changes are uncommitted.
+Remote/default/current: VOC-FH/CrowPanelTelemetry, main/main; locally recorded
+origin/main is at HEAD (0 ahead/0 behind). No fetch, branch, commit or push.
+
+Final evidence: [validation-logs/protocol-parser-fixes](validation-logs/protocol-parser-fixes/).
+Baseline suite and format passed. New WiFi, join-ceiling and RekeyInd regressions
+failed against baseline implementations; the old EXIF reader also produced a host
+ASan fault. All final independent checks pass without weakened assertions. Real
+pinned libraries run against host transport stubs/extracted production decisions;
+this is not ESP32 emulation or a physical operation test. The join simulation
+covers 60 days and sliding-day airtime windows with two seeded RNG streams.
+Target RNG entropy and 32-bit RadioLib elapsed loops are not thereby proven.
+
+Versions unchanged: Arduino CLI1.5.1, esp32 core3.3.12/IDF5.5.5; RadioLib7.8.1,
+JPEGDEC1.8.4, INA2260.6.6, TinyGPSPlusv1.0.3a, Arduino_GFX1.6.9,
+arduino-audio-driver0.3.1. Six archive hashes matched the exact source provenance
+in validation-logs/accepted-review-fixes/dependencies.json. Fresh patch apply,
+idempotence and modified-source refusal pass for both updated dependency patches.
+The manifests retain pristine before hashes and final after hashes. Isolated
+patched source hashes are saved in this task's evidence. No installed source or
+library was modified. Exact clock/RNG source hashes were added to
+correctness-source-hashes.json; no dependency version changed.
+
+Commands (T is /tmp/codex/build/CrowPanelTelemetry/protocol-parser-fixes):
+
+```sh
+RADIOLIB_DIR="$T/deps/RadioLib" make test BUILD="$T/final-tests"
+make format-check
+python3 "$T/final-builds.py"
+clang-tidy -p "$T/enabled-prev3" "$T/enabled-prev3/sketch/Workers.cpp"
+python3 tools/check_wiring.py /tmp/codex/build/CrowPanelTelemetry/rereview-fix/panel.sch /tmp/codex/build/CrowPanelTelemetry/rereview-fix/panel.brd
+python3 "$T/final-audit.py"
+```
+
+The evidence includes final-builds.py and final-build-results.json with every exact
+CLI invocation. All use --libraries "$T/deps", separate build/TMPDIR/cache paths,
+and FQBN esp32:esp32:esp32p4 with FlashSize=16M, PSRAM=enabled,
+PartitionScheme=app3M_fat9M_16MB. Enabled variants add only dummy overrides
+`-DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f`.
+All six selected external libraries resolve under task deps; bundled libraries
+resolve under core3.3.12. Final production bytes match all three build inputs
+(after removing Arduino's initial #line directive).
+
+| Configuration | Result | Flash / 3,145,728 bytes | Static RAM / 327,680 bytes |
+| --- | --- | ---: | ---: |
+| blank prev3 | PASS | 1,201,852 | 39,364 |
+| dummy enabled prev3 | PASS | 1,208,846 | 39,436 |
+| dummy enabled postv3 | PASS | 1,210,416 | 39,436 |
+
+Full host test/format/wiring/audit checks exit0. Target clang-tidy exits1:
+installed LLVM rejects xesppie, -fno-tree-switch-conversion,
+-fstrict-volatile-bitfields and cannot locate target cmath. No settings weakened;
+no clean target static-analysis result is claimed. git diff --check reports only
+four literal deleted vendor whitespace lines inside unified patch files; these
+must remain exact for pristine hash-checked application. No project-source
+whitespace error was reported. TinyGPSPlus emits its existing fallthrough warning.
+
+Enabled ELF symbols include the application downlink callback; no beforeUplink,
+afterUplink or SDMMCFS begin/end symbols. No marker macro or patch-branding comment.
+Protected-hash audit passes for Config/pins/J7, Application.cpp, Ui.cpp, protocol/
+reference packet, source photo, wiring/UI previews, canonical formatter settings,
+raw historical reviews and the historical delivery ZIP. SVG-embedded photo bytes
+match the source photo. Wiring check passes with unchanged J7 routing. Generators
+and visual assets were not changed or regenerated because their inputs are unchanged.
+
+| Physical lines relative to baseline | Added | Removed |
+| --- | ---: | ---: |
+| Application production | 8 | 7 |
+| Patched dependency source | 60 | 199 |
+| Tests | 387 | 30 |
+| Build/test tooling | 26 | 2 |
+
+The approved net +1 application line supplies the RNG include; existing retry and
+deadline state absorb the policy. JPEG deletes126 lines; RadioLib adds60/removes73,
+including the queue's paired buffer/length reset and shared deletion authority.
+The final entry in change-accounting.json is cumulative and supersedes the partial
+entry. Patch hunk/context text is excluded. Files/counts are recorded in
+final-accounting.json; protected hashes in final-audit.json.
+
+Evidence was copied before removing this task's temporary root, including its
+isolated dependencies, build trees and caches. No persistent build, project copy,
+checkout, global install or new archive was created. Pre-existing rereview-fix and
+self-review evidence/source collections were left untouched. SHA256SUMS.json was
+regenerated in its existing sorted scope, excluding itself and Git/ignored files.
+All changes remain local on main; no commit or push performed.
+
+Assembly is conditional on physical prerequisite checks. Bench flashing needs
+separate authorization. Unattended TTN stays NO-GO until the retained risks and
+full hardware checklist (including 24 h run) pass. No physical/RF tests were run.

@@ -1,0 +1,2 @@
+PASS: production WiFi association/result, atomic open/protected credentials, malformed load and NVS failures
+PASS: verbatim WiFi worker connection and credential persistence boundaries

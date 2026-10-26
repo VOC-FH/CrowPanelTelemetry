@@ -1,0 +1,22 @@
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==1266109==ERROR: AddressSanitizer: SEGV on unknown address 0x7b37993f1ab4 (pc 0x55eae74734e7 bp 0x000000000000 sp 0x7fff84da70f0 T0)
+==1266109==The signal is caused by a READ memory access.
+    #0 0x55eae74734e7 in TIFFSHORT /tmp/codex/build/CrowPanelTelemetry/protocol-parser-fixes/deps/JPEGDEC/src/jpeg.inl:1288
+    #1 0x55eae747377c in GetTIFFInfo /tmp/codex/build/CrowPanelTelemetry/protocol-parser-fixes/deps/JPEGDEC/src/jpeg.inl:1350
+    #2 0x55eae7478455 in JPEGParseInfo /tmp/codex/build/CrowPanelTelemetry/protocol-parser-fixes/deps/JPEGDEC/src/jpeg.inl:1662
+    #3 0x55eae7487fb0 in JPEGInit /tmp/codex/build/CrowPanelTelemetry/protocol-parser-fixes/deps/JPEGDEC/src/jpeg.inl:832
+    #4 0x55eae7487fb0 in JPEGDEC::openRAM(unsigned char*, int, int (*)(jpeg_draw_tag*)) /tmp/codex/build/CrowPanelTelemetry/protocol-parser-fixes/deps/JPEGDEC/src/JPEGDEC.cpp:76
+    #5 0x55eae7472b80 in main /home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/jpeg.cpp:28
+    #6 0x7f371ac33fb9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:59
+    #7 0x7f371ac340d6 in __libc_start_main_impl ../csu/libc-start.c:360
+    #8 0x55eae74713a0 in _start (/tmp/codex/build/CrowPanelTelemetry/protocol-parser-fixes/jpeg-before/jpeg+0x53a0) (BuildId: d3eb0f23ddd032fb8bd38b8d55517d51d3b4a7f3)
+
+==1266109==Register values:
+rax = 0x0000000000000000  rbx = 0x0000000000000004  rcx = 0x0000000000000001  rdx = 0x0000000000000004  
+rdi = 0x00007b37993f1ab4  rsi = 0x0000000000000000  rbp = 0x0000000000000000  rsp = 0x00007fff84da70f0  
+ r8 = 0x0000000000000000   r9 = 0x00000f67632763a8  r10 = 0x00000f6763276357  r11 = 0x00000f6763276357  
+r12 = 0x00007b37193f04a0  r13 = 0x000000007ffffffc  r14 = 0x00007b37193f04a0  r15 = 0x0000000000000002  
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV /tmp/codex/build/CrowPanelTelemetry/protocol-parser-fixes/deps/JPEGDEC/src/jpeg.inl:1288 in TIFFSHORT
+==1266109==ABORTING

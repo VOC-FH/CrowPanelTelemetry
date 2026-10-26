@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <dirent.h>
+#include <esp_random.h>
 #include <sys/stat.h>
 #include <vector>
 
@@ -41,9 +42,9 @@ public:
     bool canTransmit() const {
         return static_cast<int32_t>(millis() - allowedAt) >= 0;
     }
-    void defer(uint32_t ms) {
+    void defer(uint64_t ms, uint32_t jitter = 0) {
         uint32_t now = millis();
-        allowedAt = now + std::max(ms, static_cast<int32_t>(now - allowedAt) >= 0 ? 0U : allowedAt - now);
+        allowedAt = now + std::min<uint64_t>(INT32_MAX, std::max<uint64_t>(ms, std::max<int32_t>(allowedAt - now, 0)) + jitter);
     }
     int16_t activateOTAA(LoRaWANJoinEvent_t* event) override {
         int16_t rc = RADIOLIB_ERR_UNKNOWN;
@@ -76,7 +77,7 @@ public:
         if (TTN_AIRTIME_MS_PER_HOUR > 0) {
             allowance = std::min<uint32_t>(allowance, TTN_AIRTIME_MS_PER_HOUR);
         }
-        defer(std::min<uint64_t>(INT32_MAX, static_cast<uint64_t>(airtimeDelay(toa, allowance)) + toa));
+        defer(static_cast<uint64_t>(airtimeDelay(toa, allowance)) + toa);
     }
 
 protected:
@@ -166,11 +167,11 @@ static void radioTask(void*) {
                     joinRetry = 60000;
                     post(EventKind::Radio, "Joined / Class A / EU868 / ADR enabled");
                 } else {
-                    node.defer(joinRetry);
+                    node.defer(joinRetry, esp_random() % 60001U);
                     char text[120];
                     snprintf(text, sizeof(text), "Join failed (%d), or server is not 1.1; retry paced", rc);
                     post(EventKind::Radio, text);
-                    joinRetry = std::min<uint32_t>(joinRetry * 2, 3600000);
+                    joinRetry = std::min<uint32_t>(joinRetry * 2, 86400000);
                     node.clearSession();
                 }
             }
@@ -256,10 +257,10 @@ static void wifiTask(void*) {
     for (;;) {
         if (xQueueReceive(wifiCommands, &command, pdMS_TO_TICKS(100)) == pdTRUE && online) {
             saveOnConnect = WiFi.STA.connect(command.ssid, command.password);
-            connectAt = millis();
+            connectAt = millis() - (saveOnConnect ? 0 : 20001);
             if (!saveOnConnect) {
                 post(EventKind::Wifi, "Connection request failed / retry setup");
-                reportAt = connectAt;
+                reportAt = millis();
             }
         }
         if (millis() - reportAt >= 2000) {

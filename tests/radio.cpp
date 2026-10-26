@@ -14,6 +14,12 @@ static uint64_t clockMs = 0;
 static uint32_t millis() {
     return static_cast<uint32_t>(clockMs);
 }
+static uint32_t randomState = 1, randomCalls = 0;
+static uint32_t esp_random() {
+    ++randomCalls;
+    randomState = randomState * 1664525U + 1013904223U;
+    return randomState;
+}
 struct Preferences {
     bool failBytes = false, failOpen = false, failBoot = false;
     bool begin(const char*, bool) {
@@ -274,22 +280,39 @@ public:
         processAES(&frame[port + 1], payload.size(), appSKey, payload.data(), devAddr, counter, 0, 0, true);
         return payload;
     }
-    std::vector<uint8_t> gatewayFrame(
-        uint32_t counter, const std::string& payload, uint8_t requests, bool rekey = false, bool network = false, bool confirmed = false) {
-        assert(!network || payload.empty());
-        size_t length = (network ? 12 : 13) + requests + payload.size();
+    std::vector<uint8_t> gatewayFrame(uint32_t counter,
+                                      const std::string& payload,
+                                      uint8_t requests,
+                                      bool rekey = false,
+                                      bool network = false,
+                                      bool confirmed = false,
+                                      const std::vector<uint8_t>& commands = {},
+                                      bool macPayload = false) {
+        assert((!network && !macPayload) || payload.empty());
+        size_t length = (network && !macPayload ? 12 : 13) + requests + payload.size();
         std::vector<uint8_t> frame(16 + length, 0);
         frame[16] = confirmed ? 0xA0 : 0x60;
         hton<uint32_t>(&frame[17], devAddr);
-        frame[21] = requests;
+        frame[21] = macPayload ? 0 : requests;
         hton<uint16_t>(&frame[22], counter);
-        std::vector<uint8_t> opts(requests, RADIOLIB_LORAWAN_MAC_DEV_STATUS);
+        std::vector<uint8_t> opts = commands.empty() ? std::vector<uint8_t>(requests, RADIOLIB_LORAWAN_MAC_DEV_STATUS) : commands;
+        assert(opts.size() == requests);
         if (rekey) {
             assert(requests == 2);
             opts = {RADIOLIB_LORAWAN_MAC_REKEY, 1};
         }
-        processAES(opts.data(), opts.size(), nwkSEncKey, &frame[24], devAddr, counter, 1, network ? 1 : 2, true);
-        if (!network) {
+        processAES(opts.data(),
+                   opts.size(),
+                   nwkSEncKey,
+                   &frame[macPayload ? 25 : 24],
+                   devAddr,
+                   counter,
+                   1,
+                   macPayload ? 0 : (network ? 1 : 2),
+                   true);
+        if (macPayload) {
+            frame[24] = 0;
+        } else if (!network) {
             frame[24 + requests] = 10;
             processAES(reinterpret_cast<const uint8_t*>(payload.data()),
                        payload.size(),
@@ -309,6 +332,38 @@ public:
         uint32_t mic = generateMIC(frame.data(), frame.size() - 4, sNwkSIntKey);
         hton<uint32_t>(&frame[frame.size() - 4], mic);
         return std::vector<uint8_t>(frame.begin() + 16, frame.end());
+    }
+    std::vector<uint8_t> uplinkCommands(const std::vector<uint8_t>& frame) {
+        uint8_t options = frame[5] & 15, port = frame[8 + options];
+        size_t length = port == 0 ? frame.size() - 13 : options;
+        assert(port != 0 || options == 0); // MAC commands cannot occupy both FOpts and port0.
+        std::vector<uint8_t> commands(length);
+        processAES(frame.data() + (port == 0 ? 9 : 8),
+                   length,
+                   nwkSEncKey,
+                   commands.data(),
+                   devAddr,
+                   ntoh<uint16_t>(&frame[6]),
+                   0,
+                   port == 0 ? 0 : 1,
+                   true);
+        return commands;
+    }
+    int16_t eraseCommand(std::vector<uint8_t>& commands, uint8_t cid) {
+        uint8_t length = commands.size();
+        int16_t rc = deleteMacCommand(cid, commands.data(), &length, RADIOLIB_LORAWAN_UPLINK);
+        if (rc == 0) {
+            for (size_t i = length; i < commands.size(); ++i) {
+                assert(commands[i] == 0);
+            }
+        }
+        commands.resize(length);
+        return rc;
+    }
+    void pruneCommands(std::vector<uint8_t>& commands) {
+        uint8_t length = commands.size();
+        clearMacCommands(commands.data(), &length, RADIOLIB_LORAWAN_UPLINK);
+        commands.resize(length);
     }
     bool uplinkAcknowledges(const std::vector<uint8_t>& frame, uint16_t downCounter) {
         std::vector<uint8_t> micInput(16 + frame.size() - 4, 0);
@@ -584,12 +639,277 @@ static void testJoinLoop() {
         assert(phy.txSpreadingFactors.back() == 7 + n);
         assert(node.getLastToA() == referenceToA[n][23] / 1000);
         assert(!node.canTransmit());
-        assert(retry == std::min<uint32_t>(60000U << (n + 1), 3600000));
+        assert(retry == std::min<uint32_t>(60000U << (n + 1), 86400000));
     }
     store.failBytes = true;
     clockMs += 10000000;
     joinIteration(node, ready, retry);
     assert(!ready && phy.sent.size() == 6);
+}
+static std::vector<uint64_t> joinRetryTrace(uint32_t seed) {
+    clockMs = 0;
+    randomState = seed;
+    randomCalls = 0;
+    Preferences store;
+    TestPhy phy;
+    phy.realisticAirtime = true;
+    ProbeNode node(&phy, store);
+    initialize(node);
+    bool ready = true;
+    uint32_t retry = 60000;
+    constexpr uint64_t Hour = 3600000, Day = 24 * Hour, Horizon = 60 * Day;
+    std::vector<uint64_t> airtimes, waits;
+    while (clockMs < Horizon) {
+        uint32_t previousRetry = retry;
+        joinIteration(node, ready, retry);
+        assert(ready && phy.sent.size() == airtimes.size() + 1);
+        uint64_t toaUs = referenceToA[phy.txSpreadingFactors.back() - 7][23];
+        airtimes.push_back(toaUs);
+        uint64_t end = clockMs, low = 0, high = Day + 60000;
+        while (low < high) {
+            uint64_t middle = (low + high) / 2;
+            clockMs = end + middle;
+            if (node.canTransmit()) {
+                high = middle;
+            } else {
+                low = middle + 1;
+            }
+        }
+        clockMs = end + low;
+        assert(node.canTransmit());
+        uint64_t base = std::max<uint64_t>(previousRetry, airtimeDelay(toaUs / 1000, 1250) + toaUs / 1000);
+        assert(low >= base && low <= base + 60000);
+        waits.push_back(low);
+    }
+    auto transmitted = [&](uint64_t begin, uint64_t length) {
+        uint64_t total = 0, end = begin + length;
+        for (size_t n = 0; n < airtimes.size(); ++n) {
+            uint64_t start = phy.starts[n] * 1000;
+            if (start < end && start + airtimes[n] > begin) {
+                total += std::min(start + airtimes[n], end) - std::max(start, begin);
+            }
+        }
+        return total;
+    };
+    constexpr uint64_t HourUs = Hour * 1000, DayUs = Day * 1000;
+    assert(transmitted(0, HourUs) < 36000000);
+    assert(transmitted(HourUs, 10 * HourUs) < 36000000);
+    assert(transmitted(11 * HourUs, DayUs) < 8700000);
+    for (size_t n = 0; n < phy.starts.size(); ++n) {
+        uint64_t start = phy.starts[n] * 1000, end = start + airtimes[n];
+        for (uint64_t candidate : {start, end, start >= DayUs ? start - DayUs : UINT64_C(0), end >= DayUs ? end - DayUs : UINT64_C(0)}) {
+            if (candidate >= 11 * HourUs && candidate + DayUs <= Horizon * 1000) {
+                assert(transmitted(candidate, DayUs) < 8700000);
+            }
+        }
+    }
+    assert(randomCalls == phy.sent.size() && retry == Day);
+    assert(phy.starts.back() > UINT32_MAX); // Actual retry decisions crossed the target millis wrap.
+    return waits;
+}
+static void testRekeyQueueOperations() {
+    Preferences store;
+    TestPhy phy;
+    ProbeNode node(&phy, store);
+    const std::vector<uint8_t> queue{
+        RADIOLIB_LORAWAN_MAC_DEV_STATUS, 1, 2, RADIOLIB_LORAWAN_MAC_REKEY, 1, RADIOLIB_LORAWAN_MAC_RX_TIMING_SETUP};
+    for (uint8_t cid : {RADIOLIB_LORAWAN_MAC_DEV_STATUS, RADIOLIB_LORAWAN_MAC_REKEY, RADIOLIB_LORAWAN_MAC_RX_TIMING_SETUP}) {
+        auto commands = queue;
+        assert(node.eraseCommand(commands, cid) == 0);
+        std::vector<uint8_t> expected;
+        if (cid != RADIOLIB_LORAWAN_MAC_DEV_STATUS) {
+            expected.insert(expected.end(), {RADIOLIB_LORAWAN_MAC_DEV_STATUS, 1, 2});
+        }
+        if (cid != RADIOLIB_LORAWAN_MAC_REKEY) {
+            expected.insert(expected.end(), {RADIOLIB_LORAWAN_MAC_REKEY, 1});
+        }
+        if (cid != RADIOLIB_LORAWAN_MAC_RX_TIMING_SETUP) {
+            expected.push_back(RADIOLIB_LORAWAN_MAC_RX_TIMING_SETUP);
+        }
+        assert(commands == expected);
+    }
+    auto missing = queue;
+    assert(node.eraseCommand(missing, 0xFF) == RADIOLIB_ERR_COMMAND_QUEUE_ITEM_NOT_FOUND && missing == queue);
+    std::vector<uint8_t> malformed{RADIOLIB_LORAWAN_MAC_DEV_STATUS, 1};
+    assert(node.eraseCommand(malformed, RADIOLIB_LORAWAN_MAC_DEV_STATUS) == RADIOLIB_ERR_INVALID_CID && malformed.size() == 2);
+    std::vector<uint8_t> repeated{
+        RADIOLIB_LORAWAN_MAC_DEV_STATUS, 1, 2, RADIOLIB_LORAWAN_MAC_REKEY, 1, RADIOLIB_LORAWAN_MAC_DEV_STATUS, 3, 4};
+    node.pruneCommands(malformed);
+    assert(malformed.size() == 2);
+    node.pruneCommands(repeated);
+    assert(repeated == (std::vector<uint8_t>{RADIOLIB_LORAWAN_MAC_REKEY, 1}));
+}
+static void testMacAnswerRetention() {
+    clockMs = 0;
+    Preferences store;
+    TestPhy phy;
+    ProbeNode node(&phy, store);
+    initialize(node);
+    node.activeSession();
+    uint8_t payload = 1;
+    const std::vector<uint8_t> commands{RADIOLIB_LORAWAN_MAC_REKEY,
+                                        1,
+                                        RADIOLIB_LORAWAN_MAC_LINK_CHECK,
+                                        7,
+                                        2,
+                                        RADIOLIB_LORAWAN_MAC_DEV_STATUS,
+                                        RADIOLIB_LORAWAN_MAC_DEVICE_TIME,
+                                        4,
+                                        3,
+                                        2,
+                                        1,
+                                        128};
+    phy.replies.push_back(node.gatewayFrame(0, "combined answers", commands.size(), false, false, false, commands));
+    assert(node.sendReceive(&payload, 1, 1) > 0);
+    uint8_t margin = 0, gateways = 0;
+    assert(node.getMacLinkCheckAns(&margin, &gateways) == 0 && margin == 7 && gateways == 2);
+    uint32_t epoch = 0;
+    uint16_t fraction = 0;
+    assert(node.getMacDeviceTimeAns(&epoch, &fraction, false) == 0);
+    assert(epoch >= UINT32_C(0x01020304) && epoch <= UINT32_C(0x01020306) && fraction < 1000);
+}
+static void testRekeyLifetime() {
+    const std::vector<uint8_t> indication{RADIOLIB_LORAWAN_MAC_REKEY, 1};
+    for (unsigned scenario = 0; scenario < 4; ++scenario) {
+        clockMs = 0;
+        Preferences store;
+        TestPhy phy;
+        ProbeNode node(&phy, store);
+        initialize(node);
+        assert(node.setDatarate(5) == 0);
+        phy.replies.push_back(node.gatewayAccept(1, true));
+        assert(node.activateOTAA(nullptr) == RADIOLIB_LORAWAN_NEW_SESSION);
+        node.setADR(false);
+        uint8_t payload = 1;
+        phy.replies.push_back(node.gatewayFrame(0, "ordinary", 0));
+        assert(node.sendReceive(&payload, 1, 1) > 0);
+        assert(node.uplinkCommands(phy.sent.back()) == indication);
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) == 0);
+        assert(node.uplinkCommands(phy.sent.back()) == indication);
+        auto corrupt = node.gatewayFrame(1, "unauthenticated", 2, true);
+        corrupt.back() ^= 1;
+        phy.replies.push_back(corrupt);
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) == RADIOLIB_ERR_MIC_MISMATCH);
+        phy.replies.push_back(node.gatewayFrame(1, "wrong confirmation", 2, false, false, false, {RADIOLIB_LORAWAN_MAC_REKEY, 2}));
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) > 0);
+        phy.replies.push_back(node.gatewayFrame(2, "small reply", 4));
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) > 0);
+        assert(node.uplinkCommands(phy.sent.back()) == indication);
+        node.scheduleTransmission(millis());
+        if (scenario == 3) {
+            assert(node.sendReceive(static_cast<const uint8_t*>(nullptr), 0, 0) == 0);
+        } else {
+            assert(node.sendReceive(&payload, 1, 1) == 0);
+        }
+
+        auto small = node.uplinkCommands(phy.sent.back());
+        assert(small.size() == 14 && small[0] == indication[0] && small[1] == 1);
+        for (size_t i = 2; i < small.size(); i += 3) {
+            assert(small[i] == RADIOLIB_LORAWAN_MAC_DEV_STATUS);
+        }
+        size_t before = phy.sent.size();
+        phy.replies.push_back(node.gatewayFrame(3, "large reply", 5));
+        if (scenario == 1) {
+            phy.replies.push_back(node.gatewayFrame(4, "", 2, true, true, false, {}, true));
+        } else if (scenario == 2) {
+            phy.failOnTx = before + 2;
+        }
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) > 0);
+        assert(phy.sent.size() == before + 2);
+        auto mac = node.uplinkCommands(phy.sent.back());
+        assert((phy.sent.back()[5] & 15) == 0 && phy.sent.back()[8] == 0);
+        assert(mac.size() == 17 && mac[0] == indication[0] && mac[1] == 1);
+        phy.failOnTx = 0;
+        if (scenario == 3) {
+            node.scheduleTransmission(millis());
+            assert(node.sendReceive(static_cast<const uint8_t*>(nullptr), 0, 0) == 0);
+            assert(node.uplinkCommands(phy.sent.back()) == indication);
+        }
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) == 0);
+        assert(node.uplinkCommands(phy.sent.back()) == (scenario == 1 ? std::vector<uint8_t>{} : indication));
+        if (scenario != 1) {
+            phy.replies.push_back(node.gatewayFrame(
+                5, "confirmed", 3, false, false, false, {RADIOLIB_LORAWAN_MAC_REKEY, 1, RADIOLIB_LORAWAN_MAC_DEV_STATUS}));
+            node.scheduleTransmission(millis());
+            assert(node.sendReceive(&payload, 1, 1) > 0);
+            node.scheduleTransmission(millis());
+            assert(node.sendReceive(&payload, 1, 1) == 0);
+            auto commands = node.uplinkCommands(phy.sent.back());
+            assert(commands.size() == 3 && commands[0] == RADIOLIB_LORAWAN_MAC_DEV_STATUS);
+        } else {
+            phy.replies.push_back(
+                node.gatewayFrame(5, "unsolicited wrong version", 2, false, false, false, {RADIOLIB_LORAWAN_MAC_REKEY, 2}));
+            node.scheduleTransmission(millis());
+            assert(node.sendReceive(&payload, 1, 1) > 0);
+            node.scheduleTransmission(millis());
+            assert(node.sendReceive(&payload, 1, 1) == 0 && node.uplinkCommands(phy.sent.back()).empty());
+        }
+    }
+}
+static void testRekeyRestoreAndLimit() {
+    const std::vector<uint8_t> indication{RADIOLIB_LORAWAN_MAC_REKEY, 1};
+    for (bool confirmed : {false, true}) {
+        clockMs = 0;
+        Preferences store;
+        TestPhy phy;
+        ProbeNode node(&phy, store);
+        initialize(node);
+        assert(node.setDatarate(5) == 0);
+        phy.replies.push_back(node.gatewayAccept(1, true));
+        assert(node.activateOTAA(nullptr) == RADIOLIB_LORAWAN_NEW_SESSION);
+        node.setADR(false);
+        uint8_t payload = 1;
+        if (confirmed) {
+            phy.replies.push_back(node.gatewayFrame(0, "confirmed", 2, true));
+            assert(node.sendReceive(&payload, 1, 1) > 0);
+        }
+        auto snapshot = node.sessionSnapshot(false, false, 0);
+        std::vector<uint8_t> nonces(node.getBufferNonces(), node.getBufferNonces() + RADIOLIB_LORAWAN_NONCES_BUF_SIZE);
+        Preferences rebootStore;
+        TestPhy rebootPhy;
+        ProbeNode reboot(&rebootPhy, rebootStore);
+        initialize(reboot);
+        assert(reboot.setBufferNonces(nonces.data()) == 0 && reboot.setBufferSession(snapshot.data()) == 0);
+        assert(reboot.LoRaWANNode::activateOTAA() == RADIOLIB_LORAWAN_SESSION_RESTORED && rebootPhy.sent.empty());
+        reboot.setADR(false);
+        for (unsigned n = 0; n < (confirmed ? 65U : 64U); ++n) {
+            reboot.scheduleTransmission(millis());
+            assert(reboot.sendReceive(&payload, 1, 1) == 0);
+            assert(reboot.uplinkCommands(rebootPhy.sent.back()) == (confirmed ? std::vector<uint8_t>{} : indication));
+        }
+        size_t sent = rebootPhy.sent.size();
+        reboot.scheduleTransmission(millis());
+        int16_t rc = reboot.sendReceive(&payload, 1, 1);
+        if (confirmed) {
+            assert(rc == 0 && reboot.isActivated() && rebootPhy.sent.size() == sent + 1);
+        } else {
+            assert(rc == RADIOLIB_ERR_NETWORK_NOT_JOINED && !reboot.isActivated() && rebootPhy.sent.size() == sent);
+            assert(reboot.setDatarate(5) == 0);
+            rebootPhy.replies.push_back(reboot.gatewayAccept(2, true));
+            assert(reboot.activateOTAA(nullptr) == RADIOLIB_LORAWAN_NEW_SESSION);
+            assert(reboot.sendReceive(&payload, 1, 1) == 0 && reboot.uplinkCommands(rebootPhy.sent.back()) == indication);
+        }
+    }
+}
+static void testJoinRetryWindows() {
+    auto first = joinRetryTrace(1), second = joinRetryTrace(2);
+    assert(first != second);
+    Preferences store;
+    TestPhy phy;
+    clockMs = 0;
+    ProbeNode node(&phy, store);
+    initialize(node);
+    node.defer(UINT32_MAX, 60000);
+    clockMs = INT32_MAX - 1;
+    assert(!node.canTransmit());
+    ++clockMs;
+    assert(node.canTransmit());
 }
 static void testTransmitOutcome() {
     Preferences storage;
@@ -823,10 +1143,16 @@ int main() {
     testTransmitOutcome();
     testInitialization();
     testJoinLoop();
+    testJoinRetryWindows();
+    testRekeyLifetime();
+    testRekeyQueueOperations();
+    testMacAnswerRetention();
+    testRekeyRestoreAndLimit();
     testElapsedLoops();
-    std::puts("PASS: real RadioLib + production node: joins, wrap, aggregate pacing, immediate nested MAC/downlinks, nonce TX-error/reset "
-              "recovery, "
-              "fairness/fragments and NVS "
-              "fail-stop");
+    std::puts(
+        "PASS: real RadioLib + production node: 60-day randomized join windows/wrap, RekeyInd wire/queue/reset/restore, aggregate pacing, "
+        "recovery, "
+        "fairness/fragments and NVS "
+        "fail-stop");
     return 0;
 }

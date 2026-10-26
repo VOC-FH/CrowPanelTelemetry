@@ -156,3 +156,26 @@ remain unchanged. Pins/J7, telemetry version1/decoder, UI visuals, source photo,
 LoRaWAN1.1 ClassA/EU868, nonce reservation and volatile aggregate pacing are preserved.
 Unattended TTN remains NO-GO until the retained risks are resolved or explicitly
 accepted with measured operating limits and the complete hardware checklist passes.
+
+
+## Five selected corrections after Claude@f23e393 — 2026-10-26
+
+The user approved the quantified join/EXIF/Rekey proposals after the non-growing
+WiFi/display checkpoint. Current source traces and final evidence:
+[protocol-parser-fix-dispositions.md](review/protocol-parser-fix-dispositions.md).
+This supersedes the earlier pending-checkpoint status, without rewriting raw reviews.
+
+| Correction | Class / disposition | Verification and limits |
+|---|---|---|
+| Join retries | A; FIXED-SOURCE | Existing backoff now caps24h; jitter follows the maximum hold, with one wrap-safe deadline. Two60-day real-library/extracted-worker simulations check Table17 windows/DR/wrap; no RF timing or entropy measurement. |
+| JPEG EXIF | A mechanism/B consequence; FIXED-SOURCE | Approved removal of unused APP1/TIFF interpretation (126 dependency lines). Pixel digests agree for valid/malformed/truncated metadata under ASan/bounds; metadata APIs no longer extract orientation/thumbnails. Not a complete decoder audit. |
+| Display clock wording | A source calculation/C physical; FIXED-DOCS | Requested51MHz distinguished from source-derived nominal48MHz; no timing/initialization or UI code change. Measurement still required. |
+| Rejected WiFi status | A; FIXED-SOURCE | Existing timer expires rejected attempts while preserving the initial error interval; verbatim offline/wrap regression passes. Suspected credential race remains unproven/unmodified. |
+| RekeyInd lifetime | A; FIXED-SOURCE | One MAC queue survives ordinary/nested/MAC-only sends until valid confirmation. Deletion/pruning and reset lengths fixed at their authority. Wire/getter/reset/restore/ADR-limit regressions pass; no new flag, callback, session format or RF policy. |
+
+The suspected amplifier startup pulse and same-SSID timing race are unchanged.
+SD/Hosted lifecycle sharing/reset, ES8311 false success, recursive MAC stack depth,
+RF/TCXO/voltage/shunt/connector prerequisites and all physical acceptance remain
+retained/unexecuted. Assembly/bench work remains conditional; flashing/RF needs
+separate authorization. Unattended TTN remains NO-GO until those limits have fixes
+or measured accepted bounds and the full checklist, including24h, passes.

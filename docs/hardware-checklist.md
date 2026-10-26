@@ -176,7 +176,8 @@ shunt value and supply/load/antenna configuration with each test run.
   HIGH is shutdown (>100 µs), LOW enables AB playback. Scope GPIO30 and the
   speaker outputs at cold boot, codec initialization, playback, drain and errors.
   The schematic and host GPIO trace do not verify fitted components or reset pops.
-- Test the Elecrow V1.2 timing now selected: 51 MHz, H70/160/160, V10/23/21,
+- Test the requested Elecrow V1.2 timing: 51 MHz (nominal 48 MHz after the
+  pinned IDF divider), H70/160/160, V10/23/21,
   1024×600, two 1000-Mbps lanes. Check image stability, colors and touch orientation.
 - In an authorized controlled network, verify first counter-zero delivery,
   duplicate non-processing, and ACK MIC interoperability for confirmed application
@@ -189,3 +190,25 @@ shunt value and supply/load/antenna configuration with each test run.
   both use the same SDMMC controller. Keep the existing coexistence/reset stress,
   radio/media watermarks, latency and full 24-hour checks. No unattended approval
   follows from these software corrections.
+
+
+## Approved protocol/parser corrections — bench checks still unexecuted
+
+- In a separately authorized private-network setup, verify failed-join backoff/DR
+  progression and randomized spacing, including recovery after long outages.
+  The final host test covers60 simulated days; no physical multi-day timing or
+  ESP RNG entropy has been measured. Do not turn this into an RF stress test on
+  the public TTN network.
+- Verify RekeyInd persists through ordinary/no-confirmation downlinks, disappears
+  after valid RekeyConf, and uses the correct transport in MAC-only replies.
+  Missing confirmation must trigger the existing ADR-limit rejoin. Include the
+  extra MAC-only case when pending indication plus replies exceed15 header bytes
+  in radio-stack watermarks and aggregate airtime checks.
+- Browse otherwise valid baseline JPEGs with little/big-endian, malformed and
+  truncated EXIF metadata. Pixel rendering should remain unchanged; EXIF
+  orientation/thumbnails are deliberately ignored in this template profile.
+  Progressive/invalid SOF rejection remains. Sanitizers do not prove every
+  decoder boundary or target recovery; retain existing memory/24h checks.
+- Reject a WiFi request while offline: the specific rejection must remain for the
+  report interval, then show failure rather than Connecting. Requested51MHz / source-
+  derived nominal48MHz remains a clock/visual measurement prerequisite.

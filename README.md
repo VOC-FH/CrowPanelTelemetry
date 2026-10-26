@@ -148,7 +148,10 @@ A reboot starts a **fresh OTAA session** using the next reserved nonce. This avo
 restoring an uplink counter that might have already been transmitted before a
 power failure. Active session state is intentionally not restored. Both root keys
 are needed for1.1; a negotiated1.0 session is rejected. Joining and transmission
-run on the radio worker while the UI remains operational.
+run on the radio worker while the UI remains operational. Failed joins retain
+the existing exponential backoff, now capped at24hours, with0–60seconds of jitter
+added after the stricter retry/airtime hold. A prolonged outage can therefore
+lead to daily retries. Reset still clears this volatile policy.
 
 NVS keys live in `crow-lora` (nonce buffer and boot ID; no airtime debt)
 and `crow-wifi` (`credentials`: one SSID/password blob). A nonce write failure stops radio operations.
@@ -222,17 +225,23 @@ sources. No global dependency or SDK is modified automatically. If using Arduino
 IDE, patch the exact RadioLib and JPEGDEC folders selected by verbose build output before
 Verify, or use an isolated CLI dependency folder. A dependency change requires
 reviewing/rebasing the patch and repeating validation; do not bypass the checked
-patch or apply it blindly to another release.
+patch or apply it blindly to another release. When replacing an older project
+patch, start from clean sources of the same pinned tag; the patcher deliberately
+refuses an older patched tree. Use this EXIF-disabled JPEGDEC profile only for
+applications that do not require those metadata APIs.
 
 The patch forwards authenticated application downlinks, including nested and empty
 messages, corrects reachable Class-A time comparisons and airtime aggregation,
-and commits JoinAccept state only after authentication. It also consumes the
-MAC-payload flag after payload selection, selects the received confirmed frame
+and commits JoinAccept state only after authentication. It also retains RekeyInd until a valid RekeyConf, including ordinary, nested
+and MAC-only uplinks, and consumes the MAC-payload flag after payload selection, selects the received confirmed frame
 counter for ACK MICs, and distinguishes unseen from accepted-zero unicast counters.
 Session snapshots encode that distinction; older ambiguous snapshots are rejected.
 The application still starts fresh OTAA after reboot; its durable nonce format
 and telemetry wire format are unchanged. The JPEGDEC patch rejects invalid SOF
-component counts and lengths before writing component metadata.
+component counts and lengths before writing component metadata. It also removes
+unused EXIF parsing: orientation and thumbnail metadata APIs do not extract data
+in this isolated template dependency. Stored JPEG pixels are rendered as before;
+otherwise valid JPEGs may load even if their ignored EXIF is malformed.
 It adds no project marker macro or before/after-transmission hooks. PersistentNode
 spaces completed join/uplink operations using their aggregate predicted airtime,
 including repetitions and nested replies. RadioLib's ordinary duty-cycle gate is
@@ -242,9 +251,10 @@ DevNonce persistence before joining remains required to prevent nonce reuse.
 Reset clears the volatile airtime deadline; repeated resets can exceed network
 allowances. See [airtime policy and limitations](docs/airtime.md).
 
-Display bus timing matches Elecrow V1.2: 51 MHz pixel clock, horizontal
-pulse/back/front 70/160/160 and vertical 10/23/21. This is source alignment, not
-a measured display result. UI layout and graphics are unchanged.
+Display timing requests the Elecrow V1.2 configuration: 51 MHz, horizontal
+pulse/back/front 70/160/160 and vertical 10/23/21. The pinned IDF rounds the
+240 MHz source divider to 5, giving a nominal 48 MHz pixel clock. This is derived
+from source, not a measured display result. UI layout and graphics are unchanged.
 
 `make test` runs independent encoder/decoder, sensor-range, join-DR, SD lifecycle,
 airtime, real-library calibration/GPS/JPEG, WiFi input/status and patched RadioLib

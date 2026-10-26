@@ -5,9 +5,11 @@ import hashlib
 import json
 import subprocess
 import sys
+import struct
 project = Path(__file__).resolve().parents[1]
 dep = Path(sys.argv[1]).resolve()
 build = Path(os.environ.get('BUILD', '/tmp/codex/build/CrowPanelTelemetry/deep-fix'))
+build.mkdir(parents=True, exist_ok=True)
 for name, item in json.loads((project/'patches/jpegdec-1.8.4-hashes.json').read_text()).items():
     assert hashlib.sha256((dep/name).read_bytes()).hexdigest() == item['after'], 'Patch/version mismatch: '+name
 source = (project/'Workers.cpp').read_text()
@@ -34,6 +36,28 @@ for name, body, declared in cases:
     path.write_bytes(baseline[:sof] + b'\xff\xc0' + declared.to_bytes(2, 'big') +
                      body + baseline[sof+2+length:])
     invalid.append(str(path))
+metadata = []
+for order in ['<', '>']:
+    header = (b'II' if order == '<' else b'MM') + struct.pack(order+'HI', 42, 8)
+    entry = struct.pack(order+'HHI', 274, 3, 1) + struct.pack(order+'H', 6) + b'\0\0'
+    directory = struct.pack(order+'H', 1) + entry + struct.pack(order+'I', 0)
+    cases = [('valid', header + directory)]
+    for offset in [0x7ffffff0, 0x80000000, 0xffffffff]:
+        cases.append((f'first-{offset}', header[:4] + struct.pack(order+'I', offset) + directory))
+        cases.append((f'second-{offset}', header + directory[:-4] + struct.pack(order+'I', offset)))
+    cases.append(('tag-count', header + struct.pack(order+'H', 256) + entry))
+    # Exercise an unaligned but valid first-directory offset, not only the common offset8.
+    cases.append(('offset12', header[:4] + struct.pack(order+'I', 12) + b'pad!' + directory))
+    for name, tiff in cases:
+        body = b'Exif\0\0' + tiff
+        path = build/f'exif-{ord(order)}-{name}.jpg'
+        path.write_bytes(baseline[:2] + b'\xff\xe1' + (len(body)+2).to_bytes(2, 'big') + body + baseline[2:])
+        metadata.append(str(path))
+for size in range(16):
+    body = (b'Exif\0\0II\x2a\0\x08\0\0\0\x01\0')[:size]
+    path = build/f'exif-short-{size}.jpg'
+    path.write_bytes(baseline[:2] + b'\xff\xe1' + (len(body)+2).to_bytes(2, 'big') + body + baseline[2:])
+    metadata.append(str(path))
 subprocess.run([str(build/'jpeg'), str(project/'tests/fixtures/baseline.jpg'),
-    str(project/'tests/fixtures/progressive.jpg')] + invalid, cwd=build, check=True)
-print('PASS: real JPEGDEC with production guard: baseline decoded; progressive and invalid SOF rejected under ASan/bounds')
+    str(project/'tests/fixtures/progressive.jpg')] + invalid + ['--metadata'] + metadata, cwd=build, check=True)
+print('PASS: real JPEGDEC: baseline pixels preserved with ignored EXIF; progressive/invalid SOF rejected under ASan/bounds')
