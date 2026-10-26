@@ -204,3 +204,41 @@ and before/after real-library regression through both worker blocks. The previou
 b80bf07 report is unchanged; the other findings are not implemented. New source/
 test/build evidence is in ../validation-logs/join-restart-fix/. The forthcoming
 Claude follow-up is explicitly not an overall review or system approval.
+
+
+The focused correction and its evidence were committed/pushed on main as
+[f936218e11cd53a023b210c198cf1e22651be33f](https://github.com/VOC-FH/CrowPanelTelemetry/commit/f936218e11cd53a023b210c198cf1e22651be33f).
+The subsequent [request](claude-join-restart-request.md) explicitly restricts Claude
+to this join-budget fix and its regression, excluding a new overall review.
+Claude could not begin: HTTP429 usage_limit_reached, with a stated reset at14:00
+Europe/Vienna. [Attempt provenance](claude-join-restart-attempt.json) records the
+response and zero read/search calls. There is no Claude review or approval for
+this commit yet. These request/attempt records remain local after the fix push.
+Only the task's temporary dependency/build/cache directory was removed after
+saving evidence; no historical source collections or archive were changed.
+
+
+At13:02 Europe/Vienna on2026-10-26 the user asked for the focused review and
+a retry was made using the identical request, exact patched RadioLib and verified
+LoRaWAN1.1 specification. Claude again returned HTTP429 usage_limit_reached before
+any read/search call, with reset still stated as14:00 Europe/Vienna. The
+[retry record](claude-join-restart-retry-attempt.json) is separate from the first
+attempt. No review result exists yet. Only this retry's temporary sources were
+removed; no code, commit, push or hardware operation accompanied the retry.
+
+
+The user retried again after the stated limit reset. The same focused request
+completed successfully on2026-10-26 for main@f936218, using only29 Read/Glob/Grep
+calls over about263seconds. [Claude's complete, unedited scoped review](claude-join-restart-review.md)
+and [run/source/request/report provenance](claude-join-restart-run.json) are saved.
+Verdict: PASS for the pinned/default session-restart correction, with no blocking
+defect established in this restricted scope. This is explicitly not an overall
+system verdict or hardware test. Claude notes nonblocking limits: post-restart
+uplinks also begin atDR0/SF12 until ADR adjusts them, repeated reverts driven by
+a nonconforming server are outside current coverage, cold-boot initialization is
+retyped in the test, and the focused after log predates only the final test-output
+wording (the final full-suite log matches current source). These are review claims,
+not new implementation changes. Earlier rate-limited attempts remain separate.
+The review files/provenance remain local; no additional commit/push was performed.
+Only this retry's temporary dependency/specification directory was removed after
+preserving the report and provenance. Existing source/evidence collections remain.
