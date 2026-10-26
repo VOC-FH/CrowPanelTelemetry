@@ -130,3 +130,26 @@ SD/Hosted and nested-recursion limits. This is a new implementation disposition;
 raw historical reviews and their original proposals remain unchanged. Work stays
 on main, local/uncommitted; no new publication, archive or hardware/RF action is
 implied by this task.
+
+
+On2026-10-26 the user authorized pushing the accepted corrections and requesting
+another independent deep IoT/ESP32/LoRa/LoRaWAN/display review. The implementation
+and its saved validation were committed and pushed directly on main as
+[f23e3932fc699ba9fb5080ec77a21d8db35f8a8d](https://github.com/VOC-FH/CrowPanelTelemetry/commit/f23e3932fc699ba9fb5080ec77a21d8db35f8a8d).
+This supersedes the previous local-only handover status; historical records remain
+unchanged. No firmware source changed during the publication/review task.
+
+- [Exact review request](claude-review-f23e393-request.md)
+- [Claude's complete, unedited review](claude-review-f23e393.md)
+- [Run/tool/source provenance](claude-review-f23e393-run.json)
+- [Exact dependency/document provenance](claude-review-f23e393-sources.json)
+- [Separate caller spot checks and qualifications](claude-review-f23e393-assessment.md)
+
+Claude completed123 Read/Glob/Grep calls in about1003seconds; only read/search
+capabilities were available. It did not run tests or inspect all saved logs.
+It confirms the counter corrections and amplifier polarity, qualifies the requested
+versus realized display clock, and records new/residual join-backoff, EXIF, WiFi
+status/timing and RekeyInd concerns. The caller's qualifications are separate from
+its raw response, particularly the unproven same-SSID race and physical fault
+consequences. Findings are not approval to add fixes. UI redesign was excluded;
+retained policies were preserved. No flashing/RF/TTN operation or archive change.
