@@ -1,0 +1,28 @@
+{
+  "repository": "https://github.com/Elecrow-RD/CrowPanel-Advanced-10.1inch-ESP32-P4-HMI-AI-Display-1024x600-IPS-Touch-Screen",
+  "revision": "cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e",
+  "upstream_directory": "Eagle_SCH&PCB/1.2",
+  "files": {
+    "panel-v1.2.brd": {
+      "original_filename": "ESP32-P4 Display 10.1 inch V1.2.brd",
+      "url": "https://raw.githubusercontent.com/Elecrow-RD/CrowPanel-Advanced-10.1inch-ESP32-P4-HMI-AI-Display-1024x600-IPS-Touch-Screen/cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e/Eagle_SCH%26PCB/1.2/ESP32-P4%20Display%2010.1%20inch%20V1.2.brd",
+      "sha256": "29cd4115b1d16de5b1c5f99582b83e8fb3ef5616acd920dfa609b7d7424f9430",
+      "upstream_git_blob": "1201b2a7e6b238dd91c55a133806ef8e6d5fa11a",
+      "bytes": 2198217
+    },
+    "schematic-v1.2.pdf": {
+      "original_filename": "ESP32-P4 Display 10.1 inch V1.2.pdf",
+      "url": "https://raw.githubusercontent.com/Elecrow-RD/CrowPanel-Advanced-10.1inch-ESP32-P4-HMI-AI-Display-1024x600-IPS-Touch-Screen/cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e/Eagle_SCH%26PCB/1.2/ESP32-P4%20Display%2010.1%20inch%20V1.2.pdf",
+      "sha256": "5734ac7bf74788dd21129073be2a6c213d82d7a0ca07a9a4ea7c02cc525360c1",
+      "upstream_git_blob": "bf035f22d4cd7b548199c1d2e65b6e30af69deb4",
+      "bytes": 168381
+    },
+    "panel-v1.2.sch": {
+      "original_filename": "ESP32-P4 Display 10.1 inch V1.2.sch",
+      "url": "https://raw.githubusercontent.com/Elecrow-RD/CrowPanel-Advanced-10.1inch-ESP32-P4-HMI-AI-Display-1024x600-IPS-Touch-Screen/cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e/Eagle_SCH%26PCB/1.2/ESP32-P4%20Display%2010.1%20inch%20V1.2.sch",
+      "sha256": "7f9ac57dab96110467e4a9728cfb71b46024ea57f28a2d9d8b545b3ff0d0c172",
+      "upstream_git_blob": "a3efef711c35fd8de559ab68b8314cd7976910b6",
+      "bytes": 1035287
+    }
+  }
+}

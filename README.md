@@ -20,6 +20,7 @@ The code compiles; physical hardware operation has not been tested.
 - [Annotated original photo](docs/wiring.png), [editable/self-contained SVG](docs/wiring.svg)
 - [UI layout preview](docs/ui-preview.png), [UI behavior](docs/ui.md)
 - [Wiring table and electrical conditions](docs/wiring.md)
+- [Original panel schematic and PCB files: how to use them](docs/documentation.md#panel-design-files)
 - [Payload, airtime and delivery policy](docs/airtime.md)
 - [Hardware acceptance checklist](docs/hardware-checklist.md)
 - [Primary sources](docs/sources.md), [validation record](docs/validation.md)

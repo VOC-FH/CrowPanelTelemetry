@@ -165,6 +165,45 @@ That reference and `Config.h` remain the places to check when a hardware detail
 changes. The pin numbers have not been changed for these student documents.
 Some details of the actual modules still need the checks clearly marked below.
 
+<a id="panel-design-files"></a>
+
+### Open the original circuit and board files
+
+The original Elecrow V1.2 files are included in this repository. You can download
+them from the links below, or find them in `docs/hardware/elecrow-v1.2/` after
+getting the repository. You do not need to learn a circuit-design program before
+you wire the kit: start with the PDF and the connection tables in this guide.
+
+| Included file | What you can see | When to use it |
+| --- | --- | --- |
+| [Schematic PDF](hardware/elecrow-v1.2/schematic-v1.2.pdf) | The components and how they connect electrically | Open it in a PDF viewer and zoom in to follow a signal. |
+| [EAGLE schematic, .sch](hardware/elecrow-v1.2/panel-v1.2.sch) | The editable circuit drawing and its named connections | Use the lab's EAGLE-compatible CAD software when you need to inspect a connection in more detail. |
+| [EAGLE board, .brd](hardware/elecrow-v1.2/panel-v1.2.brd) | Component positions, connector pads and copper tracks on the PCB | Find where a connector sits and compare its contact numbers with the actual panel. |
+
+A schematic is a map of electrical connections, not a picture of where parts sit.
+Two points with the same net name can be connected even when they are drawn far
+apart. The board file answers the other question: where are those points on the
+physical board? Keep the contact number, signal name and viewing direction
+separate as you compare the two.
+
+For example, find **J13** in the schematic and identify its SCL, SDA, 3V3 and GND
+contacts. Then find J13 in the board file or annotated photograph. Follow the
+sensor's SDA connection back to GPIO45 using the connection table. This is more
+useful than trying to read every component on the sheet in one sitting.
+
+These are **EAGLE CAD files, not SPICE simulation models**. A simulation program
+cannot automatically turn the complete panel into a working simulation just by
+opening them. Simulating a small circuit would be a separate activity requiring
+suitable component models.
+
+The copies are unchanged downloads from the [Elecrow V1.2 design folder](https://github.com/Elecrow-RD/CrowPanel-Advanced-10.1inch-ESP32-P4-HMI-AI-Display-1024x600-IPS-Touch-Screen/tree/cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e/Eagle_SCH%26PCB/1.2),
+at the same source revision used for our wiring checks. Some drawing title text
+still refers to an older panel; use the V1.2 source files and connector details
+rather than that title alone. [Download records and checksums](hardware/elecrow-v1.2/provenance.json)
+record exactly which files were supplied. The panel and modules still need the
+physical checks described below; a design file does not confirm which optional
+parts are fitted on a particular board.
+
 ### A few labels to know
 
 | Label | What it means when you wire the kit |
@@ -353,8 +392,9 @@ the odd row toward the lower board edge.
 | INA226 | Shared I2C45/46, default address0x40 |
 | LoRa | Dedicated SPI GPIO matrix mapping on J7, separate from onboard C6 |
 
-On-board microphones, CSI camera, USB host, battery charging telemetry and the
-alternative unpopulated NS4168 circuit are outside the requested template scope.
+On-board microphones, CSI camera, USB host and the alternative unpopulated
+NS4168 circuit are outside the requested template scope. Battery charging is
+handled by onboard hardware; this template does not read battery or charger status.
 
 ### Power budget
 

@@ -202,3 +202,18 @@ validation-logs/platformio-support/. Both SDK targets match3155 shared header,
 archive-library, linker and flags/configuration files against the read-only
 Arduino installation; the C++ compiler executable also matches. These comparisons
 establish build inputs, not actual hardware or byte-identical firmware behavior.
+
+
+## Included Elecrow V1.2 hardware files (2026-10-26)
+
+The manufacturer files are stored unchanged in hardware/elecrow-v1.2/:
+[schematic PDF](hardware/elecrow-v1.2/schematic-v1.2.pdf),
+[EAGLE schematic](hardware/elecrow-v1.2/panel-v1.2.sch) and
+[EAGLE board](hardware/elecrow-v1.2/panel-v1.2.brd).
+They were downloaded directly from Elecrow's repository at
+cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e, the existing wiring-audit baseline.
+[Provenance](hardware/elecrow-v1.2/provenance.json) records the original filenames,
+immutable URLs, Git blob IDs, byte counts and SHA-256 hashes. The schematic and
+board hashes match the earlier audit; no vendor file was edited or converted.
+These are CAD sources and a viewing PDF, not SPICE models. The two course
+documents explain the distinction and give a connector-tracing exercise.

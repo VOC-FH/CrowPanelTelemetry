@@ -1011,3 +1011,49 @@ logs remain unchanged as evidence. `git diff HEAD^ HEAD --check -- .
 ':!docs/validation-logs/**'` passed for all authored files. This is a recorded
 raw-log whitespace exception, not a clean full-diff result. PDF rendering,
 font/link/bounds checks, wiring checks and format-check remain passing.
+
+
+## Included manufacturer design files (2026-10-26)
+
+Downloaded Elecrow V1.2 EAGLE .sch/.brd and the schematic PDF directly from
+manufacturer revision cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e into
+`docs/hardware/elecrow-v1.2/`. provenance.json records exact immutable URLs,
+original filenames, upstream Git blob IDs, bytes and SHA-256 values. The copies
+are unedited. Their Git blob IDs were independently recomputed from the bytes;
+the schematic and board SHA-256 values match the earlier wiring audit. The vendor
+PDF opens as one landscape page. The supplied format is EAGLE CAD, not SPICE.
+
+Added local links and a plain-language explanation in the existing documentation,
+a connector-tracing exercise in the learning material, and links from the wiring
+page/README. The two-document student structure is unchanged. Also replaced the
+misleading phrase battery charging telemetry: charging is onboard hardware;
+the template does not read battery/charger status. No battery feature was added.
+
+Commands run from the canonical repository:
+
+```sh
+python3 tools/check_wiring.py docs/hardware/elecrow-v1.2/panel-v1.2.sch docs/hardware/elecrow-v1.2/panel-v1.2.brd
+BUILD=/tmp/codex/build/CrowPanelTelemetry/hardware-files/render python3 tools/render_documents.py
+make format-check
+```
+
+All passed. Task-local `python3 "$T/check.py"` checked95 local Markdown links,
+all three file hashes/Git blob IDs, XML parsing, vendor PDF opening,56 unchanged
+wiring-table rows, PDF destinations/fonts/text bounds and protected-file hashes.
+Result PASS. The regenerated course PDFs remain35 and18 pages. All53 pages were
+rendered with pdftoppm and visually reviewed in contact sheets; the downloaded
+vendor schematic was rendered and inspected too. No clipping, overlapping content,
+missing glyphs, overfull boxes or unresolved references were found. The PDFs keep
+DejaVu Sans body/headings and DejaVu Sans Mono code. Evidence is retained in
+`docs/validation-logs/hardware-files/`; raw renderer logs retain tool whitespace.
+Authored-file diff whitespace checks exclude those raw logs and the unedited
+manufacturer CAD files. The latter also contain upstream trailing whitespace;
+these bytes are deliberately preserved so their source hashes still match.
+
+No firmware, test, tool, dependency patch, board setting, pin, radio route, image
+or historical ZIP changed. Application/test/dependency/build-configuration/tooling
+physical line changes are0added/0removed in each category. No firmware rebuild,
+installation, flashing, RF or hardware operation was performed for this document
+and vendor-asset addition. SHA256SUMS.json was refreshed. The task temporary
+rendering/check directories were removed after evidence was saved; no extra
+checkout or branch was created. Commit/push on main is explicitly authorized.

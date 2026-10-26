@@ -101,6 +101,21 @@ finds the contact and follows the wire. Swap roles for the next module.
 | GT-U7 GPS | J2.1 RX and a common ground | Why does the GPS TXD wire go to RX? Which supply and serial-level facts are still needed for this exact breakout? |
 | Core1262 radio | J7: SPI, control signals, 3V3 and ground | What is the difference between J7.20 and GPIO20? Where does DIO1 go, and why is DIO2 left open in this wiring? |
 
+Before following the wires on the actual kit, open the included
+[schematic PDF](../docs/hardware/elecrow-v1.2/schematic-v1.2.pdf). Find J13 and
+pick its SDA contact. Use the table to check which processor GPIO it reaches.
+Then find J13 in the [board file](../docs/hardware/elecrow-v1.2/panel-v1.2.brd)
+using the lab's CAD software, or locate it in the annotated photograph if that
+software is not available. Explain the difference between a circuit drawing
+and the physical position of the connector.
+
+Your teacher can demonstrate the [editable schematic](../docs/hardware/elecrow-v1.2/panel-v1.2.sch)
+without changing the supplied files. As an optional second example, find the
+battery connector J3 and the charger U2. Identify battery positive and ground;
+do not connect a battery as part of this drawing exercise. You are reading a
+design, not running a SPICE simulation. The [design-file explanation](../docs/documentation.md#panel-design-files)
+helps if the file types are unfamiliar.
+
 On a copy of the wiring picture, mark one complete signal path for each module.
 Then mark the ground and power path in different colors. Leave the GPS power
 path marked **not yet connected** until the teacher confirms its rating.

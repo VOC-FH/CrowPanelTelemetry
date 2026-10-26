@@ -372,5 +372,31 @@
       }
     },
     "scope": "Integrates the existing exact wiring tables, annotated photo and a wiring exercise into the two course documents. Adds a reproducible Pandoc/XeLaTeX/Graphviz PDF renderer and two sans-serif PDFs; no firmware, pins, protocol or source-image changes. Prior PlatformIO configuration accounted separately."
+  },
+  "included_panel_design_files": {
+    "baseline_commit": "06d7ae327de6dd1fd8e057d9654873d32c8580b6",
+    "lines": {
+      "application": {
+        "added": 0,
+        "removed": 0
+      },
+      "tests": {
+        "added": 0,
+        "removed": 0
+      },
+      "dependency_source": {
+        "added": 0,
+        "removed": 0
+      },
+      "build_configuration": {
+        "added": 0,
+        "removed": 0
+      },
+      "build_test_scripts": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    "scope": "Three byte-identical Elecrow V1.2 schematic/PCB/PDF downloads plus provenance. Adds a plain-language design-file section and tracing exercise to the existing two course documents; regenerates sans-serif PDFs. Clarifies hardware charging versus software monitoring. No firmware or wiring changes."
   }
 }

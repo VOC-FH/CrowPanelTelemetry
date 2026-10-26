@@ -1,0 +1,20 @@
+{
+  "result": "PASS",
+  "local_links_checked": 95,
+  "downloaded_vendor_files": 3,
+  "source_hashes_and_git_blob_ids": "PASS",
+  "vendor_schematic_pdf_pages": 1,
+  "wiring_rows_matched": 56,
+  "unchanged_preexisting_protected_files": 339,
+  "pdfs": {
+    "documentation": {
+      "pages": 35,
+      "sha256": "4d0edbcd2fc59e90ae87eea6d56540c503582a528d1a425f2e6ccf93d339cc86"
+    },
+    "learning-material": {
+      "pages": 18,
+      "sha256": "2cfd7cde3843fb91b25555792788aa1ad08daa3026e0749fb56a9e35b1603979"
+    }
+  },
+  "errors": []
+}

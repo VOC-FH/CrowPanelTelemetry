@@ -1,0 +1,18 @@
+Title:           ESP32-P4 Display 10.1 inch V1.2.sch
+Creator:         EAGLE Version 9.6.2 Copyright (c) 1988-2020 Autodesk, Inc.
+Producer:        Qt 5.9.4
+CreationDate:    Thu Jul  9 08:35:53 2026 CEST
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           1
+Encrypted:       no
+Page size:       842 x 595 pts (A4)
+Page rot:        0
+File size:       168381 bytes
+Optimized:       no
+PDF version:     1.4

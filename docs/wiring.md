@@ -4,6 +4,11 @@
 
 [Open the full-size image](wiring.png) · [Open the zoomable SVG](wiring.svg)
 
+The [original V1.2 schematic PDF](hardware/elecrow-v1.2/schematic-v1.2.pdf),
+[EAGLE schematic](hardware/elecrow-v1.2/panel-v1.2.sch) and
+[PCB layout](hardware/elecrow-v1.2/panel-v1.2.brd) are included for reference.
+The [student guide](documentation.md#panel-design-files) explains how to use them.
+
 The image gives you an overview. Use the connection tables below for exact
 contacts, and check the marked GPS power requirements before connecting it.
 
@@ -191,8 +196,9 @@ the odd row toward the lower board edge.
 | INA226 | Shared I2C45/46, default address0x40 |
 | LoRa | Dedicated SPI GPIO matrix mapping on J7, separate from onboard C6 |
 
-On-board microphones, CSI camera, USB host, battery charging telemetry and the
-alternative unpopulated NS4168 circuit are outside the requested template scope.
+On-board microphones, CSI camera, USB host and the alternative unpopulated
+NS4168 circuit are outside the requested template scope. Battery charging is
+handled by onboard hardware; this template does not read battery or charger status.
 
 ## Power budget
 
