@@ -1,0 +1,83 @@
+[
+  {
+    "command": [
+      "git",
+      "status",
+      "--porcelain"
+    ],
+    "exit": 0,
+    "stdout": " M AGENTS.md\n M Application.cpp\n M README.md\n M Ui.cpp\n M Workers.cpp\n M docs/airtime.md\n M docs/change-accounting.json\n M docs/correctness-source-hashes.json\n M docs/correctness-status.md\n M docs/hardware-checklist.md\n M docs/review/README.md\n M docs/sources.md\n M docs/ui.md\n M patches/radiolib-7.8.1-hashes.json\n M patches/radiolib-7.8.1.patch\n M tests/radio.cpp\n M tests/wifi-worker.cpp\n M tools/test.py\n M tools/test_wifi_worker.py\n?? docs/review/accepted-review-fixes.md\n?? tests/audio.cpp\n?? tools/test_audio.py\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "remote",
+      "-v"
+    ],
+    "exit": 0,
+    "stdout": "origin\tgit@github.com:VOC-FH/CrowPanelTelemetry.git (fetch)\norigin\tgit@github.com:VOC-FH/CrowPanelTelemetry.git (push)\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "branch",
+      "--show-current"
+    ],
+    "exit": 0,
+    "stdout": "main\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "1961cfa053d8ee950e1ba252cf9721e2f7833e6d\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "rev-list",
+      "--left-right",
+      "--count",
+      "main...origin/main"
+    ],
+    "exit": 0,
+    "stdout": "0\t0\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "gh",
+      "repo",
+      "view",
+      "VOC-FH/CrowPanelTelemetry",
+      "--json",
+      "defaultBranchRef,url"
+    ],
+    "exit": 0,
+    "stdout": "{\"defaultBranchRef\":{\"name\":\"main\"},\"url\":\"https://github.com/VOC-FH/CrowPanelTelemetry\"}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "gh",
+      "pr",
+      "list",
+      "--repo",
+      "VOC-FH/CrowPanelTelemetry",
+      "--state",
+      "open",
+      "--json",
+      "number,title,headRefName,baseRefName,url"
+    ],
+    "exit": 0,
+    "stdout": "[]\n",
+    "stderr": ""
+  }
+]

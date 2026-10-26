@@ -210,5 +210,34 @@
     "tag": "v5.5.5",
     "sha256": "8352a7e462ebfac20ed441501f9234cc2e107b5e39bf8315238fbe16b96d48ef",
     "installed_copy_matches_tag": true
+  },
+  "arduino-esp32-3.3.12/libraries/WiFi/src/STA.cpp": {
+    "url": "https://raw.githubusercontent.com/espressif/arduino-esp32/3.3.12/libraries/WiFi/src/STA.cpp",
+    "sha256": "8e0033dc89aa1ee9c18e4032939eb0c8d774495fc3468988022185b4b1eb9f0c"
+  },
+  "arduino-esp32-3.3.12/libraries/WiFi/src/WiFiGeneric.cpp": {
+    "url": "https://raw.githubusercontent.com/espressif/arduino-esp32/3.3.12/libraries/WiFi/src/WiFiGeneric.cpp",
+    "sha256": "df5426b0092e48f393559eba47739d25dd5d97464108d079b04c236cb03ff7e7"
+  },
+  "arduino-esp32-3.3.12/libraries/WiFi/src/WiFiSTA.h": {
+    "url": "https://raw.githubusercontent.com/espressif/arduino-esp32/3.3.12/libraries/WiFi/src/WiFiSTA.h",
+    "sha256": "ca27fa5591b7bebd2bcdab9cb98e616dfd9fdcc74c5a91faffa35c67e57082b5"
+  },
+  "arduino-esp32-3.3.12/libraries/Network/src/NetworkInterface.cpp": {
+    "url": "https://raw.githubusercontent.com/espressif/arduino-esp32/3.3.12/libraries/Network/src/NetworkInterface.cpp",
+    "sha256": "16c8b9866e544a938dd921c474d24d6fbaf0796173d34546c0061223205042e5"
+  },
+  "arduino-esp32-3.3.12/libraries/Preferences/src/Preferences.cpp": {
+    "url": "https://raw.githubusercontent.com/espressif/arduino-esp32/3.3.12/libraries/Preferences/src/Preferences.cpp",
+    "sha256": "346fa41649decf26c62660b671891e9815eeab2d4539543cd36b6a0d54bf9dab"
+  },
+  "Elecrow-V1.2-board_config.h": {
+    "url": "https://raw.githubusercontent.com/Elecrow-RD/CrowPanel-Advanced-10.1inch-ESP32-P4-HMI-AI-Display-1024x600-IPS-Touch-Screen/cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e/example/V1.2/Arduino_Code/Lesson07-Turn_on_the_screen/board_config.h",
+    "sha256": "32e23a64500cb1ae6bce2efcaa2fd2669367bb335879dd864bfc84e8c3eb7b76"
+  },
+  "NS4263B-Jun2023-V1.0.pdf": {
+    "url": "https://atta.szlcsc.com/upload/public/pdf/source/20240723/A4C23324CBEADB3DCF9750E7545A6E89.pdf",
+    "sha256": "776585313d645d7daee30d7c95a9947a3b4d2c4938850dfa5cd2a3aedbb27736",
+    "provenance": "Manufacturer-authored datasheet hosted by distributor; Nsiway product-page family images corroborate SD truth table."
   }
 }

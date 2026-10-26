@@ -10,77 +10,116 @@
 -    this->isMACPayload = false; // reset for next uplink
 @@ -168,0 +168 @@
 +  this->isMACPayload = false; // reset for next uplink
-@@ -804 +803,0 @@
+@@ -362,0 +363 @@
++  this->downlinkSeen = 0;
+@@ -527 +528 @@
+-  LoRaWANNode::hton<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS], this->sessionStatus);
++  LoRaWANNode::hton<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS], this->sessionStatus | 0x80 | (this->downlinkSeen << 4));
+@@ -542,0 +544,3 @@
++  if(state == RADIOLIB_ERR_NONE && !(persistentBuffer[RADIOLIB_LORAWAN_SESSION_STATUS] & 0x80)) {
++    state = RADIOLIB_ERR_SESSION_DISCARDED;
++  }
+@@ -612 +616,2 @@
+-  this->sessionStatus = LoRaWANNode::ntoh<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS]);
++  this->sessionStatus = LoRaWANNode::ntoh<uint8_t>(&this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS]) & 0x0F;
++  this->downlinkSeen = (this->bufferSession[RADIOLIB_LORAWAN_SESSION_STATUS] >> 4) & 0x03;
+@@ -804 +808,0 @@
 -  this->joinNonce = joinNonceNew;
-@@ -807 +805,0 @@
+@@ -807 +810,0 @@
 -  this->devAddr = LoRaWANNode::ntoh<uint32_t>(&joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_DEV_ADDR_POS]);
-@@ -811,2 +809,2 @@
+@@ -811,2 +814,2 @@
 -  this->rev = (dlSettings & RADIOLIB_LORAWAN_JOIN_ACCEPT_R_1_1) >> 7;
 -  RADIOLIB_DEBUG_PROTOCOL_PRINTLN("LoRaWAN revision: 1.%d", this->rev);
 +  uint8_t revNew = (dlSettings & RADIOLIB_LORAWAN_JOIN_ACCEPT_R_1_1) >> 7;
 +  RADIOLIB_DEBUG_PROTOCOL_PRINTLN("LoRaWAN revision: 1.%d", revNew);
-@@ -815 +813 @@
+@@ -815 +818 @@
 -  if(this->rev == 1) {
 +  if(revNew == 1) {
-@@ -817,0 +816 @@
+@@ -817,0 +821 @@
 +    uint8_t jSIntKey[RADIOLIB_AES128_KEY_SIZE];
-@@ -821 +820 @@
+@@ -821 +825 @@
 -    mod->hal->aes128->encryptECB(keyDerivationBuff, RADIOLIB_AES128_BLOCK_SIZE, this->jSIntKey);
 +    mod->hal->aes128->encryptECB(keyDerivationBuff, RADIOLIB_AES128_BLOCK_SIZE, jSIntKey);
-@@ -830 +829 @@
+@@ -830 +834 @@
 -    if(!verifyMIC(micBuff, lenRx + 11, this->jSIntKey)) {
 +    if(!verifyMIC(micBuff, lenRx + 11, jSIntKey)) {
-@@ -832,0 +832 @@
+@@ -832,0 +837 @@
 +    memcpy(this->jSIntKey, jSIntKey, RADIOLIB_AES128_KEY_SIZE);
-@@ -840,0 +841,4 @@
+@@ -840,0 +846,4 @@
 +
 +  this->joinNonce = joinNonceNew;
 +  this->rev = revNew;
 +  this->devAddr = LoRaWANNode::ntoh<uint32_t>(&joinAcceptMsg[RADIOLIB_LORAWAN_JOIN_ACCEPT_DEV_ADDR_POS]);
-@@ -960 +964 @@
+@@ -960 +969 @@
 -  if(this->tUplink < tNow) {
 +  if(static_cast<int32_t>(this->tUplink - tNow) < 0) {
-@@ -966 +970 @@
+@@ -966 +975 @@
 -    if(this->tUplinkEnd + (RadioLibTime_t)dutyCycleInterval(this->dutyCycle, this->lastToA) > this->tUplink) {
 +    if(static_cast<int32_t>(this->tUplinkEnd + dutyCycleInterval(this->dutyCycle, this->lastToA) - this->tUplink) > 0) {
-@@ -988,0 +993 @@
+@@ -988,0 +998 @@
 +  this->lastToA = 0;
-@@ -1507 +1512 @@
+@@ -1507 +1517 @@
 -  if(this->tUplink > tNow + this->launchDuration) {
 +  if(static_cast<int32_t>(this->tUplink - tNow - this->launchDuration) > 0) {
-@@ -1510 +1515 @@
+@@ -1510 +1520 @@
 -    if(this->tUplink > tNow + this->launchDuration) {
 +    if(static_cast<int32_t>(this->tUplink - tNow - this->launchDuration) > 0) {
-@@ -1520,0 +1526 @@
+@@ -1520,0 +1531 @@
 +  this->lastToA += toa;
-@@ -1535 +1541 @@
+@@ -1535 +1546 @@
 -    if(mod->hal->millis() > txEnd + this->scanGuard) {
 +    if(static_cast<RadioLibTime_t>(mod->hal->millis() - txEnd) > this->scanGuard) {
-@@ -1549,3 +1554,0 @@
+@@ -1549,3 +1559,0 @@
 -
 -  // increase Time on Air of the uplink sequence
 -  this->lastToA += toa;
-@@ -1573 +1576 @@
+@@ -1573 +1581 @@
 -  if((dlDelay == 0 && tReference > 0) || (dlDelay > 0 && tReference == 0)) {
 +  if(dlDelay == 0 && tReference > 0) {
-@@ -1611 +1614 @@
+@@ -1611 +1619 @@
 -  if(dlDelay > 0 && tReference > 0) {
 +  if(dlDelay > 0) {
-@@ -1616 +1619 @@
+@@ -1616 +1624 @@
 -    if(tNow > tWindow) {
 +    if(static_cast<int32_t>(tNow - tWindow) > 0) {
-@@ -2145,0 +2149,3 @@
+@@ -2003 +2011 @@
+-  uint32_t devFCnt32 = 0;
++  uint64_t devFCnt32 = 0;
+@@ -2019 +2027 @@
+-  if(devFCnt32 > 0 && payFCnt16 <= (uint16_t)devFCnt32) {
++  if((devFCnt32 > 0 || (!multicast && (this->downlinkSeen & (isAppDownlink ? 1 : 2)))) && payFCnt16 <= (uint16_t)devFCnt32) {
+@@ -2027,7 +2035,5 @@
+-  if(multicast) {
+-    if(devFCnt32 > this->mcGroups[mcGroupId].mcFCntMax) {
+-      #if !RADIOLIB_STATIC_ONLY
+-        delete[] downlinkMsg;
+-      #endif
+-      return(RADIOLIB_ERR_MULTICAST_FCNT_INVALID);
+-    }
++  if(devFCnt32 > UINT32_MAX || (multicast && devFCnt32 > this->mcGroups[mcGroupId].mcFCntMax)) {
++    #if !RADIOLIB_STATIC_ONLY
++      delete[] downlinkMsg;
++    #endif
++    return(multicast ? RADIOLIB_ERR_MULTICAST_FCNT_INVALID : RADIOLIB_ERR_DOWNLINK_MALFORMED);
+@@ -2094,0 +2101 @@
++    this->downlinkSeen |= isAppDownlink ? 1 : 2;
+@@ -2100 +2107 @@
+-    this->confFCntDown = this->aFCntDown;
++    this->confFCntDown = (uint16_t)devFCnt32;
+@@ -2145,0 +2153,3 @@
 +  if(fPort > 0) {
 +    this->applicationDownlink(data, payLen, fPort);
 +  }
-@@ -2279,0 +2286 @@
+@@ -2279,0 +2290 @@
 +      RadioLibTime_t outerToA = this->lastToA;
-@@ -2280,0 +2288 @@
+@@ -2280,0 +2292 @@
 +      this->lastToA += outerToA;
-@@ -3779 +3787 @@
+@@ -3779 +3791 @@
 -  if(mod->hal->millis() > nextUplink){
 +  if(static_cast<int32_t>(mod->hal->millis() - nextUplink) >= 0){
 --- a/src/protocols/LoRaWAN/LoRaWAN.h
 +++ b/src/protocols/LoRaWAN/LoRaWAN.h
 @@ -994,0 +995 @@
 +    virtual void applicationDownlink(const uint8_t*, size_t, uint8_t) {}
+@@ -1041,0 +1043 @@
++    uint8_t downlinkSeen = 0;      // Accepted App/Nwk counter state, bits 0/1

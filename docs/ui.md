@@ -13,8 +13,8 @@ satellite counts expire. A held touch triggers once. Each button has a large tou
 
 WiFi opens a dedicated screen with SSID/password fields, a masked password and
 three keyboard pages for ASCII lower/upper/symbol entry. Connection feedback
-continues without blocking the keyboard/dashboard. Connect saves only after
-successful association; Close abandons the password edit. An empty SSID or invalid
+continues without blocking the keyboard/dashboard. Connect saves one credential record only after an accepted request reaches
+live association/IP state with the requested SSID; Close abandons the password edit. An empty SSID or invalid
 password shows an inline reason that periodic WiFi status cannot overwrite.
 Open networks use an empty password; accept 8–63 characters or exactly64 hex digits. Enterprise/captive-portal flows are excluded.
 
@@ -30,3 +30,7 @@ of a GPS fix/TTN connection. The firmware uses Arduino_GFX's built-in raster fon
 preview typography is approximate. Image coordinates and control geometry follow
 the actual layout. No live data, credentials or generated landscape are embedded
 as fake measurements or real SD resources in the firmware.
+
+Saved WiFi settings from the earlier separate-key format must be entered once
+after this update. Rejected requests and credential-save failures use the existing
+status field; no screen geometry or visual styling changed.

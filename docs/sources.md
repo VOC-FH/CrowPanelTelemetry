@@ -109,3 +109,41 @@ and hardware prerequisites are distinguished in review/rereview-fix-status.md.
   default DP pull-up during pull-up disable. The installed header is byte-identical;
   its hash is recorded. This qualifies the review's low-confidence runtime-conflict
   suggestion, without claiming measured reset-time or MCLK behavior.
+
+## Accepted independent-review corrections — exact sources
+
+- [NS4263B manufacturer-authored Jun.2023 V1.0 datasheet, sections5/10.1](https://atta.szlcsc.com/upload/public/pdf/source/20240723/A4C23324CBEADB3DCF9750E7545A6E89.pdf)
+  specifies SD HIGH >100µs for shutdown and initial LOW/falling edge for AB mode.
+  This exact B datasheet is distributor-hosted. [Nsiway's product page](https://www.nsiway.com.cn/list_37/88.html)
+  embeds older NS4263 family images with a matching SD truth table; those images
+  are corroboration, not a substitute for the B revision or fitted-board inspection.
+  The pinned panel schematic connects GPIO30 through R147 to U4.1; no inversion
+  was found in that documented path. Physical population remains unverified.
+- [Elecrow V1.2 Lesson07 board configuration at cfcbfdbb](https://github.com/Elecrow-RD/CrowPanel-Advanced-10.1inch-ESP32-P4-HMI-AI-Display-1024x600-IPS-Touch-Screen/blob/cfcbfdbb1fd05997bc5e24dfeaece7fc44b6f61e/example/V1.2/Arduino_Code/Lesson07-Turn_on_the_screen/board_config.h#L30)
+  gives51MHz and H70/160/160,V10/23/21 for1024×600. Arduino_GFX1.6.9
+  `Arduino_ESP32DSIPanel.cpp:7–12,65–78` maps these constructor arguments directly
+  to DPI timing. Aligning those numbers does not verify display operation.
+- [LoRaWAN1.1 section4.4.2, ACK MIC input](https://read.uberflip.com/i/1428365-lorawan-specification-v1-1/26)
+  uses the least-significant16 bits of the confirmed downlink counter. Section4.3.1.5
+  (linked above) prohibits duplicate processing. The approved RadioLib7.8.1 patch
+  now handles received app/network counters and the initial/accepted-zero state
+  at the protocol authority. Original and patched hashes remain separate in patches/.
+- [Arduino core3.3.12 STA connect/disconnect](https://github.com/espressif/arduino-esp32/blob/3.3.12/libraries/WiFi/src/STA.cpp#L373)
+  supplies an accepted-request boolean and waits for disconnection of an existing
+  link. Raw connection/IP bits are cleared before delayed Arduino status events;
+  `NetworkInterface.cpp:316–324` reads those bits. The worker uses those public
+  interfaces, the requested SSID and its existing pending flag.
+- [Core3.3.12 Preferences putBytes](https://github.com/espressif/arduino-esp32/blob/3.3.12/libraries/Preferences/src/Preferences.cpp#L285)
+  sets one blob, commits, and returns its nonzero length only on success. The
+  approved single record replaces separate SSID/password commits, including the
+  ambiguous empty-password string result. Physical power-loss recovery is untested.
+- [Core3.3.12 Hosted WiFi initialization](https://github.com/espressif/arduino-esp32/blob/3.3.12/libraries/WiFi/src/WiFiGeneric.cpp#L274)
+  disables driver NVS and forces RAM storage under CONFIG_ESP_HOSTED_ENABLED;
+  no second credential persistence mechanism or redundant app control was added.
+- [Pinned ES8311 source](https://github.com/pschatzmann/arduino-audio-driver/blob/v0.3.1/src/Codecs/es8311/ES8311.h#L313)
+  drops selected init/volume/read transaction errors (`:504,553–570,637–641`).
+  This confirmed limitation is retained under the user's “fix or ignore” scope,
+  rather than masked downstream or silently expanded into a third dependency patch.
+
+New source hashes are in correctness-source-hashes.json; final traces and test
+limits are in review/accepted-review-fixes.md. All dependency versions remain pinned.

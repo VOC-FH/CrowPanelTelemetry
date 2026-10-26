@@ -1,0 +1,1 @@
+radio: /home/voc/Documents/Hagenberg/IntMinor/2026/codeing/CrowPanelTelemetry/tests/radio.cpp:379: void testDownlinkCounters(): Assertion `node.sendReceive(&payload, 1, 1) < 0' failed.

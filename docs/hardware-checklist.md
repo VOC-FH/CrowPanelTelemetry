@@ -147,10 +147,14 @@ shunt value and supply/load/antenna configuration with each test run.
 - N7: change credentials while connected; test rejected begin, rapid reconnect,
   same SSID with a changed password, open networks and NVS write failures. Verify
   the intended association and saved credentials after reboot. Save errors should
-  remain visible for their report interval; the association defect is still open.
+  remain visible for their report interval. Re-enter legacy saved settings once;
+  verify the single credential blob survives reboot and a failed replacement
+  retains the previously saved pair. Host doubles do not test physical association
+  timing or NVS power-loss recovery.
 - N8: scope GPIO30 and speaker output through reset, codec initialization and DSI
   startup; inspect R71/R147 and verify actual amplifier enable polarity. GPIO30 is
-  already driven LOW before beginUi, so distinguish these startup intervals.
+  now driven HIGH (shutdown) before codec initialization and LOW only for playback;
+  distinguish reset-to-setup from setup/playback/drain/idle intervals.
 - N9: inspect R29/R33 population and measure SD DAT3/CS idle voltage with the actual
   card. The schematic's divider is not a measurement or an instruction to remove
   a component.
@@ -164,3 +168,24 @@ shunt value and supply/load/antenna configuration with each test run.
 - Preserve all previous TCXO, RF-switch, antenna/EIRP/ERP, GPS logic/power, shunt/
   straps/pull-ups, J2/J13 orientation, P4/C6 versions, display/touch timing, ES8311
   clock-gap, stack/latency and 24-hour checks. No physical or RF test was executed.
+
+
+## Accepted independent-review corrections — unexecuted bench checks
+
+- Match the fitted NS4263B/R147 circuit to the manufacturer SD truth table:
+  HIGH is shutdown (>100 µs), LOW enables AB playback. Scope GPIO30 and the
+  speaker outputs at cold boot, codec initialization, playback, drain and errors.
+  The schematic and host GPIO trace do not verify fitted components or reset pops.
+- Test the Elecrow V1.2 timing now selected: 51 MHz, H70/160/160, V10/23/21,
+  1024×600, two 1000-Mbps lanes. Check image stability, colors and touch orientation.
+- In an authorized controlled network, verify first counter-zero delivery,
+  duplicate non-processing, and ACK MIC interoperability for confirmed application
+  and network frames. Host cryptographic fixtures use RadioLib's own primitives.
+- The ES8311 init/volume error-propagation defect is intentionally retained under
+  the user's “fix or ignore” direction. Test selective codec-bus failures; a
+  successful setup return is not evidence that all register writes succeeded.
+- SD/Hosted lifecycle concurrency and unbounded nested MAC-response recursion were
+  explicitly left unchanged. WiFi does not mount SD; the media worker does, and
+  both use the same SDMMC controller. Keep the existing coexistence/reset stress,
+  radio/media watermarks, latency and full 24-hour checks. No unattended approval
+  follows from these software corrections.

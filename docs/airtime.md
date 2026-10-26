@@ -147,3 +147,15 @@ two PHY submissions where one is expected on a subsequent small request. The app
 flag-lifetime patch now consumes the existing flag after payload selection; the
 regression verifies that unnecessary replies stop while required immediate MAC
 responses and aggregate accounting remain. No per-frame pacing was introduced. See review/rereview-fix-status.md.
+
+
+## Accepted counter corrections
+
+The RadioLib patch now rejects repeated authenticated counter-zero unicast frames
+in both application and network counter domains, and uses the confirmed received
+frame's low16 counter bits for the next ACK MIC. Session snapshots carry the
+accepted-state distinction; ambiguous legacy snapshots are rejected. The sketch
+still performs fresh OTAA on reboot, with unchanged durable DevNonce handling.
+These are counter/MIC corrections, not a new pacing policy. Aggregate volatile
+pacing, unpaced internal replies and the retained reset/recursion limits above
+remain unchanged. No new airtime debt, reservation or boot delay was added.

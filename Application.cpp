@@ -18,6 +18,8 @@ static bool displayReady = false;
 static uint32_t lastGpsData = 0;
 
 void setupApplication() {
+    pinMode(Pins::Amp, OUTPUT);
+    digitalWrite(Pins::Amp, HIGH);
     Serial.begin(115200);
     Serial.printf("CrowPanel V1.2; ESP32 revision %d; core 3.3.12\n", ESP.getChipRevision());
     Wire.begin(Pins::Sda, Pins::Scl, 100000);
@@ -40,8 +42,6 @@ void setupApplication() {
     cfg.i2s.fmt = I2S_NORMAL;
     audioReady = clockOk && codec.begin(cfg, codecPins) && codec.setVolume(35);
     clock.end();
-    pinMode(Pins::Amp, OUTPUT);
-    digitalWrite(Pins::Amp, LOW);
     Serial1.setRxBufferSize(4096);
     Serial1.begin(GPS_BAUD, SERIAL_8N1, Pins::GpsRx, -1);
     displayReady = beginUi();

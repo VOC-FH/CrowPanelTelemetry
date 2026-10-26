@@ -1,0 +1,24 @@
+{
+  "libraries": {
+    "RadioLib": "7.8.1",
+    "INA226": "0.6.6",
+    "TinyGPSPlus": "1.0.3",
+    "JPEGDEC": "1.8.4",
+    "Arduino_GFX": "1.6.9",
+    "audio-driver": "0.3.1"
+  },
+  "cli": "arduino-cli  Version: 1.5.1 Commit: 01f3d4f2b Date: 2026-06-05T10:22:17Z",
+  "compiler": "c++ (Debian 16.2.0-3) 16.2.0",
+  "clang_tidy": "Debian LLVM version 21.1.8\n  Optimized build.",
+  "cli_sha256": "cbb47ec4742ee49854031728a0eaeb678a2b36d7a797ef833a1a5b02062149c6",
+  "radio_patch": {
+    "src/protocols/LoRaWAN/LoRaWAN.cpp": {
+      "before": "bfd64fe3707795fcf54e75fc80e0b21036c0fa5d80850927f5ed7961873c0415",
+      "after": "8f0e314b94795c1c379ef3fb03e45b41a4d3c089a8013fc2b6c7c648d94f74a2"
+    },
+    "src/protocols/LoRaWAN/LoRaWAN.h": {
+      "before": "d359477577b97d0c2024624e3036b9aab3f06fd24db79d8fe4daa2c8b56d846b",
+      "after": "628aea5e6817a70c1e617b425823085fe07c908792b88a537daa241e73744358"
+    }
+  }
+}

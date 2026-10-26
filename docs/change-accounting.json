@@ -132,5 +132,27 @@
       }
     },
     "scope": "N1 approved seven-line JPEG parser guard; N5 MAC flag lifetime; N6 two-line task stop; prior WiFi diagnostic. One replacement patch tool serves both dependencies; N4/N7/F8 proposals excluded."
+  },
+  "accepted_independent_review": {
+    "baseline_commit": "1961cfa053d8ee950e1ba252cf9721e2f7833e6d",
+    "lines": {
+      "application": {
+        "added": 18,
+        "removed": 19
+      },
+      "dependency_source": {
+        "added": 17,
+        "removed": 12
+      },
+      "tests": {
+        "added": 372,
+        "removed": 33
+      },
+      "tooling": {
+        "added": 30,
+        "removed": 1
+      }
+    },
+    "scope": "Approved counter-state/session metadata and one-blob credential storage; active-low amplifier/startup; Elecrow V1.2 bus timing. ES8311/SD-Hosted/recursive MAC retained. No UI/pin/protocol/pacing policy change."
   }
 }

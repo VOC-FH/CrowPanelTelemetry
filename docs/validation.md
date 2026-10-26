@@ -384,3 +384,142 @@ reports trailing spaces in byte-preserved raw tool output and vendor patch conte
 a passing full staged whitespace check. Source/configuration/prose whitespace and
 make format-check pass. No source or regression assertion was weakened. The
 user separately authorized commit/push; prior local-only statements are historical.
+
+
+## Accepted independent-review fixes — final validation, 2026-10-25
+
+This section supersedes prior N4/N7 open-state descriptions for the selected fixes;
+previous validation records remain historical. Baseline and current HEAD are
+`1961cfa053d8ee950e1ba252cf9721e2f7833e6d`, main, with a clean pre-edit tree and
+cached origin/main equal to HEAD. No ref change or publication was performed.
+Detailed source traces, scope decisions and approvals:
+[accepted-review-fixes.md](review/accepted-review-fixes.md).
+Evidence: `validation-logs/accepted-review-fixes/`.
+
+### Configuration, commands and results
+
+`T=/tmp/codex/build/CrowPanelTelemetry/accepted-review-fixes`.
+Exact six dependencies were freshly extracted into `$T/deps` from the previously
+verified exact-release archives; archive SHA256 values matched the saved
+`validation-logs/rereview-fix/dependencies.json`. CLI1.5.1 was reused read-only from
+`/tmp/codex/build/CrowPanelTelemetry/rereview-fix/cli/arduino-cli` (`CLI` below).
+Core3.3.12/IDF5.5.5 and installed SDK sources stayed read-only. Dependency versions
+are unchanged: RadioLib7.8.1, INA2260.6.6, TinyGPSPlus1.0.3a, JPEGDEC1.8.4,
+Arduino_GFX1.6.9, audio-driver0.3.1. No global install, upgrade or index update.
+
+Baseline `make test` and `make format-check` passed before edits. Final commands:
+
+```sh
+python3 tools/patch_dependency.py radiolib-7.8.1 "$T/deps/RadioLib"
+python3 tools/patch_dependency.py jpegdec-1.8.4 "$T/deps/JPEGDEC"
+RADIOLIB_DIR="$T/deps/RadioLib" make test BUILD="$T/final-tests"
+make format
+make format-check
+python3 tools/check_wiring.py /tmp/codex/build/CrowPanelTelemetry/rereview-fix/panel.sch \
+  /tmp/codex/build/CrowPanelTelemetry/rereview-fix/panel.brd
+TMPDIR="$T/blank-prev3-tmp" ARDUINO_BUILD_CACHE_PATH="$T/blank-prev3-cache" \
+  "$CLI" compile --verbose --jobs 3 \
+  --fqbn 'esp32:esp32:esp32p4:FlashSize=16M,PSRAM=enabled,PartitionScheme=app3M_fat9M_16MB,ChipVariant=prev3' \
+  --libraries "$T/deps" --build-path "$T/blank-prev3" .
+# enabled-prev3/enabled-postv3: separate tmp/cache/build paths and variant;
+# add exactly this property (dummy values, never used on air):
+# --build-property 'compiler.cpp.extra_flags=-DDEV_EUI=1ULL -DAPP_KEY={0x01} -DNWK_KEY={0x02} -DINA_SHUNT_OHMS=0.1f'
+clang-tidy -p "$T/enabled-prev3" "$T/enabled-prev3/sketch/Application.cpp"
+clang-tidy -p "$T/enabled-prev3" "$T/enabled-prev3/sketch/Workers.cpp"
+clang-tidy -p "$T/enabled-prev3" "$T/enabled-prev3/sketch/Ui.cpp"
+```
+
+The final patch was regenerated against exact pristine7.8.1, retaining the existing
+zero-context artifact style and updating both after-hashes. Final `make test`
+verifies fresh apply, idempotence, tampered-source refusal and real-library hashes
+for both patch profiles. No reservation hook, branding comment or marker macro.
+No third dependency patch was introduced. All independent checks run even after
+another fails; final suite and format check PASS. Vendor TinyGPSPlus's existing
+fallthrough warning remains. ACK-selection, zero-counter and maximum-counter ACK
+regressions failed against the corresponding earlier source and pass afterward;
+`*-before.log` files are expected reproducer failures, not final test failures.
+
+All three final-source firmware configurations PASS (exact argv/exits in
+`build-results.json`, verbose logs named for each configuration):
+
+| Configuration | Flash bytes / 3,145,728 | Static RAM bytes / 327,680 |
+|---|---:|---:|
+| prev3 blank credentials/shunt | 1,202,320 | 39,364 |
+| prev3 dummy enabled | 1,209,266 | 39,436 |
+| postv3 dummy enabled | 1,210,836 | 39,436 |
+
+The three are build configurations of one sketch. Dynamic stacks/PSRAM/heap are
+additional to static RAM. Every external Used library path resolves underT/deps;
+bundled libraries resolve to core3.3.12. Canonical C++/headers match each build's
+copies after Arduino's one-line prefix. Actual compilation-database preprocessing
+also confirms both dummy key array initializers, rather than relying on verbose
+console rendering. Enabled binaries link the downlink callback; all three lack
+reservation hooks and SDMMCFS begin/end symbols. See source-and-symbol-audit.log.
+
+Target clang-tidy was attempted on all three changed cpp files using the final
+enabled-prev3 compilation database. All exit1: LLVM rejects xesppie and GCC-only
+-fno-tree-switch-conversion/-fstrict-volatile-bitfields and cannot find target
+cmath. This is incomplete target analysis, not a passing result. No flags/checks
+were weakened. Exact diagnostics are retained in tidy-*.log.
+
+### What these checks prove and leave open
+
+Real patched RadioLib tests cover both unicast counter domains, authenticated
+commit, failed MIC, independent first-zero state across session restoration,
+legacy rejection,16-bit rollover,32-bit exhaustion, fresh OTAA reset and confirmed
+ACK MIC input. Crypto uses the real library's own primitives; TTN interoperability
+and independent crypto vectors are not established. Host RadioLibTime_t remains
+64-bit; target-width elapsed loops and IRQ scheduling are not emulated.
+
+WiFi tests exercise verbatim load/service code and command struct against STA/NVS
+transport doubles, including rejected requests with the old link, raw link/IP,
+SSID identity, rapid same-SSID change, open networks and NVS failures. They do not
+model physical association timing or NVS flash power-loss recovery. One credential
+blob replaces the two strings; legacy settings require one-time re-entry.
+Amplifier tests exercise actual setup/service statements at GPIO/I2S boundaries.
+The manufacturer display configuration comparison passes; it proves numerical
+source alignment, not display/touch operation.
+
+The retained ES8311 error-propagation defect is not hidden by audioReady. SD/Hosted
+lifecycle concurrency and unbounded nested MAC recursion were explicitly excluded
+by the user; the old coexistence/reset and stack risks remain. No host test
+emulates ESP32, SDMMC contention, physical codec/amplifier, RF, or a live network.
+All previous GPS/shunt/TCXO/power/antenna/connector/C6/P4/display prerequisites,
+watermarks/latency and the full24h run remain unexecuted. No flash/RF permission.
+
+Wiring check PASS with unchanged J7 result. Config.h, telemetry/decoder/reference
+packet, UI previews, wiring graphics/radio-nets, historical raw reviews and delivery
+ZIP match baseline SHA256. The photo and SVG-embedded photo are byte-identical;
+photo SHA256 remains `5b2e2bdfefe5a38b7bbee5ef09f37c363579a8628f27df23f5702b5fcd6624ad`.
+No preview regeneration was needed: UI geometry and generators did not change.
+Formatter/analysis configurations remain unchanged. Project-owned diff whitespace
+checks pass; raw verbose logs retain tool-emitted whitespace.
+
+### Accounting and handover
+
+Physical added/removed lines relative to main@1961cfa:
+
+| Category | Added | Removed | Net |
+|---|---:|---:|---:|
+| Application production | 18 | 19 | −1 |
+| Patched dependency source | 17 | 12 | +5 |
+| Tests | 372 | 33 | +339 |
+| Build/test tooling | 30 | 1 | +29 |
+
+The approved two-bit state accounts for dependency growth. No application growth:
+existing worker flags/timers and one record absorb the WiFi correction; amplifier
+and display changes are neutral. Tests/tooling add boundary and real-library
+regressions without a new framework. Patch-file hunk/context text is not counted
+as dependency production; actual before/after sources were compared separately.
+The separate accepted_independent_review entry in change-accounting.json preserves
+historical entries. Changed files and detailed counts are saved with the evidence.
+
+Evidence was copied and checked before removing this task'sT, including temporary
+build trees, isolated dependency trees, caches and negative-test tree. No persistent
+build, extra project checkout, archive or global install was created. The pre-existing
+rereview-fix/self-review source/evidence collections were reused read-only and left
+untouched. SHA256SUMS.json is regenerated in its existing sorted format/scope.
+Work remains uncommitted on main@1961cfa; no push performed. Assembly is conditional
+on physical identification/voltage checks. Bench flashing requires separate
+authorization and those prerequisites. Unattended TTN remains NO-GO until retained
+risks have measured acceptable limits or fixes and the full checklist passes.

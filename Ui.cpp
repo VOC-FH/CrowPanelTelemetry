@@ -4,7 +4,7 @@
 #include <Arduino_GFX_Library.h>
 #include <Wire.h>
 
-static Arduino_ESP32DSIPanel bus(10, 160, 160, 1, 23, 12, 52000000, 1000);
+static Arduino_ESP32DSIPanel bus(70, 160, 160, 10, 23, 21, 51000000, 1000);
 static Arduino_DSI_Display
     display(1024, 600, &bus, 0, true, 41, ek79007_init_operations, sizeof(ek79007_init_operations) / sizeof(lcd_init_cmd_t));
 static constexpr uint16_t Bg = 0x0885, Card = 0x1128, Ink = 0xEF7D, Muted = 0x8CF4, Mint = 0x47D5, Amber = 0xFD8A;

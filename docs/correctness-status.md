@@ -70,7 +70,7 @@ function and current implementation/test; see source URLs in sources.md.
 C: exact GT-U7 VCC/TXD/pads, INA226 fitted shunt/rating/straps, Waveshare R22/FB1
 population, P4 silicon revision and C6 slave firmware remain unconfirmed. Do not
 change TCXO configuration on a schematic assumption. Also unverified:10.1-inch
-DSI timing (upstream profile is associated with the7-inch P4 panel), GT911
+DSI operation (timing now matches Elecrow V1.2; still unmeasured), GT911
 orientation, amplifier enable, codec retention across its clock gap, real supply
 headroom, RF switch and frequency error. No software test substitutes for these.
 
@@ -131,3 +131,28 @@ handling and coexistence remain open. The credential-save status overwrite is
 corrected; WiFi association/persistence and strict GPS checksum parsing are not
 yet resolved. No hardware evidence
 was added. Unattended TTN operation remains NO-GO.
+
+
+## Accepted independent-review corrections — 2026-10-25
+
+Baseline main@1961cfa. Current authoritative traces, scope decisions, approvals,
+regressions and validation are in [accepted-review-fixes.md](review/accepted-review-fixes.md).
+The historical N4/N7 “open” statements above describe prior checkpoints.
+
+| Finding | Class | Disposition | Evidence / remaining limit |
+|---|---|---|---|
+| Amplifier control/startup (R1) | A + C | FIXED-SOURCE + HARDWARE-ONLY | GPIO30 HIGH before codec setup and at idle; LOW for playback/drain. Verbatim startup/audio service tests pass. Fitted circuit and sound remain untested. |
+| Confirmed network ACK (R2) | A | FIXED-SOURCE | Real RadioLib app3/network7 fixture verifies ACK counter7, including low16 handling at maximum32-bit FCnt. |
+| Counter-zero duplicates (R4/N4) | A | FIXED-SOURCE | Approved two-bit accepted-state metadata, reset/restore contract, authenticated commit and overflow rejection; both unicast domains tested. Legacy ambiguous session snapshots fail closed. |
+| WiFi association/credential storage (R6/N7) | A/B | FIXED-SOURCE | Accepted STA request + raw association/IP + matching SSID precede one blob write. Verbatim boundary tests include stale/rejected state, open networks and storage failure. Physical event timing/power loss untested. |
+| Manufacturer display timing (R8) | B | FIXED-SOURCE + HARDWARE-ONLY | Constructor now matches pinned Elecrow V1.2; physical display/touch still unverified. |
+| ES8311 false success (R5) | A | RETAINED-DOCUMENTED | User allowed “fix or ignore”; selectively lost write/read errors remain in audio-driver0.3.1. No third patch or app-side masking added. |
+| SD/Hosted sharing (R3/F4/N2) | B | RETAINED-DOCUMENTED + HARDWARE-ONLY | User excluded this fix. WiFi never mounts the card, but shared-controller lifecycle risk and conditional whole-P4 reset remain. |
+| Nested MAC recursion (R7/F14) | A/B | RETAINED-DOCUMENTED + HARDWARE-ONLY | User excluded this fix; no general recursion bound or target stack-safety claim. |
+
+Other review observations (JPEG scaling, permissive NMEA checksum helper and demo
+single-attempt semantics) were not authorized for correction in this scope and
+remain unchanged. Pins/J7, telemetry version1/decoder, UI visuals, source photo,
+LoRaWAN1.1 ClassA/EU868, nonce reservation and volatile aggregate pacing are preserved.
+Unattended TTN remains NO-GO until the retained risks are resolved or explicitly
+accepted with measured operating limits and the complete hardware checklist passes.

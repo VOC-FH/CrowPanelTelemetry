@@ -239,36 +239,35 @@ static void wifiTask(void*) {
     Preferences prefs;
     bool ok = prefs.begin("crow-wifi", false);
     WifiCommand command{};
-    if (ok) {
-        strlcpy(command.ssid, prefs.getString("ssid").c_str(), sizeof(command.ssid));
-        strlcpy(command.password, prefs.getString("password").c_str(), sizeof(command.password));
+    if (ok && (prefs.getBytes("credentials", &command, sizeof(command)) != sizeof(command) || command.ssid[sizeof(command.ssid) - 1] != 0 ||
+               command.password[sizeof(command.password) - 1] != 0)) {
+        command = {};
     }
     WiFi.setPins(Pins::WifiClk, Pins::WifiCmd, Pins::WifiD0, Pins::WifiD1, Pins::WifiD2, Pins::WifiD3, Pins::WifiReset);
     bool online = WiFi.mode(WIFI_STA);
     configASSERT(xTaskCreate(mediaTask, "media", 24576, nullptr, 1, nullptr) == pdPASS);
-    if (!online) {
-        post(EventKind::Wifi, "C6 unavailable / check ESP-Hosted firmware");
-    } else if (command.ssid[0]) {
+    if (online && command.ssid[0]) {
         WiFi.begin(command.ssid, command.password);
     } else {
-        post(EventKind::Wifi, "Not configured / tap WiFi setup");
+        post(EventKind::Wifi, online ? "Not configured / tap WiFi setup" : "C6 unavailable / check ESP-Hosted firmware");
     }
     uint32_t reportAt = 0, connectAt = millis();
     bool saveOnConnect = false;
     for (;;) {
         if (xQueueReceive(wifiCommands, &command, pdMS_TO_TICKS(100)) == pdTRUE && online) {
-            WiFi.disconnect(false, false);
-            WiFi.begin(command.ssid, command.password);
+            saveOnConnect = WiFi.STA.connect(command.ssid, command.password);
             connectAt = millis();
-            saveOnConnect = true;
+            if (!saveOnConnect) {
+                post(EventKind::Wifi, "Connection request failed / retry setup");
+                reportAt = connectAt;
+            }
         }
         if (millis() - reportAt >= 2000) {
             char text[160];
-            if (WiFi.status() == WL_CONNECTED) {
+            if (WiFi.STA.connected() && WiFi.STA.hasIP()) {
                 snprintf(text, sizeof(text), "%s / %s", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str());
-                if (saveOnConnect && ok) {
-                    bool saved = prefs.putString("ssid", command.ssid) > 0;
-                    saved = prefs.putString("password", command.password) == strlen(command.password) && saved;
+                if (saveOnConnect && WiFi.SSID() == command.ssid) {
+                    bool saved = ok && prefs.putBytes("credentials", &command, sizeof(command)) == sizeof(command);
                     if (!saved) {
                         snprintf(text, sizeof(text), "Connected; saving credentials failed");
                     }
@@ -420,7 +419,7 @@ static void audioTask(void*) {
     for (;;) {
         xQueueReceive(sounds, &sound, portMAX_DELAY);
         if (ok && audioReady) {
-            digitalWrite(Pins::Amp, HIGH);
+            digitalWrite(Pins::Amp, LOW);
             size_t done = 0;
             while (done < sound.length && ok) {
                 size_t chunk = std::min<size_t>(1024, sound.length - done);
@@ -431,7 +430,7 @@ static void audioTask(void*) {
             }
             // Drain the short DMA tail before disabling the amplifier.
             vTaskDelay(pdMS_TO_TICKS(100));
-            digitalWrite(Pins::Amp, LOW);
+            digitalWrite(Pins::Amp, HIGH);
             post(EventKind::Media, ok ? "Playback finished" : "I2S write failed");
         } else {
             post(EventKind::Media, "Audio unavailable / codec or I2S initialization failed");

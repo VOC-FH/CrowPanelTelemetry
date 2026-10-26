@@ -32,6 +32,7 @@ else:
 for name, command in [('TTN decoder' , ['node', 'tests/decoder.js', 'tests/reference-packet.json']),
                       ('Airtime', ['python3', 'tools/airtime.py']),
                       ('WiFi input/status', ['python3', 'tools/test_wifi_form.py']),
+                      ('Amplifier playback', ['python3', 'tools/test_audio.py']),
                       ('WiFi worker status', ['python3', 'tools/test_wifi_worker.py'])]:
     result = subprocess.run(command, cwd=root, env=env)
     if result.returncode != 0:

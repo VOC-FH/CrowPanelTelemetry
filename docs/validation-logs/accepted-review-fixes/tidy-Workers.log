@@ -1,0 +1,9 @@
+4 errors generated.
+Error while processing /tmp/codex/build/CrowPanelTelemetry/accepted-review-fixes/enabled-prev3/sketch/Workers.cpp.
+error: invalid arch name 'rv32imafc_zicsr_zifencei_xesppie', unsupported non-standard user-level extension 'xesppie' [clang-diagnostic-error]
+error: unknown argument: '-fno-tree-switch-conversion' [clang-diagnostic-error]
+error: unknown argument: '-fstrict-volatile-bitfields' [clang-diagnostic-error]
+/tmp/codex/build/CrowPanelTelemetry/accepted-review-fixes/enabled-prev3/sketch/Telemetry.h:3:10: error: 'cmath' file not found [clang-diagnostic-error]
+    3 | #include <cmath>
+      |          ^~~~~~~
+Found compiler error(s).

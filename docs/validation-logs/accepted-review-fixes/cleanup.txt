@@ -1,0 +1,1 @@
+Removed /tmp/codex/build/CrowPanelTelemetry/accepted-review-fixes after copying/verifying evidence. No persistent build, additional checkout, archive or global installation created. Pre-existing rereview-fix and self-review-1961cfa collections left untouched. No flash/RF/TTN/commit/push operation.

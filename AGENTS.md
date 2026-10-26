@@ -10,8 +10,11 @@ The canonical project is this folder; do not modify sibling Basic/S3 sketches.
 owns the UI model, scheduler, GPS parsing and shared I2C bus. Codec setup runs
 before tasks start. UI alone owns the display and live touch/sensor I2C traffic.
 Workers exclusively own radio/SPI/NVS, WiFi, SD/JPEG, and audio/I2S respectively.
+WiFi alone stores one atomic credentials blob after its accepted request reaches
+live association/IP state with the requested SSID.
 The hash-checked RadioLib 7.8.1 patch in patches/ fixes Class-A timing and airtime
-accounting and forwards nested application downlinks. It has no project marker or
+accounting, authenticated join/counter state and ACK counter selection, and forwards
+nested application downlinks. It has no project marker or
 transmission-reservation hooks. PersistentNode owns the sole volatile RF deadline
 and NVS nonces; completed operations extend that deadline using total airtime.
 Preserve pre-RF DevNonce reservation, including ambiguous TX errors. Airtime is

@@ -119,3 +119,14 @@ evidence and editorial/provenance records. N4/N7/F8 remain clearly labelled
 unapplied proposals; publishing those documents is not approval to implement
 them. Earlier local-only/no-push statements describe their respective checkpoints.
 The historical delivery ZIP is unchanged; no hardware/RF operation is included.
+
+
+The user then requested an independent review by Codex and selected the amplifier,
+ACK counter, zero-counter, WiFi credential and display-timing corrections. Two
+concrete gates (counter-state/session metadata and one-blob WiFi storage with
+one-time re-entry) were approved. [Accepted corrections](accepted-review-fixes.md)
+records current exact-source traces, regressions and deliberately retained codec,
+SD/Hosted and nested-recursion limits. This is a new implementation disposition;
+raw historical reviews and their original proposals remain unchanged. Work stays
+on main, local/uncommitted; no new publication, archive or hardware/RF action is
+implied by this task.

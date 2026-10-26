@@ -107,9 +107,10 @@ Real SD/C6 coexistence still needs hardware testing; see the open re-review find
 
 Tap **WiFi setup**, type SSID and password, then Connect. The keyboard supports
 lowercase, uppercase, digits, printable ASCII punctuation and Space/Delete.
-Passwords are masked. The current worker saves on connected status; stale status
-and empty-password write confirmation remain open correctness issues (N7). The
-password edit buffer is cleared on Connect/Close. NVS and firmware credentials
+Passwords are masked. Credentials are saved only after an accepted connection
+request, live association/IP state and a matching SSID. One atomic credential blob
+replaces the old separate keys; enter saved WiFi settings once after this update.
+Write failures are reported, including open networks. The password edit buffer is cleared on Connect/Close. NVS and firmware credentials
 are not encrypted by this template. Open networks and Personal authentication are
 supported; Enterprise authentication/captive-portal login is outside scope.
 WiFi is independent of TTN: LoRaWAN needs an actual LoRaWAN gateway/network path,
@@ -150,7 +151,7 @@ are needed for1.1; a negotiated1.0 session is rejected. Joining and transmission
 run on the radio worker while the UI remains operational.
 
 NVS keys live in `crow-lora` (nonce buffer and boot ID; no airtime debt)
-and `crow-wifi` (SSID/password). A nonce write failure stops radio operations.
+and `crow-wifi` (`credentials`: one SSID/password blob). A nonce write failure stops radio operations.
 Changing credentials after an earlier enrollment can make the stored nonce buffer
 incompatible; the UI reports failure. **Do not erase/reuse old nonce state with the
 same credentials on a live network.** For recovery after lost/corrupt state, provision
@@ -190,6 +191,12 @@ ffmpeg -i input.mp3 -map_metadata -1 -vn -ac 2 -ar 48000 -c:a pcm_s16le -fflags 
 Verify the result has the canonical header described above. Audio is loaded into
 PSRAM before playback, so browsing JPGs cannot interrupt playback with SD contention.
 One additional sound can be queued. Initial volume is35% through the ES8311 driver.
+GPIO30 is driven HIGH (NS4263B shutdown) before codec setup, stays HIGH at idle,
+and is LOW during playback until the DMA tail drains.
+Confirm the fitted amplifier/R147 and speaker output during supervised bench testing.
+The pinned ES8311 driver can report success after selective I2C failures;
+`audioReady` is not proof that all codec registers were programmed. This driver
+limitation is retained; verify playback and volume physically.
 The ES8311 is a mono codec; stereo WAV framing does not promise independently
 separated left/right speaker content. Use the board's proper speaker outputs and suitable speaker impedance/rating.
 Speaker output pins are differential amplifier outputs; neither speaker terminal
@@ -220,7 +227,11 @@ patch or apply it blindly to another release.
 The patch forwards authenticated application downlinks, including nested and empty
 messages, corrects reachable Class-A time comparisons and airtime aggregation,
 and commits JoinAccept state only after authentication. It also consumes the
-MAC-payload flag after payload selection. The JPEGDEC patch rejects invalid SOF
+MAC-payload flag after payload selection, selects the received confirmed frame
+counter for ACK MICs, and distinguishes unseen from accepted-zero unicast counters.
+Session snapshots encode that distinction; older ambiguous snapshots are rejected.
+The application still starts fresh OTAA after reboot; its durable nonce format
+and telemetry wire format are unchanged. The JPEGDEC patch rejects invalid SOF
 component counts and lengths before writing component metadata.
 It adds no project marker macro or before/after-transmission hooks. PersistentNode
 spaces completed join/uplink operations using their aggregate predicted airtime,
@@ -230,6 +241,10 @@ pre-transmission airtime reservations; automatic MAC replies proceed normally.
 DevNonce persistence before joining remains required to prevent nonce reuse.
 Reset clears the volatile airtime deadline; repeated resets can exceed network
 allowances. See [airtime policy and limitations](docs/airtime.md).
+
+Display bus timing matches Elecrow V1.2: 51 MHz pixel clock, horizontal
+pulse/back/front 70/160/160 and vertical 10/23/21. This is source alignment, not
+a measured display result. UI layout and graphics are unchanged.
 
 `make test` runs independent encoder/decoder, sensor-range, join-DR, SD lifecycle,
 airtime, real-library calibration/GPS/JPEG, WiFi input/status and patched RadioLib

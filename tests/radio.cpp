@@ -274,10 +274,12 @@ public:
         processAES(&frame[port + 1], payload.size(), appSKey, payload.data(), devAddr, counter, 0, 0, true);
         return payload;
     }
-    std::vector<uint8_t> gatewayFrame(uint32_t counter, const std::string& payload, uint8_t requests, bool rekey = false) {
-        size_t length = 13 + requests + payload.size();
+    std::vector<uint8_t> gatewayFrame(
+        uint32_t counter, const std::string& payload, uint8_t requests, bool rekey = false, bool network = false, bool confirmed = false) {
+        assert(!network || payload.empty());
+        size_t length = (network ? 12 : 13) + requests + payload.size();
         std::vector<uint8_t> frame(16 + length, 0);
-        frame[16] = 0x60;
+        frame[16] = confirmed ? 0xA0 : 0x60;
         hton<uint32_t>(&frame[17], devAddr);
         frame[21] = requests;
         hton<uint16_t>(&frame[22], counter);
@@ -286,10 +288,19 @@ public:
             assert(requests == 2);
             opts = {RADIOLIB_LORAWAN_MAC_REKEY, 1};
         }
-        processAES(opts.data(), opts.size(), nwkSEncKey, &frame[24], devAddr, counter, 1, 2, true);
-        frame[24 + requests] = 10;
-        processAES(
-            reinterpret_cast<const uint8_t*>(payload.data()), payload.size(), appSKey, &frame[25 + requests], devAddr, counter, 1, 0, true);
+        processAES(opts.data(), opts.size(), nwkSEncKey, &frame[24], devAddr, counter, 1, network ? 1 : 2, true);
+        if (!network) {
+            frame[24 + requests] = 10;
+            processAES(reinterpret_cast<const uint8_t*>(payload.data()),
+                       payload.size(),
+                       appSKey,
+                       &frame[25 + requests],
+                       devAddr,
+                       counter,
+                       1,
+                       0,
+                       true);
+        }
         frame[0] = RADIOLIB_LORAWAN_MIC_BLOCK_MAGIC;
         frame[RADIOLIB_LORAWAN_BLOCK_DIR_POS] = 1;
         hton<uint32_t>(&frame[RADIOLIB_LORAWAN_BLOCK_DEV_ADDR_POS], devAddr);
@@ -299,12 +310,149 @@ public:
         hton<uint32_t>(&frame[frame.size() - 4], mic);
         return std::vector<uint8_t>(frame.begin() + 16, frame.end());
     }
+    bool uplinkAcknowledges(const std::vector<uint8_t>& frame, uint16_t downCounter) {
+        std::vector<uint8_t> micInput(16 + frame.size() - 4, 0);
+        micInput[0] = RADIOLIB_LORAWAN_MIC_BLOCK_MAGIC;
+        hton<uint16_t>(&micInput[RADIOLIB_LORAWAN_BLOCK_CONF_FCNT_POS], downCounter);
+        micInput[RADIOLIB_LORAWAN_MIC_DATA_RATE_POS] = channels[RADIOLIB_LORAWAN_UPLINK].dr;
+        micInput[RADIOLIB_LORAWAN_MIC_CH_INDEX_POS] = channels[RADIOLIB_LORAWAN_UPLINK].idx;
+        hton<uint32_t>(&micInput[RADIOLIB_LORAWAN_BLOCK_DEV_ADDR_POS], devAddr);
+        hton<uint32_t>(&micInput[RADIOLIB_LORAWAN_BLOCK_FCNT_POS], ntoh<uint16_t>(&frame[6]));
+        micInput[RADIOLIB_LORAWAN_MIC_BLOCK_LEN_POS] = frame.size() - 4;
+        memcpy(&micInput[16], frame.data(), frame.size() - 4);
+        uint32_t mic = generateMIC(micInput.data(), micInput.size(), sNwkSIntKey);
+        return (frame[5] & RADIOLIB_LORAWAN_FCTRL_ACK) && (mic & 0xFFFF) == ntoh<uint16_t>(&frame[frame.size() - 4]);
+    }
+    std::vector<uint8_t> sessionSnapshot(bool legacy, bool network, uint32_t counter) {
+        const uint8_t* bytes = getBufferSession();
+        std::vector<uint8_t> snapshot(bytes, bytes + RADIOLIB_LORAWAN_SESSION_BUF_SIZE);
+        if (legacy) {
+            snapshot[RADIOLIB_LORAWAN_SESSION_STATUS] &= 0x0F;
+        }
+        hton<uint32_t>(&snapshot[network ? RADIOLIB_LORAWAN_SESSION_N_FCNT_DOWN : RADIOLIB_LORAWAN_SESSION_A_FCNT_DOWN], counter);
+        hton<uint16_t>(&snapshot[RADIOLIB_LORAWAN_SESSION_SIGNATURE], checkSum16(snapshot.data(), snapshot.size() - 2));
+        return snapshot;
+    }
 };
 static void initialize(ProbeNode& node) {
     uint8_t nwk[16] = {1}, app[16] = {2};
     assert(node.beginOTAA(1, 2, nwk, app) == 0);
     node.setDutyCycle(false);
     node.defer(0);
+}
+static void testConfirmedCounters() {
+    for (bool network : {false, true}) {
+        Preferences store;
+        TestPhy phy;
+        ProbeNode node(&phy, store);
+        initialize(node);
+        node.activeSession();
+        uint8_t payload = 1;
+        phy.replies.push_back(node.gatewayFrame(3, "prior", 0));
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) > 0);
+        phy.replies.push_back(node.gatewayFrame(7, network ? "" : "confirmed", 1, false, network, true));
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) > 0);
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) == 0);
+        assert(node.uplinkAcknowledges(phy.sent.back(), 7));
+        assert(!node.uplinkAcknowledges(phy.sent.back(), 3));
+    }
+}
+static void testDownlinkCounters() {
+    for (bool network : {false, true}) {
+        Preferences store;
+        TestPhy phy;
+        ProbeNode node(&phy, store);
+        initialize(node);
+        assert(node.setDatarate(5) == 0);
+        phy.replies.push_back(node.gatewayAccept(1, true));
+        assert(node.activateOTAA(nullptr) == RADIOLIB_LORAWAN_NEW_SESSION);
+        uint8_t payload = 1;
+        {
+            auto fresh = node.sessionSnapshot(false, network, 0);
+            Preferences freshStore;
+            TestPhy freshPhy;
+            ProbeNode restored(&freshPhy, freshStore);
+            initialize(restored);
+            assert(restored.setBufferNonces(node.getBufferNonces()) == 0 && restored.setBufferSession(fresh.data()) == 0);
+            assert(restored.LoRaWANNode::activateOTAA() == RADIOLIB_LORAWAN_SESSION_RESTORED);
+            for (bool domain : {network, !network}) {
+                freshPhy.replies.push_back(restored.gatewayFrame(0, "", 1, false, domain));
+                restored.scheduleTransmission(millis());
+                assert(restored.sendReceive(&payload, 1, 1) > 0);
+                freshPhy.replies.push_back(restored.gatewayFrame(0, "", 1, false, domain));
+                restored.scheduleTransmission(millis());
+                assert(restored.sendReceive(&payload, 1, 1) < 0);
+            }
+        }
+        auto zero = node.gatewayFrame(0, network ? "" : "zero", 1, false, network);
+        auto corrupt = zero;
+        corrupt.back() ^= 1;
+        phy.replies.push_back(corrupt);
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) == RADIOLIB_ERR_MIC_MISMATCH);
+        messages.clear();
+        phy.replies.push_back(zero);
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) > 0);
+        size_t deliveries = messages.size();
+        phy.replies.push_back(zero);
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) < 0);
+        assert(messages.size() == deliveries);
+        std::vector<uint8_t> nonces(node.getBufferNonces(), node.getBufferNonces() + RADIOLIB_LORAWAN_NONCES_BUF_SIZE);
+        for (bool legacy : {false, true}) {
+            auto snapshot = node.sessionSnapshot(legacy, network, 0);
+            Preferences rebootStore;
+            TestPhy rebootPhy;
+            ProbeNode reboot(&rebootPhy, rebootStore);
+            initialize(reboot);
+            assert(reboot.setBufferNonces(nonces.data()) == 0);
+            int16_t rc = reboot.setBufferSession(snapshot.data());
+            if (legacy) {
+                assert(rc == RADIOLIB_ERR_SESSION_DISCARDED);
+            } else {
+                assert(rc == 0);
+                assert(reboot.LoRaWANNode::activateOTAA() == RADIOLIB_LORAWAN_SESSION_RESTORED);
+                assert(rebootPhy.sent.empty());
+                rebootPhy.replies.push_back(zero);
+                reboot.scheduleTransmission(millis());
+                assert(reboot.sendReceive(&payload, 1, 1) < 0);
+                rebootPhy.replies.push_back(node.gatewayFrame(1, network ? "" : "next", 1, false, network));
+                reboot.scheduleTransmission(millis());
+                assert(reboot.sendReceive(&payload, 1, 1) > 0);
+            }
+        }
+        for (uint32_t previous : {UINT32_C(0xFFFE), UINT32_C(0xFFFFFFFE)}) {
+            auto snapshot = node.sessionSnapshot(false, network, previous);
+            Preferences restoredStore;
+            TestPhy restoredPhy;
+            ProbeNode restored(&restoredPhy, restoredStore);
+            initialize(restored);
+            assert(restored.setBufferNonces(nonces.data()) == 0 && restored.setBufferSession(snapshot.data()) == 0);
+            assert(restored.LoRaWANNode::activateOTAA() == RADIOLIB_LORAWAN_SESSION_RESTORED);
+            auto last = restored.gatewayFrame(previous + 1, "", 1, false, network, true);
+            restoredPhy.replies.push_back(last);
+            restored.scheduleTransmission(millis());
+            assert(restored.sendReceive(&payload, 1, 1) > 0);
+            restoredPhy.replies.push_back(last);
+            restored.scheduleTransmission(millis());
+            assert(restored.sendReceive(&payload, 1, 1) < 0);
+            assert(restored.uplinkAcknowledges(restoredPhy.sent.back(), static_cast<uint16_t>(previous + 1)));
+            restoredPhy.replies.push_back(restored.gatewayFrame(previous + 2, "", 1, false, network));
+            restored.scheduleTransmission(millis());
+            assert((restored.sendReceive(&payload, 1, 1) > 0) == (previous == 0xFFFE));
+        }
+        node.clearSession();
+        assert(node.setDatarate(5) == 0);
+        phy.replies.push_back(node.gatewayAccept(2, true));
+        assert(node.activateOTAA(nullptr) == RADIOLIB_LORAWAN_NEW_SESSION);
+        phy.replies.push_back(node.gatewayFrame(0, "", 1, false, network));
+        node.scheduleTransmission(millis());
+        assert(node.sendReceive(&payload, 1, 1) > 0);
+    }
 }
 struct TestQueue {
     std::deque<Batch> records;
@@ -669,6 +817,8 @@ int main() {
     assert(failedNode.activateOTAA(&event) < 0);
     assert(!failedNode.healthy && failedPhy.sent.empty());
     testMacPayloadLifetime();
+    testConfirmedCounters();
+    testDownlinkCounters();
     testJoinAuthentication();
     testTransmitOutcome();
     testInitialization();
