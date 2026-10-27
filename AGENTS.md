@@ -65,3 +65,8 @@ Render their sans-serif PDFs with tools/render_documents.py (Pandoc/XeLaTeX and
 Graphviz); output/pdf holds the deliverables. Renderer scratch uses BUILD or the
 student-pdfs task temporary directory. docs/wiring.md remains the detailed pin
 reference; keep the course connection tables identical when it changes.
+
+The two supplied lecture PDFs in docs/slides are tracked individually with Git
+LFS via .gitattributes. Keep their original PDF bytes; do not migrate other PDFs
+or firmware into LFS. SHA256SUMS.json records the actual downloaded PDF bytes,
+not the LFS pointer text. Firmware builds do not depend on the slide downloads.

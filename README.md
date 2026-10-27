@@ -25,6 +25,16 @@ The code compiles; physical hardware operation has not been tested.
 - [Hardware acceptance checklist](docs/hardware-checklist.md)
 - [Primary sources](docs/sources.md), [validation record](docs/validation.md)
 
+## Lecture slides
+
+- [PCO: The Internet of Things and Sensors for Controlling Invasive Species](docs/slides/PCO.pdf)
+- [International Minor 2026: Global Acting in IT](docs/slides/IntMinor-2026.pdf)
+
+These two large PDFs use Git LFS and are included unchanged. With Git LFS
+installed, retrieve them after cloning with
+`git lfs pull --include="docs/slides/*.pdf" --exclude=""`. The firmware and
+other course documents do not require these slide files to compile.
+
 ## Dependencies
 
 These were the latest stable release tags checked on2026-10-25. Exact versions

@@ -1057,3 +1057,21 @@ installation, flashing, RF or hardware operation was performed for this document
 and vendor-asset addition. SHA256SUMS.json was refreshed. The task temporary
 rendering/check directories were removed after evidence was saved; no extra
 checkout or branch was created. Commit/push on main is explicitly authorized.
+
+
+## Supplied lecture PDFs (2026-10-27)
+
+Added docs/slides/PCO.pdf and docs/slides/IntMinor-2026.pdf, copied unchanged
+from the two user-supplied files. PCO is193425086 bytes/389 pages; IntMinor-2026
+is103142941 bytes/111 pages. Both open with pdfinfo. SHA-256 comparison against
+the supplied files passed. No PDF was rendered, recompressed or edited.
+
+PCO exceeds GitHub's100MiB regular-file limit. Both slides are tracked individually
+using the already-installed Git LFS3.8.0; no other PDF was migrated. `git lfs install
+--local` configured only this repository and its previously absent pre-push hook;
+no global software/settings were installed or upgraded. README links both slides
+and gives the selective LFS download command. The checksum manifest hashes real
+PDF contents. Firmware, pins, tests, build configuration and the two authored
+student documents are unchanged; no compile/hardware/RF test applies to this
+binary-document addition. Production0added/0removed; tests0/0. No extra checkout
+or branch was created. Publication on main is authorized by the user's request.
